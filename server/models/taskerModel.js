@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const User = require('./userModel');
-const geocoder = require('../utils/geocoder');
+// const geocoder = require('../utils/geocoder');
 
 const baseOptions = {
   discriminatorKey: 'role',
