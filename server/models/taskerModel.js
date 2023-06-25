@@ -51,6 +51,12 @@ const taskerSchema = new mongoose.Schema(
 //   this.address = undefined;
 //   next();
 // });
-
+taskerSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'taskTag',
+    select: '-__v -updatedAt -createdAt',
+  });
+  next();
+});
 const Tasker = User.discriminator('Tasker', taskerSchema);
 module.exports = Tasker;

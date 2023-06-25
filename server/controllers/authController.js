@@ -62,6 +62,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   };
   if (role === 'Tasker') {
     user.address = req.body.address;
+    user.taskTag = req.body.taskTag;
   }
 
   const newUser = await Object.create(user);
