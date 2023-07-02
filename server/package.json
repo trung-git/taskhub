@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "prod": "set NODE_ENV=production && nodemon server.js"
+    "prod": "set NODE_ENV=production && nodemon server.js",
+    "seed:data": "node seeder/seeder.js",
+    "seed:data-d": "node seeder/seeder.js -d"
   },
   "author": "trunght1810@gmail.com",
   "license": "ISC",
