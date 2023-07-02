@@ -4,9 +4,18 @@ const { promisify } = require('util');
 const User = require('../models/userModel');
 const Finder = require('../models/finderModel');
 const Tasker = require('../models/taskerModel');
+const Review = require('../models/reviewModel');
 
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const TaskTag = require('../models/taskTagModel');
+const District = require('../models/districtModel');
+const City = require('../models/cityModel');
+
+const ROLE = {
+  TASKER: 'Tasker',
+  FINDER: 'Finder',
+};
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -37,11 +46,11 @@ const createAndSendToken = (user, statusCode, req, res) => {
 };
 
 const getObjectModel = (role) => {
-  const ROLE = ['Tasker', 'Finder'];
-  if (!ROLE.includes(role)) {
+  const masterRole = Object.entries(ROLE).map((v) => v[1]);
+  if (!masterRole.includes(role)) {
     return false;
   }
-  return role === 'Tasker' ? Tasker : Finder;
+  return role === ROLE.TASKER ? Tasker : Finder;
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
@@ -56,13 +65,30 @@ exports.signup = catchAsync(async (req, res, next) => {
     username: req.body.username,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
+    dateOfBirth: req.body.dateOfBirth,
     email: req.body.email,
     gender: req.body.gender,
     password: req.body.password,
   };
-  if (role === 'Tasker') {
-    user.address = req.body.address;
-    user.taskTag = req.body.taskTag;
+  if (role === ROLE.TASKER) {
+    const workLocation = await District.findById(req.body.workLocation);
+    if (!workLocation) {
+      return next(new AppError('Invalid Work Location', 400));
+    }
+    user.workLocation = [workLocation._id];
+
+    const taskTag = await TaskTag.findById(req.body.taskTag);
+    if (!taskTag) {
+      return next(new AppError('Invalid Task', 400));
+    }
+    user.taskTag = { taskInfo: taskTag._id, price: taskTag.defaultPrice };
+  }
+  if (role === ROLE.FINDER) {
+    const city = await City.findById(req.body.city);
+    if (!city) {
+      return next(new AppError('Invalid City', 400));
+    }
+    user.city = [city._id];
   }
 
   const newUser = await Object.create(user);
@@ -79,13 +105,13 @@ exports.login = catchAsync(async (req, res, next) => {
 
   // 1) Check if email and password exist
   if (!username || !password) {
-    return next(new AppError('Please provide email and password!', 400));
+    return next(new AppError('Please provide username and password!', 400));
   }
   // 2) Check if user exists && password is correct
   const user = await Object.findOne({ username }).select('+password');
 
   if (!user || !(await user.correctPassword(password, user.password))) {
-    return next(new AppError('Incorrect email or password', 401));
+    return next(new AppError('Incorrect username or password', 401));
   }
 
   // 3) If everything ok, send token to client

@@ -1,62 +1,77 @@
 const mongoose = require('mongoose');
 const User = require('./userModel');
-// const geocoder = require('../utils/geocoder');
 
 const baseOptions = {
   discriminatorKey: 'role',
   timestamps: true,
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true },
+  id: false,
 };
 
 const taskerSchema = new mongoose.Schema(
   {
-    address: {
-      //GeoJSON
-      type: {
-        type: String,
-        enum: ['Point'],
-        default: 'Point',
-      },
-      coordinates: {
-        type: [Number],
-        index: '2dsphere',
-        required: [true, 'Address coordinates can not empty!'],
-      },
-      inputAddress: {
-        type: String,
-        required: [true, 'Address can not empty!'],
-      },
-    },
-    taskTag: [
+    workLocation: [{ type: mongoose.Schema.ObjectId, ref: 'District' }],
+    workTime: [
       {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Task Tag',
+        date: { type: String },
+        start: { type: String },
+        end: { type: String },
       },
     ],
+    taskTag: [
+      {
+        taskInfo: {
+          type: mongoose.Schema.ObjectId,
+          ref: 'Task Tag',
+        },
+        price: {
+          type: Number,
+          // Per hours
+        },
+      },
+    ],
+    reviews: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Review',
+      },
+    ],
+    profile: {
+      aboutMe: {
+        type: String,
+      },
+      skillAndExperience: {
+        type: String,
+      },
+      photo: [{ type: String }],
+      vehicle: {
+        type: String,
+      },
+    },
+    contracts: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Contract',
+      },
+    ],
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
   },
   baseOptions
 );
 
-// taskerSchema.pre('save', async function (next) {
-//   const loc = await geocoder.geocode(this.address);
-//   console.log({ loc });
-//   this.location = {
-//     type: 'Point',
-//     coordinates: [loc[0].longitude, loc[0].latitude],
-//     formattedAddress: loc[0].formattedAddress,
-//   };
-
-//   // Do not save address
-//   this.address = undefined;
-//   next();
-// });
 taskerSchema.pre(/^find/, function (next) {
   this.populate({
-    path: 'taskTag',
+    path: 'taskTag.taskInfo',
+    select: '-__v -updatedAt -createdAt',
+  });
+  this.populate({
+    path: 'reviews',
     select: '-__v -updatedAt -createdAt',
   });
   next();
 });
+
 const Tasker = User.discriminator('Tasker', taskerSchema);
 module.exports = Tasker;

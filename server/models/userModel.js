@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 
-const baseOptions = { discriminatorKey: 'role', timestamps: true };
+const baseOptions = { discriminatorKey: 'role', timestamps: true, id: false };
 
 const userSchema = new mongoose.Schema(
   {
@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema(
     },
     dateOfBirth: {
       type: Date,
+      required: [true, 'Date Of Birth can not empty!'],
     },
     email: {
       type: String,
@@ -30,29 +31,14 @@ const userSchema = new mongoose.Schema(
     },
     phoneNumber: {
       type: Number,
-      validate: {
-        validator: function (v) {
-          return validator.isMobilePhone(v, ['vi-VN']);
-        },
-        message: (props) => `${props.value} is not a valid phone number!`,
-      },
-    },
-    address: {
-      //GeoJSON
-      type: {
-        type: String,
-        enum: ['Point'],
-      },
-      coordinates: {
-        type: [Number],
-        index: '2dsphere',
-      },
-      inputAddress: String,
     },
     gender: {
       type: String,
       enum: ['Male', 'Female'],
       required: [true, 'Gender can not empty!'],
+    },
+    image: {
+      type: String,
     },
     password: {
       type: String,
@@ -68,11 +54,12 @@ userSchema.pre('save', async function (next) {
   // Only run this function if password was actually modified
   if (!this.isModified('password')) return next();
 
-  // Hash the password with cost of 12
-  this.password = await bcrypt.hash(this.password, 12);
+  // Hash the password with cost of 10
+  this.password = await bcrypt.hash(this.password, 10);
 
   next();
 });
+
 userSchema.methods.correctPassword = async function (
   candidatePassword,
   userPassword
