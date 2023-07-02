@@ -5,11 +5,11 @@ const taskTagSchema = new mongoose.Schema(
     title: {
       type: String,
       required: [true, 'Task title can not empty!'],
-      unique: true
+      unique: true,
     },
     description: {
       type: String,
-      required: [true, 'Task title can not empty!'],
+      required: [true, 'Task description can not empty!'],
     },
     langKey: {
       type: String,
@@ -24,9 +24,17 @@ const taskTagSchema = new mongoose.Schema(
         message: (props) => `Average Price must be an array of 2 number!`,
       },
     },
+    defaultPrice: {
+      type: Number, // per Hour
+      required: [true, 'Default price can not empty!'],
+    },
+    photo: {
+      type: String,
+    },
   },
   {
     timestamps: true,
+    id: false,
   }
 );
 

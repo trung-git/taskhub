@@ -5,7 +5,7 @@ const { protect } = require('../controllers/authController');
 
 router
   .route('/')
-  .get(taskTagController.getAllTaskTags)
+  .get(taskTagController.getTaskTags)
   .post(protect, taskTagController.createTaskTag);
 
 module.exports = router;
