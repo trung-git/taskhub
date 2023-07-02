@@ -19,6 +19,7 @@ app.use(cors(corsOptions));
 //Router
 const userRouter = require('./routes/userRoutes.js');
 const taskTagRouter = require('./routes/taskTagRoutes.js');
+const areaRouter = require('./routes/areaRoutes.js');
 
 // Utils
 const globalErrorHandler = require('./controllers/errorController');
@@ -29,6 +30,7 @@ app.get('/', (req, res) => {
 });
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/task-tag', taskTagRouter);
+app.use('/api/v1/area', areaRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Not found ${req.originalUrl}`, 404));
