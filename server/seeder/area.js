@@ -5,13 +5,13 @@ const cities = [
     _id: mongoose.Types.ObjectId.createFromHexString(
       '64a12b2fde768d62c2605820'
     ),
-    name: 'Ho chi Minh',
+    name: 'Hồ Chí Minh',
   },
   {
     _id: mongoose.Types.ObjectId.createFromHexString(
       '64a12ae70e4a73f9a8f71a8e'
     ),
-    name: 'Ha Noi',
+    name: 'Hà Nội',
     prefix: 'th_key_capital',
   },
 ];
