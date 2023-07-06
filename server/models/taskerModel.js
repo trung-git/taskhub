@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const User = require('./userModel');
+const Review = require('./reviewModel');
 
 const baseOptions = {
   discriminatorKey: 'role',
@@ -53,6 +54,9 @@ const taskerSchema = new mongoose.Schema(
         ref: 'Contract',
       },
     ],
+    averageRating: {
+      type: Number,
+    },
     isVerified: {
       type: Boolean,
       default: false,
@@ -61,6 +65,14 @@ const taskerSchema = new mongoose.Schema(
   baseOptions
 );
 
+taskerSchema.pre('save', async function(next) {
+  const reviewIds = this.reviews; // Mảng các reference id
+  const reviews = await Review.find({ _id: { $in: reviewIds } });
+  const total = reviews.reduce((sum, review) => sum + review.rating, 0);
+  this.averagePrice = reviews.length > 0 ? total / products.length : 0;
+  next();
+});
+
 taskerSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'taskTag.taskInfo',
@@ -68,6 +80,10 @@ taskerSchema.pre(/^find/, function (next) {
   });
   this.populate({
     path: 'reviews',
+    select: '-__v -updatedAt -createdAt',
+  });
+  this.populate({
+    path: 'workLocation',
     select: '-__v -updatedAt -createdAt',
   });
   next();
