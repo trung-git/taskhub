@@ -2,7 +2,14 @@ const mongoose = require('mongoose');
 const Tasker = require('../models/taskerModel');
 const catchAsync = require('../utils/catchAsync');
 
-exports.getTasker = catchAsync(async (req, res, next) => {
+exports.getTaskers = catchAsync(async (req, res, next) => {
+  const taskTagId = req.query.taskTagId;
+  const districtIds = req.query.districtIds.split(','); //id1,id2,id3
+  const price = req.query.price ? req.query.price.split(',') : undefined; // 1,12
+  const sortOption = Number(req.query.sortOption) || 1;
+  const pageNum = Number(req.query.pageNum) || 1;
+  const recordsPerPage = Number(process.env.RECORDS_PER_PAGE);
+
   const aggregatePipeline = [
     {
       $lookup: {
@@ -62,7 +69,7 @@ exports.getTasker = catchAsync(async (req, res, next) => {
     {
       $match: {
         'taskInfo._id': {
-          $eq: mongoose.Types.ObjectId.createFromHexString(req.body.taskTagId),
+          $eq: mongoose.Types.ObjectId.createFromHexString(taskTagId),
         },
       },
     },
@@ -70,7 +77,7 @@ exports.getTasker = catchAsync(async (req, res, next) => {
       $match: {
         workLocation: {
           $elemMatch: {
-            $in: req.body.districtIds.map((v) =>
+            $in: districtIds.map((v) =>
               mongoose.Types.ObjectId.createFromHexString(v)
             ),
           },
@@ -78,12 +85,12 @@ exports.getTasker = catchAsync(async (req, res, next) => {
       },
     },
   ];
-  if (req.body.price) {
+  if (price) {
     aggregatePipeline.push({
       $match: {
         'taskInfo.price': {
-          $gte: req.body.price.from,
-          $lte: req.body.price.to,
+          $gte: Number(price[0]),
+          $lte: Number(price[1]),
         },
       },
     });
@@ -94,7 +101,6 @@ exports.getTasker = catchAsync(async (req, res, next) => {
   // 3 Price high to low
   // 4 High rating
   // 5 Number of complete Task
-  const sortOption = req.body.sortOption || 1;
   switch (sortOption) {
     case 1:
       aggregatePipeline.push({
@@ -113,16 +119,14 @@ exports.getTasker = catchAsync(async (req, res, next) => {
     default:
       break;
   }
-  const recordsPerPage = process.env.RECORDS_PER_PAGE;
-  const pageNum = req.body.pageNum || 1;
 
   const tasker = await Tasker.aggregate([
     ...aggregatePipeline,
     {
-      $skip: Number(recordsPerPage) * (pageNum - 1),
+      $skip: recordsPerPage * (pageNum - 1),
     },
     {
-      $limit: Number(recordsPerPage),
+      $limit: recordsPerPage,
     },
   ]);
 
