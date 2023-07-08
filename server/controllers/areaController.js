@@ -36,7 +36,7 @@ exports.getDistricts = catchAsync(async (req, res, next) => {
 
 // District Controllers
 exports.getDistrictsByCity = catchAsync(async (req, res, next) => {
-  const { cityId } = req.body;
+  const { cityId } = req.params;
   const city = await City.findById(cityId).populate({
     path: 'districts',
   });

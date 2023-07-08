@@ -13,5 +13,5 @@ router
   .get(areaController.getDistricts)
   .post(protect, areaController.createDistrict);
 
-router.get('/districts-by-city', areaController.getDistrictsByCity)
+router.get('/districts-by-city/:cityId', areaController.getDistrictsByCity)
 module.exports = router;
