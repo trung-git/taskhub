@@ -7,6 +7,7 @@ router.post('/signup', authController.signup);
 router.post('/login', authController.login);
 router.get('/logout', authController.logout);
 
-router.get('/tasker', userController.getTasker);
+router.get('/tasker', userController.getTaskers);
+
 
 module.exports = router;
