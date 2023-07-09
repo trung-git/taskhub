@@ -2,8 +2,6 @@ const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 
 const User = require('../models/userModel');
-const Finder = require('../models/finderModel');
-const Tasker = require('../models/taskerModel');
 const Review = require('../models/reviewModel');
 
 const catchAsync = require('../utils/catchAsync');
@@ -12,10 +10,8 @@ const TaskTag = require('../models/taskTagModel');
 const District = require('../models/districtModel');
 const City = require('../models/cityModel');
 
-const ROLE = {
-  TASKER: 'Tasker',
-  FINDER: 'Finder',
-};
+const { getObjectModel } = require('../utils');
+const { ROLE } = require('../utils/constantVariables');
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -45,13 +41,6 @@ const createAndSendToken = (user, statusCode, req, res) => {
   });
 };
 
-const getObjectModel = (role) => {
-  const masterRole = Object.entries(ROLE).map((v) => v[1]);
-  if (!masterRole.includes(role)) {
-    return false;
-  }
-  return role === ROLE.TASKER ? Tasker : Finder;
-};
 
 exports.signup = catchAsync(async (req, res, next) => {
   const { role } = req.body;
