@@ -9,6 +9,12 @@ const finderSchema = new mongoose.Schema(
   },
   baseOptions
 );
-
+finderSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'city',
+    select: '-__v -updatedAt -createdAt',
+  });
+  next();
+});
 const Finder = User.discriminator('Finder', finderSchema);
 module.exports = Finder;
