@@ -8,12 +8,14 @@ const Review = require('../models/reviewModel');
 const User = require('../models/userModel');
 const City = require('../models/cityModel');
 const District = require('../models/districtModel');
+const Post = require('../models/postModel');
 
 const taskTagData = require('./taskTag');
 const finderData = require('./finder');
 const reviewData = require('./review');
 const taskerData = require('./tasker');
 const areaData = require('./area');
+const postData = require('./post');
 
 const importData = async () => {
   try {
@@ -23,6 +25,7 @@ const importData = async () => {
     await Review.collection.deleteMany({});
     await City.collection.deleteMany({});
     await District.collection.deleteMany({});
+    await Post.collection.deleteMany({});
 
     if (process.argv[2] !== '-d') {
       await TaskTag.insertMany(taskTagData);
@@ -31,6 +34,7 @@ const importData = async () => {
       await Finder.insertMany(finderData);
       await Review.insertMany(reviewData);
       await Tasker.insertMany(taskerData);
+      await Post.insertMany(postData);
 
       console.log('Seeder data imported successfully');
       process.exit();
