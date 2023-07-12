@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const Tasker = require('../models/taskerModel');
 const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
+const { getObjectModel } = require('../utils');
+const imageValidate = require('../utils/imageValidation');
+const cloudinary = require('../utils/cloudinary');
 
 exports.getTaskers = catchAsync(async (req, res, next) => {
   const taskTagId = req.query.taskTagId;
@@ -135,5 +139,96 @@ exports.getTaskers = catchAsync(async (req, res, next) => {
     data: tasker,
     recordsPerPage,
     pageNum,
+  });
+});
+
+exports.getMe = catchAsync(async (req, res, next) => {
+  const id = req.user._id;
+  const role = req.user.role;
+
+  const user = await getObjectModel(role).findOne({ _id: id });
+
+  if (!user) {
+    return next(new AppError('User not found', 400));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user,
+    },
+  });
+});
+
+exports.updateMe = catchAsync(async (req, res, next) => {
+  if (req.body.password) {
+    return next(new AppError('This route is not for password updates', 400));
+  }
+  console.log(__dirname);
+  const Object = getObjectModel(req.user.role);
+  const user = await Object.findById(req.user._id);
+
+  // Common info
+  user.firstName = req.body.firstName || user.firstName;
+  user.lastName = req.body.lastName || user.lastName;
+  user.dateOfBirth = req.body.dateOfBirth || user.dateOfBirth;
+  user.email = req.body.email || user.email;
+  user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
+  user.gender = req.body.gender || user.gender;
+
+  if (req.files && req?.files?.image) {
+    const validateResult = imageValidate(req.files.image);
+    if (validateResult.error) {
+      return next(new AppError(validateResult.error));
+    }
+    try {
+      const result = await cloudinary.uploader.upload(req.files.image.tempFilePath, {
+        folder: 'userImages',
+      });
+      user.image = result.url;
+    } catch (error) {
+      console.error(error);
+      return next(new AppError('Failed to upload file.'));
+    }
+  }
+  // Role base info
+  if (user.role === 'Finder') {
+    user.city = req.body.city || user.city;
+  }
+  if (user.role === 'Tasker') {
+    user.workLocation = req.body.workLocation || user.workLocation;
+    user.workTime = req.body.workTime || user.workTime;
+    user.taskTag = req.body.taskTag || user.taskTag;
+    user.profile.aboutMe = req.body.profile.aboutMe || user.profile.aboutMe;
+    user.profile.skillAndExperience =
+      req.body.profile.skillAndExperience || user.profile.skillAndExperience;
+    user.profile.vehicle = req.body.profile.vehicle || user.profile.vehicle;
+    if (req.files && req?.files?.photo) {
+      const validateResult = imageValidate(req.files.photo);
+      if (validateResult.error) {
+        return next(new AppError(validateResult.error));
+      }
+      try {
+        const uploadedFiles = [];
+        for (let i = 0; i < req.files.photo.length; i++) {
+          const file = req.files.photo[i];
+          const result = await cloudinary.uploader.upload(file.tempFilePath);
+          uploadedFiles.push(result.url);
+        }
+        user.profile.photo = uploadedFiles;
+      } catch (error) {
+        console.error(error);
+        return next(new AppError('Failed to upload files.'));
+      }
+    }
+  }
+
+  const updatedUser = await user.save();
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      updatedUser,
+    },
   });
 });

@@ -2,12 +2,13 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const app = express();
-const cors = require('cors')
+const cors = require('cors');
+const fileUpload = require('express-fileupload');
 
 const corsOptions = {
   origin: ['http://localhost:3000'],
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-}
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
 
 //Set up
 app.use(express.static(path.join(__dirname, 'public')));
@@ -15,6 +16,12 @@ app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(express.json({ limit: '10kb' }));
 app.use(cookieParser());
 app.use(cors(corsOptions));
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: '/tmp/',
+  })
+);
 
 //Router
 const userRouter = require('./routes/userRoutes.js');
@@ -37,5 +44,5 @@ app.all('*', (req, res, next) => {
 });
 //Error handling
 app.use(globalErrorHandler);
-  
+
 module.exports = app;

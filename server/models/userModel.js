@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto')
 
 const baseOptions = { discriminatorKey: 'role', timestamps: true, id: false };
 
@@ -46,6 +47,9 @@ const userSchema = new mongoose.Schema(
       minlength: 8,
       select: false,
     },
+    passwordChangedAt: Date,
+    passwordResetToken: String,
+    passwordResetExpired: Date,
   },
   baseOptions
 );
@@ -66,6 +70,30 @@ userSchema.methods.correctPassword = async function (
 ) {
   return await bcrypt.compare(candidatePassword, userPassword);
 };
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
 
+    return JWTTimestamp < changedTimestamp;
+  }
+
+  // False means NOT changed
+  return false;
+};
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  this.passwordResetExpired = Date.now() + 10 * 60 * 1000;
+
+  return resetToken;
+};
 const User = mongoose.model('User', userSchema);
 module.exports = User;
