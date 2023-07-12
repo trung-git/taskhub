@@ -69,7 +69,7 @@ taskerSchema.pre('save', async function(next) {
   const reviewIds = this.reviews; // Mảng các reference id
   const reviews = await Review.find({ _id: { $in: reviewIds } });
   const total = reviews.reduce((sum, review) => sum + review.rating, 0);
-  this.averagePrice = reviews.length > 0 ? total / products.length : 0;
+  this.averagePrice = reviews.length > 0 ? total / reviews.length : 0;
   next();
 });
 
