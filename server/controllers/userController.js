@@ -183,7 +183,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     }
     try {
       const result = await cloudinary.uploader.upload(req.files.image.tempFilePath, {
-        folder: 'userImages',
+        folder: 'userAvatar',
       });
       user.image = result.url;
     } catch (error) {
@@ -212,7 +212,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
         const uploadedFiles = [];
         for (let i = 0; i < req.files.photo.length; i++) {
           const file = req.files.photo[i];
-          const result = await cloudinary.uploader.upload(file.tempFilePath);
+          const result = await cloudinary.uploader.upload(file.tempFilePath, {folder: 'profileImages'});
           uploadedFiles.push(result.url);
         }
         user.profile.photo = uploadedFiles;
