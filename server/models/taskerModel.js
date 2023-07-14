@@ -57,10 +57,6 @@ const taskerSchema = new mongoose.Schema(
     averageRating: {
       type: Number,
     },
-    isVerified: {
-      type: Boolean,
-      default: false,
-    },
   },
   baseOptions
 );
