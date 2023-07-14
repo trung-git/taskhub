@@ -9,20 +9,10 @@ module.exports = class Email {
     this.to = user.email;
     this.firstname = user.firstName;
     this.url = url;
-    this.from = `Task Hub <${process.env.EMAIL_FROM}>`;
+    this.from = `Task Hub`;
   }
 
   newTransport() {
-    // if (process.env.NODE_ENV.trim() === 'production') {
-    //   return nodemailer.createTransport({
-    //     service: 'SendGrid',
-    //     auth: {
-    //       user: process.env.SEND_GRID_USERNAME,
-    //       pass: process.env.SEND_GRID_PASSWORD,
-    //     },
-    //   });
-    // }
-    //use mailTrap
     return nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -54,9 +44,9 @@ module.exports = class Email {
     await this.newTransport().sendMail(mailOptions);
   }
 
-  // async sendWelcome() {
-  //   await this.send('welcome', 'Welcome to the Task Hub!');
-  // }
+  async sendWelcome() {
+    await this.send('welcome', 'Welcome to Task Hub!');
+  }
 
   async sendPasswordReset() {
     await this.send(
