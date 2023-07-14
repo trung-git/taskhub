@@ -5,11 +5,18 @@ const cloudinary = require('../utils/cloudinary');
 const imageValidate = require('../utils/imageValidation');
 
 const getPosts = catchAsync(async (req, res, next) => {
-  const posts = await Post.find();
+  const pageNum = Number(req.query.pageNum) || 1;
+  const recordsPerPage = Number(process.env.RECORDS_PER_PAGE);
+
+  const posts = await Post.find()
+    .skip(recordsPerPage * (pageNum - 1))
+    .limit(recordsPerPage);
 
   return res.status(200).json({
     status: 'success',
     data: posts,
+    recordsPerPage,
+    pageNum,
   });
 });
 const getPostById = catchAsync(async (req, res, next) => {
