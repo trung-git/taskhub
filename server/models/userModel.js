@@ -50,6 +50,8 @@ const userSchema = new mongoose.Schema(
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetExpired: Date,
+    verifyEmailToken: String,
+    verifyEmailExpired: Date,
     isVerified: {
       type: Boolean,
       default: false,
@@ -98,6 +100,19 @@ userSchema.methods.createPasswordResetToken = function () {
   this.passwordResetExpired = Date.now() + 10 * 60 * 1000;
 
   return resetToken;
+};
+
+userSchema.methods.createVerifyEmailToken = function () {
+  const verifyEmailToken = crypto.randomBytes(6).toString('hex');
+
+  this.verifyEmailToken = crypto
+    .createHash('sha256')
+    .update(verifyEmailToken)
+    .digest('hex');
+
+  this.verifyEmailExpired = Date.now() + 10 * 60 * 1000;
+
+  return verifyEmailToken;
 };
 const User = mongoose.model('User', userSchema);
 module.exports = User;

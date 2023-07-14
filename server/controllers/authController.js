@@ -80,9 +80,72 @@ exports.signup = catchAsync(async (req, res, next) => {
     }
     user.city = [city._id];
   }
-
   const newUser = await Object.create(user);
-  createAndSendToken(newUser, 201, req, res);
+
+  const emailToken = newUser.createVerifyEmailToken();
+  const finalUser = await newUser.save();
+
+  try {
+    const URL = `${req.protocol}://${req.get(
+      'host'
+    )}/api/v1/user/verify-email/${emailToken}`;
+
+    await new Email(finalUser, URL).sendWelcome();
+  } catch (error) {
+    finalUser.verifyEmailToken = undefined;
+    finalUser.verifyEmailExpired = undefined;
+    await finalUser.save();
+    return next(new AppError('Send email fail! Please try again.', 500));
+  }
+  createAndSendToken(finalUser, 201, req, res);
+});
+
+exports.verifyEmail = catchAsync(async (req, res, next) => {
+  //Get token
+  const hashToken = crypto
+    .createHash('sha256')
+    .update(req.params.token)
+    .digest('hex');
+
+  const user = await User.findOne({
+    verifyEmailToken: hashToken,
+    verifyEmailExpired: { $gt: Date.now() },
+  });
+  //If not expired and there is user => set password
+  if (!user)  return next(new AppError('Token is invalid or expired', 400));
+
+  user.isVerified = true;
+  user.verifyEmailToken = undefined;
+  user.verifyEmailExpired = undefined;
+
+  await user.save();
+  res.status(200).json({
+    status: 'success',
+  });
+});
+
+exports.generateVerifyEmailToken = catchAsync(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+  const emailToken = user.createVerifyEmailToken();
+  await user.save();
+
+  try {
+    const URL = `${req.protocol}://${req.get(
+      'host'
+    )}/api/v1/user/verify-email/${emailToken}`;
+
+    await new Email(user, URL).sendWelcome();
+  } catch (error) {
+    user.verifyEmailToken = undefined;
+    user.verifyEmailExpired = undefined;
+    await user.save();
+    return next(new AppError('Send email fail! Please try again.', 500));
+  }
+  await user.save();
+  res.status(200).json({
+    status: 'success',
+    message: 'Token send to email',
+  });
 });
 
 exports.login = catchAsync(async (req, res, next) => {
