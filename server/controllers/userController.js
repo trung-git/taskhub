@@ -164,7 +164,6 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   if (req.body.password) {
     return next(new AppError('This route is not for password updates', 400));
   }
-  console.log(__dirname);
   const Object = getObjectModel(req.user.role);
   const user = await Object.findById(req.user._id);
 
