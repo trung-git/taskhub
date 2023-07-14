@@ -44,7 +44,9 @@ const createPost = catchAsync(async (req, res, next) => {
       const uploadedFiles = [];
       for (let i = 0; i < req.files.photo.length; i++) {
         const file = req.files.photo[i];
-        const result = await cloudinary.uploader.upload(file.tempFilePath, {folder: 'postImages'});
+        const result = await cloudinary.uploader.upload(file.tempFilePath, {
+          folder: 'postImages',
+        });
         uploadedFiles.push(result.url);
       }
       photo = uploadedFiles;
@@ -72,10 +74,32 @@ const registerPostCandidate = catchAsync(async (req, res, next) => {
   if (!post) {
     return next(new AppError('Post not found'));
   }
-
-  post.candidate.push({
+  const candidate = post.candidate.filter((v) => {
+    return String(v.user) !== String(req.user._id);
+  });
+  candidate.push({
     user: req.user._id,
     text: req.body.text,
+    price: req.body.price,
+  });
+
+  post.candidate = candidate;
+
+  const updatedPost = await post.save();
+  return res.status(200).json({
+    status: 'success',
+    data: updatedPost,
+  });
+});
+
+const unRegisterPostCandidate = catchAsync(async (req, res, next) => {
+  const post = await Post.findById(req.params.postId);
+
+  if (!post) {
+    return next(new AppError('Post not found'));
+  }
+  post.candidate = post.candidate.filter((v) => {
+    return String(v.user) !== String(req.user._id);
   });
 
   const updatedPost = await post.save();
@@ -85,4 +109,10 @@ const registerPostCandidate = catchAsync(async (req, res, next) => {
   });
 });
 
-module.exports = { getPosts, getPostById, createPost, registerPostCandidate };
+module.exports = {
+  getPosts,
+  getPostById,
+  createPost,
+  registerPostCandidate,
+  unRegisterPostCandidate,
+};

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authController = require('./../controllers/authController');
 const userController = require('./../controllers/userController');
-const { registerPostCandidate } = require('../controllers/postController');
+const postController = require('../controllers/postController');
 
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
@@ -21,6 +21,11 @@ router.post('/update-password', authController.updatePassword);
 router.patch(
   '/register-post-candidate/:postId',
   authController.restrictTo('Tasker'),
-  registerPostCandidate
+  postController.registerPostCandidate
+);
+router.patch(
+  '/unregister-post-candidate/:postId',
+  authController.restrictTo('Tasker'),
+  postController.unRegisterPostCandidate
 );
 module.exports = router;
