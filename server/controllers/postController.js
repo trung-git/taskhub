@@ -1,4 +1,5 @@
 const Post = require('../models/postModel');
+const TaskTag = require('../models/taskTagModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const cloudinary = require('../utils/cloudinary');
@@ -34,6 +35,12 @@ const getPostById = catchAsync(async (req, res, next) => {
 const createPost = catchAsync(async (req, res, next) => {
   const user = req.user._id;
   const text = req.body.text;
+  
+  const taskTag = await TaskTag.findById(req.body.taskTag);
+  if (!taskTag) {
+    return next(new AppError('Invalid Task tag'));
+  }
+
   let photo = undefined;
   if (req.files && req?.files?.photo) {
     const validateResult = imageValidate(req.files.photo);
@@ -60,6 +67,7 @@ const createPost = catchAsync(async (req, res, next) => {
     user,
     text,
     photo,
+    taskTag: taskTag._id,
   });
 
   return res.status(200).json({

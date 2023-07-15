@@ -3,6 +3,9 @@ const bcrypt = require('bcryptjs');
 
 const taskers = [
   {
+    _id: mongoose.Types.ObjectId.createFromHexString(
+      '64b253f56dc6525e4693f475'
+    ),
     username: 'trunghuynh',
     firstName: 'Trung',
     lastName: 'Huynh',
