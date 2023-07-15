@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const postSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.ObjectId,
-    ref: 'Finder',
+    ref: 'User',
     required: [true, 'Candidate can not empty!'],
   },
   text: {
@@ -28,6 +28,12 @@ const postSchema = new mongoose.Schema({
     },
   ],
 });
-
+postSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'user',
+    select: '-__v -updatedAt -createdAt -password',
+  });
+  next();
+});
 const Post = mongoose.model('Post', postSchema);
 module.exports = Post;
