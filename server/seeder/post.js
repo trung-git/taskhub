@@ -6,19 +6,28 @@ const posts = [
       '64ae6134734cef8f2296cac8'
     ),
     user: mongoose.Types.ObjectId.createFromHexString(
-      '64a0163810f4179aa8f4c7b3'
+      '64a02850c21039353808b262'
     ),
     taskTag: mongoose.Types.ObjectId.createFromHexString(
       '64a0163810f4179aa8f4c7b3'
     ),
     text: 'Aliquip Lorem laboris et anim ipsum tempor. Proident ex non cillum nisi nisi tempor velit nulla reprehenderit sit sint quis. Nisi eu deserunt aliquip ea sunt mollit. Proident cupidatat sint ad esse eu voluptate. Ut dolor proident nulla proident duis. Proident ea laboris deserunt quis. Aliquip cupidatat cillum velit irure.',
-    candidate: [{
-      user: mongoose.Types.ObjectId.createFromHexString(
-        '64b253f56dc6525e4693f475'
-      ),
-      text: 'abc',
-      price: 100
-    }]
+    candidate: [
+      {
+        user: mongoose.Types.ObjectId.createFromHexString(
+          '64b25c28e5533a086228f4e7'
+        ),
+        text: 'abc',
+        price: 100,
+      },
+      {
+        user: mongoose.Types.ObjectId.createFromHexString(
+          '64b253f56dc6525e4693f475'
+        ),
+        text: 'a1111bc',
+        price: 2,
+      },
+    ],
   },
   {
     _id: mongoose.Types.ObjectId.createFromHexString(
@@ -31,6 +40,15 @@ const posts = [
       '64a0163810f4179aa8f4c7b3'
     ),
     text: 'Aliquip Lorem laboris et anim ipsum tempor. Proident ex non cillum nisi nisi tempor velit nulla reprehenderit sit sint quis. Nisi eu deserunt aliquip ea sunt mollit. Proident cupidatat sint ad esse eu voluptate. Ut dolor proident nulla proident duis. Proident ea laboris deserunt quis. Aliquip cupidatat cillum velit irure.',
+    candidate: [
+      {
+        user: mongoose.Types.ObjectId.createFromHexString(
+          '64b25c28e5533a086228f4e7'
+        ),
+        text: 'abc',
+        price: 100,
+      },
+    ],
   },
   {
     _id: mongoose.Types.ObjectId.createFromHexString(

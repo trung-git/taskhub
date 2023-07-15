@@ -9,14 +9,26 @@ const getPosts = catchAsync(async (req, res, next) => {
   const pageNum = Number(req.query.pageNum) || 1;
   const recordsPerPage = Number(process.env.RECORDS_PER_PAGE);
 
-  const posts = await Post.find()
+  let findCondition =
+    req.user.role === 'Finder'
+      ? { user: req.user._id }
+      : {
+          taskTag: {
+            $in: req.user.taskTag.map((v) => {
+              return v.taskInfo;
+            }),
+          },
+        };
+
+  const posts = await Post.find(findCondition)
     .skip(recordsPerPage * (pageNum - 1))
     .limit(recordsPerPage);
-
+  const count = await Post.countDocuments(findCondition);
   return res.status(200).json({
     status: 'success',
     data: posts,
     recordsPerPage,
+    totalPage: Math.ceil(count / recordsPerPage),
     pageNum,
   });
 });
@@ -35,7 +47,7 @@ const getPostById = catchAsync(async (req, res, next) => {
 const createPost = catchAsync(async (req, res, next) => {
   const user = req.user._id;
   const text = req.body.text;
-  
+
   const taskTag = await TaskTag.findById(req.body.taskTag);
   if (!taskTag) {
     return next(new AppError('Invalid Task tag'));

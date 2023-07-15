@@ -79,6 +79,9 @@ const taskers = [
     isVerified: true,
   },
   {
+    _id: mongoose.Types.ObjectId.createFromHexString(
+      '64b25c28e5533a086228f4e7'
+    ),
     username: 'bao1',
     firstName: 'Bao',
     lastName: 'Nguyen',
