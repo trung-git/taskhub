@@ -28,6 +28,7 @@ const userRouter = require('./routes/userRoutes.js');
 const taskTagRouter = require('./routes/taskTagRoutes.js');
 const areaRouter = require('./routes/areaRoutes.js');
 const postRouter = require('./routes/postRoutes.js');
+const chatRouter = require('./routes/chatRoutes.js');
 
 // Utils
 const globalErrorHandler = require('./controllers/errorController');
@@ -40,6 +41,7 @@ app.use('/api/v1/user', userRouter);
 app.use('/api/v1/task-tag', taskTagRouter);
 app.use('/api/v1/area', areaRouter);
 app.use('/api/v1/post', postRouter);
+app.use('/api/v1/chat', chatRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Not found ${req.originalUrl}`, 404));

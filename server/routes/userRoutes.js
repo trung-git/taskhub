@@ -3,6 +3,7 @@ const router = express.Router();
 const authController = require('./../controllers/authController');
 const userController = require('./../controllers/userController');
 const postController = require('../controllers/postController');
+const chatController = require('../controllers/chatController');
 
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
@@ -18,7 +19,13 @@ router.get('/me', userController.getMe);
 router.post('/update-profile', userController.updateMe);
 router.post('/update-password', authController.updatePassword);
 router.post('/verify-email/:token', authController.verifyEmail);
-router.post('/generate-verify-email-token', authController.generateVerifyEmailToken);
+router.post(
+  '/generate-verify-email-token',
+  authController.generateVerifyEmailToken
+);
+
+router.post('/create-chat', chatController.createChat);
+router.post('/send-message', chatController.sendMessage);
 
 router.patch(
   '/register-post-candidate/:postId',
