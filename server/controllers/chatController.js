@@ -68,16 +68,18 @@ exports.createChat = catchAsync(async (req, res, next) => {
 });
 
 exports.sendMessage = catchAsync(async (req, res, next) => {
-  const { chatId, userId, message } = req.body;
+  const { chatId, message } = req.body;
+
   const chat = await Chat.findOne({
     _id: chatId,
-    users: { $elemMatch: { $eq: userId } },
+    users: { $elemMatch: { $eq: req.user._id } },
   });
 
   if (!chat) {
     return next(new AppError('Chat not found', 400));
   }
-  const mes = { sender: userId, content: message, createAt: Date.now() };
+
+  const mes = { sender: req.user._id, content: message, createAt: Date.now() };
   chat.messages = [...chat.messages, mes];
   chat.lastMessage = mes;
 
