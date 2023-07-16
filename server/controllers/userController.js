@@ -198,10 +198,10 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     user.workLocation = req.body.workLocation || user.workLocation;
     user.workTime = req.body.workTime || user.workTime;
     user.taskTag = req.body.taskTag || user.taskTag;
-    user.profile.aboutMe = req.body.profile.aboutMe || user.profile.aboutMe;
+    user.profile.aboutMe = req.body.aboutMe || user.profile.aboutMe;
     user.profile.skillAndExperience =
-      req.body.profile.skillAndExperience || user.profile.skillAndExperience;
-    user.profile.vehicle = req.body.profile.vehicle || user.profile.vehicle;
+      req.body.skillAndExperience || user.profile.skillAndExperience;
+    user.profile.vehicle = req.body.vehicle || user.profile.vehicle;
     if (req.files && req?.files?.photo) {
       const validateResult = imageValidate(req.files.photo);
       if (validateResult.error) {
