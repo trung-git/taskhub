@@ -95,7 +95,7 @@ const registerPostCandidate = catchAsync(async (req, res, next) => {
     return next(new AppError('Post not found'));
   }
   const candidate = post.candidate.filter((v) => {
-    return String(v.user) !== String(req.user._id);
+    return String(v.user._id) !== String(req.user._id);
   });
   candidate.push({
     user: req.user._id,
@@ -106,9 +106,11 @@ const registerPostCandidate = catchAsync(async (req, res, next) => {
   post.candidate = candidate;
 
   const updatedPost = await post.save();
+  const finalPost = await updatedPost.populate('candidate.user','-password');
+  
   return res.status(200).json({
     status: 'success',
-    data: updatedPost,
+    data: finalPost,
   });
 });
 
@@ -119,7 +121,7 @@ const unRegisterPostCandidate = catchAsync(async (req, res, next) => {
     return next(new AppError('Post not found'));
   }
   post.candidate = post.candidate.filter((v) => {
-    return String(v.user) !== String(req.user._id);
+    return String(v.user._id) !== String(req.user._id);
   });
 
   const updatedPost = await post.save();
