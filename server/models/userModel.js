@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema(
       validate: [validator.isEmail, '{VALUE} is not a valid email'],
     },
     phoneNumber: {
-      type: Number,
+      type: String,
     },
     gender: {
       type: String,
