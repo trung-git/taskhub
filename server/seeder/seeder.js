@@ -9,6 +9,8 @@ const User = require('../models/userModel');
 const City = require('../models/cityModel');
 const District = require('../models/districtModel');
 const Post = require('../models/postModel');
+const Chat = require('../models/chatModel');
+const Message = require('../models/messageModel');
 
 const taskTagData = require('./taskTag');
 const finderData = require('./finder');
@@ -16,6 +18,7 @@ const reviewData = require('./review');
 const taskerData = require('./tasker');
 const areaData = require('./area');
 const postData = require('./post');
+const { messages: messageData, chats: chatData } = require('./chat');
 
 const importData = async () => {
   try {
@@ -26,6 +29,8 @@ const importData = async () => {
     await City.collection.deleteMany({});
     await District.collection.deleteMany({});
     await Post.collection.deleteMany({});
+    await Message.collection.deleteMany({});
+    await Chat.collection.deleteMany({});
 
     if (process.argv[2] !== '-d') {
       await TaskTag.insertMany(taskTagData);
@@ -35,6 +40,8 @@ const importData = async () => {
       await Review.insertMany(reviewData);
       await Tasker.insertMany(taskerData);
       await Post.insertMany(postData);
+      await Message.insertMany(messageData);
+      await Chat.insertMany(chatData);
 
       console.log('Seeder data imported successfully');
       process.exit();
