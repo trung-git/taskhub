@@ -6,8 +6,12 @@ const { protect } = require('../controllers/authController');
 router.use(protect);
 
 router.get('/', chatController.getChats);
+router.get('/achieved', chatController.getAchievedChats);
 router.get('/:chatId', chatController.getChatById);
 
-router.delete('/:chatId', chatController.deleteChat);
+router.post('/send', chatController.sendMessage);
+router.post('/achieve', chatController.achieveChat);
+
+router.get('/:chatId/messages', chatController.getMessages);
 
 module.exports = router;

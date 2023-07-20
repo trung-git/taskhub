@@ -2,14 +2,14 @@ const mongoose = require('mongoose');
 
 const chatSchema = new mongoose.Schema(
   {
-    chatName: {
-      type: String,
-    },
     users: {
       type: [
         {
-          type: mongoose.Types.ObjectId,
-          ref: 'User',
+          user: { type: mongoose.Types.ObjectId, ref: 'User' },
+          isAchieve: {
+            type: Boolean,
+            default: false,
+          },
         },
       ],
       required: [true, 'Chat box must have users!'],
@@ -20,32 +20,9 @@ const chatSchema = new mongoose.Schema(
         message: () => `Chat box have only 2 users`,
       },
     },
-    messages: [
-      {
-        sender: {
-          type: mongoose.Types.ObjectId,
-          ref: 'User',
-        },
-        content: {
-          type: String,
-        },
-        createAt: {
-          type: Date,
-          default: Date.now(),
-        },
-      },
-    ],
     lastMessage: {
-      sender: {
-        type: mongoose.Types.ObjectId,
-        ref: 'User',
-      },
-      content: {
-        type: String,
-      },
-      createAt: {
-        type: Date,
-      },
+      type: mongoose.Types.ObjectId,
+      ref: 'Message',
     },
   },
   {
