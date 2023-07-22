@@ -1,0 +1,10 @@
+MK_ : hình ảnh để quảng cáo trên web
+TASK_MAIN_ : đại diện cho các công việc phổ biến
+TASK_SUB_ : đại diện cho các công việc còn lại
+
+
+main color: 92E3A9
+
+<a href="https://storyset.com/people">People illustrations by Storyset</a>
+
+https://storyset.com/people
