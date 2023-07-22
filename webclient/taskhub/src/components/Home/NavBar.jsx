@@ -16,46 +16,63 @@ import TaskHubLogo from '../../base/component/TaskHubLogo';
 import { navBarHeight } from '../../base/config';
 import { useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router';
 
-const pages = [
-  {
-    languageKey: 'th_key_navbar_task_feed',
-    onClick: () => {},
-  },
-  {
-    languageKey: 'th_key_navbar_services',
-    onClick: () => {},
-  },
-  {
-    languageKey: 'th_key_navbar_signup_login',
-    onClick: () => {},
-  },
-];
-const pagesSmall = [
-  {
-    languageKey: 'th_key_navbar_task_feed',
-    onClick: () => {},
-  },
-  {
-    languageKey: 'th_key_navbar_services',
-    onClick: () => {},
-  },
-  {
-    languageKey: 'th_key_navbar_signup_login',
-    onClick: () => {},
-  },
-  {
-    languageKey: 'th_key_navbar_becometasker',
-    onClick: () => {},
-  },
-];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function NavBar() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const theme = useTheme();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+  const pages = [
+    {
+      languageKey: 'th_key_navbar_task_feed',
+      onClick: () => {
+        navigate('/signin');
+      },
+    },
+    {
+      languageKey: 'th_key_navbar_services',
+      onClick: () => {
+        navigate('/signin');
+      },
+    },
+    {
+      languageKey: 'th_key_navbar_signup_login',
+      onClick: () => {
+        navigate('/signin');
+      },
+    },
+  ];
+  const pagesSmall = [
+    {
+      languageKey: 'th_key_navbar_task_feed',
+      onClick: () => {
+        navigate('/signin');
+      },
+    },
+    {
+      languageKey: 'th_key_navbar_services',
+      onClick: () => {
+        navigate('/signin');
+      },
+    },
+    {
+      languageKey: 'th_key_navbar_signup_login',
+      onClick: () => {
+        navigate('/signin');
+      },
+    },
+    {
+      languageKey: 'th_key_navbar_becometasker',
+      onClick: () => {
+        navigate('/signin');
+      },
+    },
+  ];
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -121,7 +138,7 @@ function NavBar() {
               }}
             >
               {pagesSmall.map((page, index) => (
-                <MenuItem key={index} onClick={handleCloseNavMenu}>
+                <MenuItem key={index} onClick={page.onClick}>
                   <Typography
                     color={'green'}
                     textAlign="center"
@@ -143,7 +160,7 @@ function NavBar() {
             {pages.map((page, index) => (
               <Button
                 key={index}
-                onClick={handleCloseNavMenu}
+                onClick={page.onClick}
                 sx={{
                   my: 2,
                   color: 'green',

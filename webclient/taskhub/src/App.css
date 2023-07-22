@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+.custom-box {
+  background-image: url("../src/assets/img/homebackground.jpg");
+  background-position: center;
+  width: 100%;
+  height: 500px;
+  background-size: cover;
+}
