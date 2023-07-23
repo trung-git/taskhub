@@ -17,10 +17,14 @@ import { navBarHeight } from '../../base/config';
 import { useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
+import { AccountCircle } from '@mui/icons-material';
+import LogoutIcon from '@mui/icons-material/Logout';
+import MessageIcon from '@mui/icons-material/Message';
+import LanguageSwitch from '../../base/component/LanguageSwitch';
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-function NavBar() {
+function NavBar({ isLogin = true }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const theme = useTheme();
@@ -88,10 +92,19 @@ function NavBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <AppBar
-      position="static"
+      position="sticky"
       sx={{
         height: navBarHeight,
         bgcolor: 'background.default',
@@ -150,6 +163,7 @@ function NavBar() {
               ))}
             </Menu>
           </Box>
+
           <Box
             sx={{
               flexGrow: 1,
@@ -157,28 +171,84 @@ function NavBar() {
               justifyContent: 'flex-end',
             }}
           >
-            {pages.map((page, index) => (
-              <Button
-                key={index}
-                onClick={page.onClick}
-                sx={{
-                  my: 2,
-                  color: 'green',
-                  display: 'block',
-                  textTransform: 'none',
-                }}
-              >
-                {t(page.languageKey)}
-              </Button>
-            ))}
+            {pages.map((page, index) =>
+              isLogin &&
+              page.languageKey === 'th_key_navbar_signup_login' ? null : (
+                <Button
+                  key={index}
+                  onClick={page.onClick}
+                  sx={{
+                    my: 2,
+                    color: 'green',
+                    display: 'block',
+                    textTransform: 'none',
+                  }}
+                >
+                  {t(page.languageKey)}
+                </Button>
+              )
+            )}
           </Box>
-          <Button
-            variant="contained"
-            color="success"
-            sx={{ display: { xs: 'none', md: 'block' } }}
-          >
-            {t('th_key_navbar_becometasker')}
-          </Button>
+          {isLogin && (
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={() => navigate('/chat')}
+              color="success"
+            >
+              <MessageIcon />
+            </IconButton>
+          )}
+          {!isLogin && (
+            <Button
+              variant="contained"
+              color="success"
+              sx={{ display: { xs: 'none', md: 'block' } }}
+            >
+              {t('th_key_navbar_becometasker')}
+            </Button>
+          )}
+          {isLogin && (
+            <div>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="success"
+              >
+                <AccountCircle />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose}>Thông tin cá nhân</MenuItem>
+                <MenuItem onClick={handleClose}>Quản lý công việc</MenuItem>
+                <MenuItem onClick={handleClose}>
+                  <Typography color={'error'} sx={{ mr: 1 }}>
+                    {t('Đăng xuất')}
+                  </Typography>
+                  <LogoutIcon color="error" fontSize="small" />
+                </MenuItem>
+              </Menu>
+            </div>
+          )}
+          <LanguageSwitch />
         </Toolbar>
       </Container>
     </AppBar>

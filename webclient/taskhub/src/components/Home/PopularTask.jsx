@@ -98,15 +98,27 @@ const PopularTask = () => {
   ];
 
   return (
-    <Box sx={{ mt: 2 }}>
+    <Box sx={{ my: 6 }}>
       <Container maxWidth="xl">
-        <Typography gutterBottom variant="h4" component="div">
-          {t('Các công việc phổ biến')}
-        </Typography>
+        <Stack
+          justifyContent={'flex-start'}
+          alignItems={'center'}
+          sx={{ width: '100%' }}
+          direction={'row'}
+        >
+          <Typography
+            gutterBottom
+            variant="h4"
+            component="div"
+            sx={{ fontWeight: 600, mb: 2 }}
+          >
+            {t('th_key_home_popular_task')}
+          </Typography>
+        </Stack>
         <Grid container spacing={3}>
           {taskTag?.map((tag) => {
             return (
-              <Grid item xs={3}>
+              <Grid item xs={3} key={tag._id}>
                 <Card>
                   <CardMedia
                     sx={{ height: 200, backgroundSize: 'contain' }}
@@ -125,7 +137,8 @@ const PopularTask = () => {
                     >
                       <SellOutlinedIcon />
                       <Typography variant="body2" color="text.secondary">
-                        {t('Giá trung bình: ')}{' '}
+                        {t('th_key_home_avg_price')}
+                        {': '}
                         {(tag?.avgPrice[0] * 23000).toLocaleString('vi')}-
                         {(tag?.avgPrice[1] * 23000).toLocaleString('vi')} VND
                       </Typography>

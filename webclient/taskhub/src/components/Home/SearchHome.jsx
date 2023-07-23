@@ -14,15 +14,10 @@ import axios from 'axios';
 
 const SearchHome = () => {
   const { t } = useTranslation();
-  const [selectedValue, setSelectedValue] = useState('');
+  const [selectedValue, setSelectedValue] = useState(null);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
-
-  //   useEffect(() => {
-  //     if (value) {
-  //       setSelectedValue(value)
-  //     }
-  //   }, [value])
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchData();
@@ -46,6 +41,17 @@ const SearchHome = () => {
     }
   };
 
+  const handleValueChange = (event, selected, reason) => {
+    let newItem = selected;
+
+    console.log('newItem', newItem);
+
+    setSelectedValue(newItem);
+
+    //callback
+    // onChange && onChange(newItem);
+  };
+
   return (
     <Box
       className="custom-box"
@@ -57,11 +63,13 @@ const SearchHome = () => {
           height: 300,
           backgroundColor: '#fff',
           borderRadius: 3,
+          display: 'flex',
+          alignItems: 'center',
         }}
       >
-        <Stack direction={'column'}>
-          <Typography sx={{ fontSize: 32, fontWeight: 600, mt: 2 }}>
-            {t('Bạn cần giúp đỡ gì ?')}
+        <Stack direction={'column'} spacing={2} sx={{ width: '100%' }}>
+          <Typography sx={{ fontSize: 32, fontWeight: 600 }}>
+            {t('th_key_home_help_search_title')}
           </Typography>
           <Stack direction={'row'} spacing={1} sx={{ px: 2 }}>
             <Autocomplete
@@ -74,21 +82,29 @@ const SearchHome = () => {
                   value: task?._id,
                 };
               })}
+              value={selectedValue}
               sx={{}}
               renderInput={(params) => (
                 <TextField
-                  placeholder="Chọn công việc bạn cần giúp đỡ"
+                  placeholder={t('th_key_home_help_search_place_holder')}
                   {...params}
                 />
               )}
+              color="success"
+              onChange={handleValueChange}
             />
             <Button
               color="success"
               sx={{ width: 280 }}
               size="large"
               variant="contained"
+              onClick={() =>
+                selectedValue
+                  ? navigate(`/find/${selectedValue?.value}`)
+                  : undefined
+              }
             >
-              {t('Tìm giúp đỡ ngay')}
+              {t('th_key_home_finding_now')}
             </Button>
           </Stack>
         </Stack>
