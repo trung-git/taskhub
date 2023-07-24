@@ -8,4 +8,6 @@ router
   .get(taskTagController.getTaskTags)
   .post(protect, taskTagController.createTaskTag);
 
+router.get('/:taskTagId', taskTagController.getTaskTagById);
+
 module.exports = router;
