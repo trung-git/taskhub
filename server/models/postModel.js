@@ -10,7 +10,7 @@ const postSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Text content of post can not empty!'],
     },
-    photo: [String],
+    photos: [String],
     taskTag: {
       type: mongoose.Schema.ObjectId,
       ref: 'Task Tag',

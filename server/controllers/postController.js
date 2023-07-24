@@ -53,22 +53,22 @@ const createPost = catchAsync(async (req, res, next) => {
     return next(new AppError('Invalid Task tag'));
   }
 
-  let photo = undefined;
-  if (req.files && req?.files?.photo) {
-    const validateResult = imageValidate(req.files.photo);
+  let photos = undefined;
+  if (req.files && req?.files?.photos) {
+    const validateResult = imageValidate(req.files.photos);
     if (validateResult.error) {
       return next(new AppError(validateResult.error));
     }
     try {
       const uploadedFiles = [];
-      for (let i = 0; i < req.files.photo.length; i++) {
-        const file = req.files.photo[i];
+      for (let i = 0; i < req.files.photos.length; i++) {
+        const file = req.files.photos[i];
         const result = await cloudinary.uploader.upload(file.tempFilePath, {
           folder: 'postImages',
         });
         uploadedFiles.push(result.url);
       }
-      photo = uploadedFiles;
+      photos = uploadedFiles;
     } catch (error) {
       console.error(error);
       return next(new AppError('Failed to upload files.'));
@@ -78,7 +78,7 @@ const createPost = catchAsync(async (req, res, next) => {
   const newPost = await Post.create({
     user,
     text,
-    photo,
+    photos,
     taskTag: taskTag._id,
   });
 
