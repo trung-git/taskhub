@@ -25,6 +25,11 @@ const resources = {
       th_key_home_popular_task: 'Popular task',
       th_key_home_finding_now: 'Get help',
       th_key_home_avg_price: 'AVG Price',
+      //
+      th_key_finding_step_describe: 'Describe your task',
+      th_key_finding_step_taskerlist: 'Browse Taskers & prices',
+      th_key_finding_step_choosingdate: 'Choose date & time',
+      th_key_finding_step_booking: 'Booking',
     },
   },
   vi: {
@@ -45,6 +50,11 @@ const resources = {
       th_key_home_popular_task: 'Các công việc phổ biến',
       th_key_home_finding_now: 'Tìm ngay',
       th_key_home_avg_price: 'Giá trung bình',
+      //
+      th_key_finding_step_describe: 'Mô tả công việc',
+      th_key_finding_step_taskerlist: 'Duyệt người nhận việc',
+      th_key_finding_step_choosingdate: 'Chọn thời gian',
+      th_key_finding_step_booking: 'Đặt lịch',
     },
   },
 };

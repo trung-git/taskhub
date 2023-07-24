@@ -111,7 +111,7 @@ function NavBar({ isLogin = true }) {
         color: 'text.primary',
       }}
     >
-      <Container maxWidth="xl" sx={{ height: '100%' }}>
+      <Container maxWidth="lg" sx={{ height: '100%' }}>
         <Toolbar disableGutters sx={{ height: '100%' }}>
           <TaskHubLogo />
 

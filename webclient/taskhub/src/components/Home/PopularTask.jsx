@@ -99,7 +99,7 @@ const PopularTask = () => {
 
   return (
     <Box sx={{ my: 6 }}>
-      <Container maxWidth="xl">
+      <Container maxWidth="lg">
         <Stack
           justifyContent={'flex-start'}
           alignItems={'center'}
