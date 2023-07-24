@@ -36,18 +36,18 @@ const taskerSchema = new mongoose.Schema(
         ref: 'Review',
       },
     ],
-    profile: {
-      aboutMe: {
-        type: String,
-      },
-      skillAndExperience: {
-        type: String,
-      },
-      photo: [{ type: String }],
-      vehicle: {
-        type: String,
-      },
+
+    aboutMe: {
+      type: String,
     },
+    skillAndExperience: {
+      type: String,
+    },
+    photos: [{ type: String }],
+    vehicle: {
+      type: String,
+    },
+
     contracts: [
       {
         type: mongoose.Schema.ObjectId,
@@ -61,7 +61,7 @@ const taskerSchema = new mongoose.Schema(
   baseOptions
 );
 
-taskerSchema.pre('save', async function(next) {
+taskerSchema.pre('save', async function (next) {
   const reviewIds = this.reviews; // Mảng các reference id
   const reviews = await Review.find({ _id: { $in: reviewIds } });
   const total = reviews.reduce((sum, review) => sum + review.rating, 0);

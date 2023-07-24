@@ -55,7 +55,10 @@ exports.getTaskers = catchAsync(async (req, res, next) => {
         city: 1,
         workLocation: 1,
         workTime: 1,
-        profile: 1,
+        aboutMe: 1,
+        skillAndExperience: 1,
+        photos: 1,
+        vehicle: 1,
         contracts: 1,
         averageRating: 1,
         taskInfo: {
@@ -198,23 +201,23 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     user.workLocation = req.body.workLocation || user.workLocation;
     user.workTime = req.body.workTime || user.workTime;
     user.taskTag = req.body.taskTag || user.taskTag;
-    user.profile.aboutMe = req.body.aboutMe || user.profile.aboutMe;
-    user.profile.skillAndExperience =
-      req.body.skillAndExperience || user.profile.skillAndExperience;
-    user.profile.vehicle = req.body.vehicle || user.profile.vehicle;
-    if (req.files && req?.files?.photo) {
-      const validateResult = imageValidate(req.files.photo);
+    user.aboutMe = req.body.aboutMe || user.aboutMe;
+    user.skillAndExperience =
+      req.body.skillAndExperience || user.skillAndExperience;
+    user.vehicle = req.body.vehicle || user.vehicle;
+    if (req.files && req?.files?.photos) {
+      const validateResult = imageValidate(req.files.photos);
       if (validateResult.error) {
         return next(new AppError(validateResult.error));
       }
       try {
         const uploadedFiles = [];
-        for (let i = 0; i < req.files.photo.length; i++) {
-          const file = req.files.photo[i];
+        for (let i = 0; i < req.files.photos.length; i++) {
+          const file = req.files.photos[i];
           const result = await cloudinary.uploader.upload(file.tempFilePath, {folder: 'profileImages'});
           uploadedFiles.push(result.url);
         }
-        user.profile.photo = uploadedFiles;
+        user.photos = uploadedFiles;
       } catch (error) {
         console.error(error);
         return next(new AppError('Failed to upload files.'));
