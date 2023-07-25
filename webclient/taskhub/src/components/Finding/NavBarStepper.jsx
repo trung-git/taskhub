@@ -46,7 +46,7 @@ function NavBarStepper({ curStep }) {
       setActiveStep(curStep);
       let newComplete = completed;
       Object.keys(newComplete).forEach((step) => {
-        newComplete[step] = step < activeStep ? true : false;
+        newComplete[step] = step < curStep ? true : false;
       });
       setCompleted(newComplete);
     }
@@ -63,7 +63,7 @@ function NavBarStepper({ curStep }) {
         color: 'text.primary',
       }}
     >
-      <Container maxWidth="xl" sx={{ height: '100%' }}>
+      <Container maxWidth="lg" sx={{ height: '100%' }}>
         <Toolbar disableGutters sx={{ height: '100%' }}>
           <TaskHubLogo />
 
@@ -81,6 +81,11 @@ function NavBarStepper({ curStep }) {
                 },
                 '& .MuiStepLabel-label.Mui-active': {
                   color: 'green',
+                  fontWeight: 600,
+                },
+                '& .MuiStepLabel-label.Mui-completed': {
+                  color: 'green',
+                  fontWeight: 600,
                 },
                 '.MuiSvgIcon-root.Mui-active': {
                   color: 'green',

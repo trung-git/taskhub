@@ -30,6 +30,11 @@ const resources = {
       th_key_finding_step_taskerlist: 'Browse Taskers & prices',
       th_key_finding_step_choosingdate: 'Choose date & time',
       th_key_finding_step_booking: 'Booking',
+      th_key_city: '',
+      th_key_capital: '',
+      th_key_select_city: 'Select City',
+      th_key_district_type1: 'District',
+      th_key_district_type2: 'District',
     },
   },
   vi: {
@@ -55,6 +60,11 @@ const resources = {
       th_key_finding_step_taskerlist: 'Duyệt người nhận việc',
       th_key_finding_step_choosingdate: 'Chọn thời gian',
       th_key_finding_step_booking: 'Đặt lịch',
+      th_key_city: 'Thành Phố',
+      th_key_capital: '',
+      th_key_select_city: 'Chọn thành phố',
+      th_key_district_type1: 'Quận',
+      th_key_district_type2: 'Huyện',
     },
   },
 };
