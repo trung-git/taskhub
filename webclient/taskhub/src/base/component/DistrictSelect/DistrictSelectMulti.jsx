@@ -3,8 +3,8 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-const DistrictSelect = ({ cityId, onChange, value }) => {
-  const [selectedValue, setSelectedValue] = useState(value);
+const DistrictSelectMulti = ({ cityId, onChange, value }) => {
+  const [selectedValue, setSelectedValue] = useState([]);
   const [loading, setLoading] = useState(false);
   const [district, setDistrict] = useState([]);
   const { t } = useTranslation();
@@ -15,7 +15,7 @@ const DistrictSelect = ({ cityId, onChange, value }) => {
     if (value) {
       setSelectedValue(value);
     } else {
-      setSelectedValue('');
+      setSelectedValue([]);
     }
   }, [value]);
 
@@ -53,13 +53,20 @@ const DistrictSelect = ({ cityId, onChange, value }) => {
   // };
 
   const handleValueChange = (event) => {
-    setSelectedValue(event.target.value);
-    console.log('handleValueChange', event.target.value);
-    onChange && onChange(event.target.value);
+    const {
+      target: { value },
+    } = event;
+    setSelectedValue(typeof value === 'string' ? value.split(',') : value);
+    console.log(
+      'handleValueChange',
+      typeof value === 'string' ? value.split(',') : value
+    );
+    onChange && onChange(typeof value === 'string' ? value.split(',') : value);
   };
 
   return (
     <Select
+      size="small"
       labelId="demo-simple-select-label"
       id="demo-simple-select"
       value={selectedValue}
@@ -67,6 +74,7 @@ const DistrictSelect = ({ cityId, onChange, value }) => {
       onChange={handleValueChange}
       fullWidth
       disabled={loading}
+      multiple
     >
       {district?.length > 0 &&
         district?.map((item) => {
@@ -80,4 +88,4 @@ const DistrictSelect = ({ cityId, onChange, value }) => {
   );
 };
 
-export default DistrictSelect;
+export default DistrictSelectMulti;

@@ -5,7 +5,7 @@ import SignInSide from './components/SignIn';
 import SignUp from './components/SignUp';
 import Home from './components/Home';
 import Scrolltop from './components/Scrolltop';
-import { Box } from '@mui/material';
+import { Box, CssBaseline } from '@mui/material';
 import { LoginContext } from './provider/LoginContext';
 import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import { I18nextProvider } from 'react-i18next';
@@ -43,6 +43,7 @@ function App() {
   return (
     <MuiThemeProvider theme={darkTheme}>
       <I18nextProvider i18n={i18n}>
+        <CssBaseline />
         <Box className="App">
           {/* <Navbar/> */}
           {/* <NavBar isLogin={isLogin} /> */}

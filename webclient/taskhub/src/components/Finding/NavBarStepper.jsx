@@ -50,9 +50,9 @@ function NavBarStepper({ curStep }) {
       });
       setCompleted(newComplete);
     }
-  }, [curStep]);
+  }, [curStep, completed]);
 
-  console.log('completed', completed);
+  console.log('curStep', curStep);
 
   return (
     <AppBar
