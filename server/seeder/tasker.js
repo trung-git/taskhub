@@ -28,37 +28,37 @@ const taskers = [
     ],
     workTime: [
       {
-        date: '',
+        index: '01',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '02',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '03',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '04',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '05',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '06',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '07',
         start: '08:00',
         end: '17:00',
       },
@@ -70,7 +70,17 @@ const taskers = [
       'Ex tempor exercitation aliqua eiusmod. Sint exercitation exercitation Lorem velit labore proident Lorem quis fugiat. Velit Lorem consequat laboris adipisicing ex ut aliqua ut et et qui. Sint cillum cupidatat non proident do in esse amet ex ullamco id cillum deserunt. Esse velit irure sint veniam mollit aute aliqua eu aliquip Lorem ad. Consectetur velit consectetur fugiat amet pariatur eiusmod.',
     skillAndExperience:
       'Magna dolor officia consequat cupidatat nostrud. In proident ex irure reprehenderit do adipisicing sunt ullamco mollit proident dolor voluptate elit. Eu adipisicing elit enim elit nulla laborum. Mollit fugiat consectetur cillum elit nisi cupidatat occaecat. Ea deserunt exercitation laborum enim aute et aliqua aliqua adipisicing incididunt est laboris. Incididunt est et proident excepteur reprehenderit eiusmod proident laboris consequat anim sint mollit consectetur. Ipsum tempor id aliquip magna ad non pariatur qui Lorem quis cupidatat consequat enim.',
-    photos: [],
+    photos: [
+      'https://burst.shopifycdn.com/photos/macbook-air-on-desk.jpg?width=1200&format=pjpg&exif=1&iptc=1',
+      'https://images.ctfassets.net/pdf29us7flmy/4JU61ygq6O2SH7JFL4Kmwq/a414c63b49c1a13656cbde5f66597c55/shutterstock_1073291759_optimized__1_.jpeg?w=720&q=100&fm=jpg',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIERfGCshzboAIpO4IHgnYoCrQYfTIDF-z2Q&usqp=CAU',
+      'https://englishlive.ef.com/blog/wp-content/uploads/sites/2/2014/06/work.jpg',
+      'https://www.jobberman.com/discover/wp-content/uploads/2018/05/BlogArticle_images_Passion_For_Work_Sets_Your_Attitude_Straight.png',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSklkvXzvTaVBh2MzYJvpoWfD-LAirbcjaKow&usqp=CAU',
+      'https://www.verywellmind.com/thmb/yLDypwyc3u3RB_V1MAk3gPHDvUM=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Man-multitasking-at-work-97168efba2a54bd9b351ac2b6a7e16f5.jpg',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsRndwQY7mycKJf1TZtWHNP4QhL0pOD9BVQPRP5yWGNLL30vvlda3prDwROHesf0wTUAU&usqp=CAU',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6as1MqQ4FAE7zuVUqqdEGBbZwb4pmkLa9iQ&usqp=CAU',
+    ],
     vehicle: 'Bike',
     averageRating: 5,
     contracts: [],
@@ -102,37 +112,37 @@ const taskers = [
     ],
     workTime: [
       {
-        date: '',
+        index: '01',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '02',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '03',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '04',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '05',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '06',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '07',
         start: '08:00',
         end: '17:00',
       },
@@ -144,7 +154,17 @@ const taskers = [
       'Ex tempor exercitation aliqua eiusmod. Sint exercitation exercitation Lorem velit labore proident Lorem quis fugiat. Velit Lorem consequat laboris adipisicing ex ut aliqua ut et et qui. Sint cillum cupidatat non proident do in esse amet ex ullamco id cillum deserunt. Esse velit irure sint veniam mollit aute aliqua eu aliquip Lorem ad. Consectetur velit consectetur fugiat amet pariatur eiusmod.',
     skillAndExperience:
       'Magna dolor officia consequat cupidatat nostrud. In proident ex irure reprehenderit do adipisicing sunt ullamco mollit proident dolor voluptate elit. Eu adipisicing elit enim elit nulla laborum. Mollit fugiat consectetur cillum elit nisi cupidatat occaecat. Ea deserunt exercitation laborum enim aute et aliqua aliqua adipisicing incididunt est laboris. Incididunt est et proident excepteur reprehenderit eiusmod proident laboris consequat anim sint mollit consectetur. Ipsum tempor id aliquip magna ad non pariatur qui Lorem quis cupidatat consequat enim.',
-    photos: [],
+    photos: [
+      'https://burst.shopifycdn.com/photos/macbook-air-on-desk.jpg?width=1200&format=pjpg&exif=1&iptc=1',
+      'https://images.ctfassets.net/pdf29us7flmy/4JU61ygq6O2SH7JFL4Kmwq/a414c63b49c1a13656cbde5f66597c55/shutterstock_1073291759_optimized__1_.jpeg?w=720&q=100&fm=jpg',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIERfGCshzboAIpO4IHgnYoCrQYfTIDF-z2Q&usqp=CAU',
+      'https://englishlive.ef.com/blog/wp-content/uploads/sites/2/2014/06/work.jpg',
+      'https://www.jobberman.com/discover/wp-content/uploads/2018/05/BlogArticle_images_Passion_For_Work_Sets_Your_Attitude_Straight.png',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSklkvXzvTaVBh2MzYJvpoWfD-LAirbcjaKow&usqp=CAU',
+      'https://www.verywellmind.com/thmb/yLDypwyc3u3RB_V1MAk3gPHDvUM=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Man-multitasking-at-work-97168efba2a54bd9b351ac2b6a7e16f5.jpg',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsRndwQY7mycKJf1TZtWHNP4QhL0pOD9BVQPRP5yWGNLL30vvlda3prDwROHesf0wTUAU&usqp=CAU',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6as1MqQ4FAE7zuVUqqdEGBbZwb4pmkLa9iQ&usqp=CAU',
+    ],
     vehicle: 'Bike',
     averageRating: 5,
     contracts: [],
@@ -173,40 +193,56 @@ const taskers = [
     ],
     workTime: [
       {
-        date: '',
+        index: '01',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '02',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '03',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '04',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '05',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '06',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '07',
         start: '08:00',
         end: '17:00',
       },
+    ],
+    unavailableTime: [
+      {
+        date: '2023-08-08',
+        time: {
+          from : '13:00',
+          to: '15:00'
+        }
+      },
+      {
+        date: '2023-08-14',
+        time: {
+          from : '12:00',
+          to: '13:00'
+        }
+      }
     ],
     reviews: [
       mongoose.Types.ObjectId.createFromHexString('64a029cd505314a289b1c18d'),
@@ -215,7 +251,17 @@ const taskers = [
       'Ex tempor exercitation aliqua eiusmod. Sint exercitation exercitation Lorem velit labore proident Lorem quis fugiat. Velit Lorem consequat laboris adipisicing ex ut aliqua ut et et qui. Sint cillum cupidatat non proident do in esse amet ex ullamco id cillum deserunt. Esse velit irure sint veniam mollit aute aliqua eu aliquip Lorem ad. Consectetur velit consectetur fugiat amet pariatur eiusmod.',
     skillAndExperience:
       'Magna dolor officia consequat cupidatat nostrud. In proident ex irure reprehenderit do adipisicing sunt ullamco mollit proident dolor voluptate elit. Eu adipisicing elit enim elit nulla laborum. Mollit fugiat consectetur cillum elit nisi cupidatat occaecat. Ea deserunt exercitation laborum enim aute et aliqua aliqua adipisicing incididunt est laboris. Incididunt est et proident excepteur reprehenderit eiusmod proident laboris consequat anim sint mollit consectetur. Ipsum tempor id aliquip magna ad non pariatur qui Lorem quis cupidatat consequat enim.',
-    photos: [],
+    photos: [
+      'https://burst.shopifycdn.com/photos/macbook-air-on-desk.jpg?width=1200&format=pjpg&exif=1&iptc=1',
+      'https://images.ctfassets.net/pdf29us7flmy/4JU61ygq6O2SH7JFL4Kmwq/a414c63b49c1a13656cbde5f66597c55/shutterstock_1073291759_optimized__1_.jpeg?w=720&q=100&fm=jpg',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIERfGCshzboAIpO4IHgnYoCrQYfTIDF-z2Q&usqp=CAU',
+      'https://englishlive.ef.com/blog/wp-content/uploads/sites/2/2014/06/work.jpg',
+      'https://www.jobberman.com/discover/wp-content/uploads/2018/05/BlogArticle_images_Passion_For_Work_Sets_Your_Attitude_Straight.png',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSklkvXzvTaVBh2MzYJvpoWfD-LAirbcjaKow&usqp=CAU',
+      'https://www.verywellmind.com/thmb/yLDypwyc3u3RB_V1MAk3gPHDvUM=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Man-multitasking-at-work-97168efba2a54bd9b351ac2b6a7e16f5.jpg',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsRndwQY7mycKJf1TZtWHNP4QhL0pOD9BVQPRP5yWGNLL30vvlda3prDwROHesf0wTUAU&usqp=CAU',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6as1MqQ4FAE7zuVUqqdEGBbZwb4pmkLa9iQ&usqp=CAU',
+    ],
     vehicle: 'Bike',
     averageRating: 4,
     contracts: [],
@@ -244,40 +290,56 @@ const taskers = [
     ],
     workTime: [
       {
-        date: '',
+        index: '01',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '02',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '03',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '04',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '05',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '06',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '07',
         start: '08:00',
         end: '17:00',
       },
+    ],
+    unavailableTime: [
+      {
+        date: '2023-08-11',
+        time: {
+          from : '13:00',
+          to: '15:00'
+        }
+      },
+      {
+        date: '2023-08-15',
+        time: {
+          from : '12:00',
+          to: '13:00'
+        }
+      }
     ],
     reviews: [
       mongoose.Types.ObjectId.createFromHexString('64a029cd505314a289b1c18d'),
@@ -315,37 +377,37 @@ const taskers = [
     ],
     workTime: [
       {
-        date: '',
+        index: '01',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '02',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '03',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '04',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '05',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '06',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '07',
         start: '08:00',
         end: '17:00',
       },
@@ -386,37 +448,37 @@ const taskers = [
     ],
     workTime: [
       {
-        date: '',
+        index: '01',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '02',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '03',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '04',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '05',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '06',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '07',
         start: '08:00',
         end: '17:00',
       },
@@ -463,37 +525,37 @@ const taskers = [
     ],
     workTime: [
       {
-        date: '',
+        index: '01',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '02',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '03',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '04',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '05',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '06',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '07',
         start: '08:00',
         end: '17:00',
       },
@@ -533,37 +595,37 @@ const taskers = [
     ],
     workTime: [
       {
-        date: '',
+        index: '01',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '02',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '03',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '04',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '05',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '06',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '07',
         start: '08:00',
         end: '17:00',
       },
@@ -604,37 +666,37 @@ const taskers = [
     ],
     workTime: [
       {
-        date: '',
+        index: '01',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '02',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '03',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '04',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '05',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '06',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '07',
         start: '08:00',
         end: '17:00',
       },
@@ -675,37 +737,37 @@ const taskers = [
     ],
     workTime: [
       {
-        date: '',
+        index: '01',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '02',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '03',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '04',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '05',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '06',
         start: '08:00',
         end: '17:00',
       },
       {
-        date: '',
+        index: '07',
         start: '08:00',
         end: '17:00',
       },
