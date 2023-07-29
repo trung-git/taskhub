@@ -20,7 +20,7 @@ const taskerSchema = new mongoose.Schema(
     ],
     unavailableTime: [
       {
-        date: String,
+        date: Date,
         time: {
           from: String,
           to: String
