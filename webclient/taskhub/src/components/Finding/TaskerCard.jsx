@@ -4,17 +4,23 @@ import {
   Box,
   Button,
   Grid,
+  ImageList,
+  ImageListItem,
   Modal,
   Rating,
   Stack,
   Typography,
+  useTheme,
 } from '@mui/material';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { useTranslation } from 'react-i18next';
+import { green } from '@mui/material/colors';
+import ImagesSlider from '../../base/component/ImagesSlider';
 
 const TaskerCard = ({ taskerData }) => {
   const [isOpenUserModal, setIsOpenUserModal] = useState(false);
   const { t } = useTranslation();
+  const theme = useTheme();
 
   const handleOpenUserModal = () => setIsOpenUserModal(true);
   const handleCloseUserModal = () => setIsOpenUserModal(false);
@@ -167,9 +173,9 @@ const TaskerCard = ({ taskerData }) => {
               )}`}</Typography>
             </Stack>
             <Stack direction={'row'} marginTop={1}>
-              <Typography
-                sx={{ mr: 0.5 }}
-              >{`(${taskerData?.averageRating})`}</Typography>
+              {/* <Typography sx={{ mr: 0.5 }}>
+                {taskerData?.averageRating}
+              </Typography> */}
               <Rating
                 name="tasker-rating"
                 value={taskerData?.averageRating}
@@ -200,7 +206,7 @@ const TaskerCard = ({ taskerData }) => {
                 mt: 1,
                 alignItems: 'flex-start',
                 p: 3,
-                backgroundColor: '#f0f0f0',
+                backgroundColor: green[100],
                 borderRadius: 2,
               }}
             >
@@ -318,6 +324,22 @@ const TaskerCard = ({ taskerData }) => {
               {taskerData?.skillAndExperience}
             </Typography>
           </Box>
+          {taskerData?.photos?.length > 0 && (
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                mt: 1,
+                alignItems: 'flex-start',
+                width: '100%',
+              }}
+            >
+              <Typography fontSize={18} fontWeight={600}>
+                {t('Work photos')}:
+              </Typography>
+              <ImagesSlider images={taskerData?.photos} />
+            </Box>
+          )}
           <Stack
             direction={'row'}
             alignItems={'center'}

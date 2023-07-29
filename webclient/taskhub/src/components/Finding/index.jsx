@@ -155,7 +155,11 @@ const Finding = (props) => {
           </Stack>
         )}
         {taskData && activeStep === 1 && (
-          <Grid container spacing={2} sx={{ my: 10 }}>
+          <Grid
+            container
+            spacing={2}
+            sx={{ mt: 10, height: 'calc(100vh - 148px)' }}
+          >
             <Grid item xs={4}>
               <Box
                 sx={{
@@ -177,7 +181,9 @@ const Finding = (props) => {
                 <Typography sx={{ fontWeight: 600, my: 0.5 }}>
                   Price:
                 </Typography>
-                <PriceSlider value={price} onChange={setPrice} />
+                <Box sx={{ width: '100%', mt: 2, px: 1 }}>
+                  <PriceSlider value={price} onChange={setPrice} />
+                </Box>
                 <Typography sx={{ fontWeight: 600, my: 0.5 }}>
                   District:
                 </Typography>
@@ -188,8 +194,12 @@ const Finding = (props) => {
                 />
               </Box>
             </Grid>
-            {taskerData?.length > 0 && (
-              <Grid item xs={8}>
+            {taskerData?.length > 0 ? (
+              <Grid
+                item
+                xs={8}
+                sx={{ height: '100%', overflowY: 'scroll', pb: 10 }}
+              >
                 <Stack spacing={2}>
                   {taskerData?.length > 0 &&
                     taskerData?.map((tasker) => {
@@ -211,6 +221,21 @@ const Finding = (props) => {
                     size="large"
                   />
                 </Stack>
+              </Grid>
+            ) : (
+              <Grid item xs={8}>
+                <Grid
+                  container
+                  sx={{
+                    width: '100%',
+                    p: 2,
+                    border: '1px solid #b3b3b3',
+                    borderRadius: 2,
+                    height: 2000,
+                  }}
+                >
+                  <Typography>{t('Không tìm thấy người dùng')}</Typography>
+                </Grid>
               </Grid>
             )}
           </Grid>
