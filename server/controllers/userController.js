@@ -126,22 +126,44 @@ exports.getTaskers = catchAsync(async (req, res, next) => {
     default:
       break;
   }
-
-  const tasker = await Tasker.aggregate([
-    ...aggregatePipeline,
+  const paginationPipeline = [
     {
       $skip: recordsPerPage * (pageNum - 1),
     },
     {
       $limit: recordsPerPage,
     },
+  ];
+  const countPipeline = [
+    {
+      $group: {
+        _id: null,
+        totalRecord: { $sum: 1 },
+      },
+    },
+    {
+      $project: {
+        totalRecord: 1,
+      }
+    }
+  ];
+  const tasker = await Tasker.aggregate([
+    ...aggregatePipeline,
+    ...paginationPipeline,
   ]);
+
+  const count = await Tasker.aggregate([
+    ...aggregatePipeline,
+    ...countPipeline
+  ]);
+  const totalPage = Math.ceil(count[0].totalRecord / recordsPerPage)
 
   res.status(200).json({
     status: 'success',
     data: tasker,
     recordsPerPage,
     pageNum,
+    totalPage
   });
 });
 
