@@ -205,6 +205,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     user.skillAndExperience =
       req.body.skillAndExperience || user.skillAndExperience;
     user.vehicle = req.body.vehicle || user.vehicle;
+    user.unavailableTime = req.body.unavailableTime || user.unavailableTime;
     if (req.files && req?.files?.photos) {
       const validateResult = imageValidate(req.files.photos);
       if (validateResult.error) {

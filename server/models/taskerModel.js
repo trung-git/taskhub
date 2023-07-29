@@ -13,10 +13,19 @@ const taskerSchema = new mongoose.Schema(
     workLocation: [{ type: mongoose.Schema.ObjectId, ref: 'District' }],
     workTime: [
       {
-        date: { type: String },
+        index: { type: String },
         start: { type: String },
         end: { type: String },
       },
+    ],
+    unavailableTime: [
+      {
+        date: String,
+        time: {
+          from: String,
+          to: String
+        }
+      }
     ],
     taskTag: [
       {
