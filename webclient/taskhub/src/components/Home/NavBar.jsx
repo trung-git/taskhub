@@ -16,46 +16,67 @@ import TaskHubLogo from '../../base/component/TaskHubLogo';
 import { navBarHeight } from '../../base/config';
 import { useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router';
+import { AccountCircle } from '@mui/icons-material';
+import LogoutIcon from '@mui/icons-material/Logout';
+import MessageIcon from '@mui/icons-material/Message';
+import LanguageSwitch from '../../base/component/LanguageSwitch';
 
-const pages = [
-  {
-    languageKey: 'th_key_navbar_task_feed',
-    onClick: () => {},
-  },
-  {
-    languageKey: 'th_key_navbar_services',
-    onClick: () => {},
-  },
-  {
-    languageKey: 'th_key_navbar_signup_login',
-    onClick: () => {},
-  },
-];
-const pagesSmall = [
-  {
-    languageKey: 'th_key_navbar_task_feed',
-    onClick: () => {},
-  },
-  {
-    languageKey: 'th_key_navbar_services',
-    onClick: () => {},
-  },
-  {
-    languageKey: 'th_key_navbar_signup_login',
-    onClick: () => {},
-  },
-  {
-    languageKey: 'th_key_navbar_becometasker',
-    onClick: () => {},
-  },
-];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-function NavBar() {
+function NavBar({ isLogin = true }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const theme = useTheme();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+  const pages = [
+    {
+      languageKey: 'th_key_navbar_task_feed',
+      onClick: () => {
+        navigate('/signin');
+      },
+    },
+    {
+      languageKey: 'th_key_navbar_services',
+      onClick: () => {
+        navigate('/signin');
+      },
+    },
+    {
+      languageKey: 'th_key_navbar_signup_login',
+      onClick: () => {
+        navigate('/signin');
+      },
+    },
+  ];
+  const pagesSmall = [
+    {
+      languageKey: 'th_key_navbar_task_feed',
+      onClick: () => {
+        navigate('/signin');
+      },
+    },
+    {
+      languageKey: 'th_key_navbar_services',
+      onClick: () => {
+        navigate('/signin');
+      },
+    },
+    {
+      languageKey: 'th_key_navbar_signup_login',
+      onClick: () => {
+        navigate('/signin');
+      },
+    },
+    {
+      languageKey: 'th_key_navbar_becometasker',
+      onClick: () => {
+        navigate('/signin');
+      },
+    },
+  ];
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -71,17 +92,26 @@ function NavBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <AppBar
-      position="static"
+      position="sticky"
       sx={{
         height: navBarHeight,
         bgcolor: 'background.default',
         color: 'text.primary',
       }}
     >
-      <Container maxWidth="xl" sx={{ height: '100%' }}>
+      <Container maxWidth="lg" sx={{ height: '100%' }}>
         <Toolbar disableGutters sx={{ height: '100%' }}>
           <TaskHubLogo />
 
@@ -120,8 +150,8 @@ function NavBar() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pagesSmall.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+              {pagesSmall.map((page, index) => (
+                <MenuItem key={index} onClick={page.onClick}>
                   <Typography
                     color={'green'}
                     textAlign="center"
@@ -133,6 +163,7 @@ function NavBar() {
               ))}
             </Menu>
           </Box>
+
           <Box
             sx={{
               flexGrow: 1,
@@ -140,58 +171,84 @@ function NavBar() {
               justifyContent: 'flex-end',
             }}
           >
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{
-                  my: 2,
-                  color: 'green',
-                  display: 'block',
-                  textTransform: 'none',
-                }}
-              >
-                {t(page.languageKey)}
-              </Button>
-            ))}
+            {pages.map((page, index) =>
+              isLogin &&
+              page.languageKey === 'th_key_navbar_signup_login' ? null : (
+                <Button
+                  key={index}
+                  onClick={page.onClick}
+                  sx={{
+                    my: 2,
+                    color: 'green',
+                    display: 'block',
+                    textTransform: 'none',
+                  }}
+                >
+                  {t(page.languageKey)}
+                </Button>
+              )
+            )}
           </Box>
-          <Button
-            variant="contained"
-            color="success"
-            sx={{ display: { xs: 'none', md: 'block' } }}
-          >
-            {t('th_key_navbar_becometasker')}
-          </Button>
-
-          {/* <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+          {isLogin && (
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={() => navigate('/chat')}
+              color="success"
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+              <MessageIcon />
+            </IconButton>
+          )}
+          {!isLogin && (
+            <Button
+              variant="contained"
+              color="success"
+              sx={{ display: { xs: 'none', md: 'block' } }}
+            >
+              {t('th_key_navbar_becometasker')}
+            </Button>
+          )}
+          {isLogin && (
+            <div>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="success"
+              >
+                <AccountCircle />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose}>Thông tin cá nhân</MenuItem>
+                <MenuItem onClick={handleClose}>Quản lý công việc</MenuItem>
+                <MenuItem onClick={handleClose}>
+                  <Typography color={'error'} sx={{ mr: 1 }}>
+                    {t('Đăng xuất')}
+                  </Typography>
+                  <LogoutIcon color="error" fontSize="small" />
                 </MenuItem>
-              ))}
-            </Menu>
-          </Box> */}
+              </Menu>
+            </div>
+          )}
+          <LanguageSwitch />
         </Toolbar>
       </Container>
     </AppBar>

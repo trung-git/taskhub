@@ -36,3 +36,22 @@
     transform: rotate(360deg);
   }
 }
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+*{
+  -ms-overflow-style: none;
+}
+::-webkit-scrollbar {
+  display: none;
+}
+
+.custom-box {
+  background-image: url("../src/assets/img/homebackground.jpg");
+  background-position: top center;
+  width: 100%;
+  height: 500px;
+  background-size: cover;
+}

@@ -159,6 +159,7 @@ export default function SignInSide() {
                 </InputLabel>
                 <OutlinedInput
                   id="outlined-adornment-password"
+                  color="success"
                   type={showPassword ? 'text' : 'password'}
                   endAdornment={
                     <InputAdornment position="end">
@@ -168,7 +169,7 @@ export default function SignInSide() {
                         onMouseDown={handleMouseDownPassword}
                         edge="end"
                       >
-                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
                     </InputAdornment>
                   }
