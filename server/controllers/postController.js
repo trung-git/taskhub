@@ -47,11 +47,16 @@ const getPostById = catchAsync(async (req, res, next) => {
 });
 const createPost = catchAsync(async (req, res, next) => {
   const user = req.user._id;
-  const text = req.body.text;
+  const { text, address, workLocationId, workTime } = req.body;
 
   const taskTag = await TaskTag.findById(req.body.taskTag);
   if (!taskTag) {
     return next(new AppError('Invalid Task tag'));
+  }
+
+  const workLocation = await District.findById(workLocationId);
+  if (!workLocation) {
+    return next(new AppError('Work Location not found', 400));
   }
 
   let photos = undefined;
@@ -81,6 +86,9 @@ const createPost = catchAsync(async (req, res, next) => {
     text,
     photos,
     taskTag: taskTag._id,
+    address,
+    workLocation: workLocation._id,
+    workTime,
   });
 
   return res.status(200).json({
@@ -107,8 +115,8 @@ const registerPostCandidate = catchAsync(async (req, res, next) => {
   post.candidate = candidate;
 
   const updatedPost = await post.save();
-  const finalPost = await updatedPost.populate('candidate.user','-password');
-  
+  const finalPost = await updatedPost.populate('candidate.user', '-password');
+
   return res.status(200).json({
     status: 'success',
     data: finalPost,
@@ -132,10 +140,91 @@ const unRegisterPostCandidate = catchAsync(async (req, res, next) => {
   });
 });
 
+const updatePost = catchAsync(async (req, res, next) => {
+  const post = await Post.findById(req.params.id);
+  if (!post) {
+    return next(new AppError('Post not found'));
+  }
+
+  if (req.body.taskTagId) {
+    const taskTag = await TaskTag.findById(req.body.taskTagId);
+    if (!taskTag) {
+      return next(new AppError('Task Tag not found'));
+    }
+  }
+
+  if (req.body.workLocationId) {
+    const workLocation = await TaskTag.findById(req.body.workLocationId);
+    if (!workLocation) {
+      return next(new AppError('Work location not found'));
+    }
+  }
+
+  let photos = undefined;
+  if (req.files && req?.files?.photos) {
+    const validateResult = imageValidate(req.files.photos);
+    if (validateResult.error) {
+      return next(new AppError(validateResult.error));
+    }
+    try {
+      const uploadedFiles = [];
+      for (let i = 0; i < req.files.photos.length; i++) {
+        const file = req.files.photos[i];
+        const result = await cloudinary.uploader.upload(file.tempFilePath, {
+          folder: 'postImages',
+        });
+        uploadedFiles.push(result.url);
+      }
+      photos = uploadedFiles;
+    } catch (error) {
+      console.error(error);
+      return next(new AppError('Failed to upload files.'));
+    }
+  }
+  if (photos && req.body.photos) {
+    post.photos = [...req.body.photos, ...photos];
+  } else if (photos && !req.body.photos) {
+    post.photos = [...(post.photos.length === 0 ? [] : post.photos), ...photos];
+  } else if (!photos && req.body.photos) {
+    post.photos = req.body.photos;
+
+    // TODO delete photo
+    // const deletedPhotos = post.photos.filter(v => !req.body.photos.includes(v));
+  }
+
+  post.text = req.body.text || post.text;
+  post.address = req.body.address || post.address;
+  post.taskTag = req.body.taskTagId || post.taskTag;
+  post.workLocation = req.body.workLocationId || post.workLocation;
+  post.price = req.body.price || post.price;
+  post.workTime = req.body.workTime || post.workTime;
+
+  const updatedPost = await post.save();
+  return res.status(200).json({
+    status: 'success',
+    data: updatedPost,
+  });
+});
+
+const deletePost = catchAsync(async (req, res, next) => {
+  const post = await Post.findOneAndRemove({ _id: req.params.id });
+
+  if (!post) {
+    return next(new AppError('Post not found'));
+  }
+
+  return res.status(200).json({
+    status: 'success',
+    data: post,
+  });
+});
+
 module.exports = {
   getPosts,
   getPostById,
   createPost,
+  updatePost,
+  deletePost,
   registerPostCandidate,
   unRegisterPostCandidate,
 };

@@ -33,6 +33,26 @@ const postSchema = new mongoose.Schema(
         },
       },
     ],
+    address: {
+      type: String,
+      required: [true, 'Address can not empty!'],
+    },
+    workLocation: {
+      type: mongoose.Types.ObjectId,
+      ref: 'District',
+      required: [true, 'Work location can not empty!'],
+    },
+    workTime: {
+      type: {
+        date: Date,
+        time: {
+          from: String,
+          to: String,
+        },
+        hour: Number,
+      },
+      required: [true, 'work Time can not empty!'],
+    },
   },
   { timestamps: true }
 );
