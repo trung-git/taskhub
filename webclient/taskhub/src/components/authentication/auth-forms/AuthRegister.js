@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 // material-ui
@@ -35,11 +35,17 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { LoadingButton } from '@mui/lab';
 import { useTranslation } from 'react-i18next';
+import dayjs from 'dayjs';
+import CitySelect from '../../../base/component/CitySelect';
+import AnimateButton from '../../../base/component/AnimateButton';
+import axios from 'axios';
+import { API_URL } from '../../../base/config';
 
 // ============================|| FIREBASE - REGISTER ||============================ //
 
 const SignUp = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -58,6 +64,39 @@ const SignUp = () => {
   //   changePassword('');
   // }, []);
 
+  function handleSubmitSignUp(values, { setErrors, setStatus, setSubmitting }) {
+    const requestData = {
+      username: values.username,
+      firstName: values.firstname,
+      lastName: values.lastname,
+      dateOfBirth: values.dateOfBirth,
+      email: values.email,
+      gender: values.gender,
+      role: 'Finder',
+      password: values.password,
+      city: values.city,
+    };
+    axios
+      .post(`${API_URL}api/v1/user/signup`, requestData)
+      .then((response) => {
+        // Handle successful signup
+        console.log('userData', response);
+        setSubmitting(false);
+        setStatus({ success: true });
+        navigate('/login');
+      })
+      .catch((error) => {
+        // Handle error
+        console.log('userDataerror', error);
+        if (error?.response?.data?.message) {
+          // setErrors(error?.response?.data?.message);
+          setErrors({ submit: error?.response?.data?.message });
+        }
+        setStatus({ success: false });
+        setSubmitting(false);
+      });
+  }
+
   return (
     <>
       <Formik
@@ -65,36 +104,25 @@ const SignUp = () => {
           firstname: '',
           lastname: '',
           email: '',
-          company: '',
           password: '',
           username: '',
           dateOfBirth: '2000-01-01',
           gender: 'Male',
           city: '',
-
           submit: null,
         }}
         validationSchema={Yup.object().shape({
           firstname: Yup.string().max(255).required('First Name is required'),
+          username: Yup.string().max(255).required('Username is required'),
           lastname: Yup.string().max(255).required('Last Name is required'),
+          city: Yup.string().max(255).required('City is required'),
           email: Yup.string()
             .email('Must be a valid email')
             .max(255)
             .required('Email is required'),
           password: Yup.string().max(255).required('Password is required'),
         })}
-        onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-          try {
-            console.log('values', values);
-            setStatus({ success: false });
-            setSubmitting(false);
-          } catch (err) {
-            console.error(err);
-            setStatus({ success: false });
-            setErrors({ submit: err.message });
-            setSubmitting(false);
-          }
-        }}
+        onSubmit={handleSubmitSignUp}
       >
         {({
           errors,
@@ -104,6 +132,7 @@ const SignUp = () => {
           isSubmitting,
           touched,
           values,
+          setFieldValue,
         }) => (
           <form noValidate onSubmit={handleSubmit}>
             <Grid container spacing={3}>
@@ -158,17 +187,6 @@ const SignUp = () => {
               <Grid item xs={12} md={6}>
                 <Stack spacing={1} alignItems={'flex-start'}>
                   <InputLabel htmlFor="firstname-signup">Gender*</InputLabel>
-                  {/* <OutlinedInput
-                    id="firstname-login"
-                    type="firstname"
-                    value={values.firstname}
-                    name="firstname"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    placeholder="John"
-                    fullWidth
-                    error={Boolean(touched.firstname && errors.firstname)}
-                  /> */}
                   <FormControl fullWidth>
                     <Select
                       labelId="demo-simple-select-label"
@@ -196,22 +214,13 @@ const SignUp = () => {
                   <InputLabel htmlFor="lastname-signup">
                     Date Of Birth*
                   </InputLabel>
-                  <OutlinedInput
-                    fullWidth
-                    error={Boolean(touched.lastname && errors.lastname)}
-                    id="lastname-signup"
-                    type="lastname"
-                    value={values.lastname}
-                    name="lastname"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    placeholder="Doe"
-                    inputProps={{}}
-                  />
                   <DatePicker
-                    label="Controlled picker"
-                    value={values.dateOfBirth}
-                    onChange={(newValue) => handleChange(newValue)}
+                    name="dateOfBirth"
+                    views={['year', 'month', 'day']}
+                    value={dayjs(values.dateOfBirth)}
+                    onChange={(newValue) =>
+                      handleChange(newValue.format('YYYY-MM-DD'))
+                    }
                   />
                   {touched.lastname && errors.lastname && (
                     <FormHelperText error id="helper-text-lastname-signup">
@@ -222,17 +231,14 @@ const SignUp = () => {
               </Grid>
               <Grid item xs={12}>
                 <Stack spacing={1} alignItems={'flex-start'}>
-                  <InputLabel htmlFor="company-signup">Company</InputLabel>
-                  <OutlinedInput
-                    fullWidth
-                    error={Boolean(touched.company && errors.company)}
-                    id="company-signup"
-                    value={values.company}
-                    name="company"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    placeholder="Demo Inc."
-                    inputProps={{}}
+                  <InputLabel htmlFor="company-signup">City</InputLabel>
+                  <CitySelect
+                    value={values.city}
+                    name="city"
+                    onChange={(value) => {
+                      console.log('valueCitySelect', value);
+                      setFieldValue('city', value, true);
+                    }}
                   />
                   {touched.company && errors.company && (
                     <FormHelperText error id="helper-text-company-signup">
@@ -253,7 +259,7 @@ const SignUp = () => {
                     name="email"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    placeholder="demo@company.com"
+                    placeholder="email@taskhub.com"
                     inputProps={{}}
                   />
                   {touched.email && errors.email && (
@@ -265,7 +271,28 @@ const SignUp = () => {
               </Grid>
               <Grid item xs={12}>
                 <Stack spacing={1} alignItems={'flex-start'}>
-                  <InputLabel htmlFor="password-signup">Password</InputLabel>
+                  <InputLabel htmlFor="username">Username*</InputLabel>
+                  <OutlinedInput
+                    fullWidth
+                    error={Boolean(touched.username && errors.username)}
+                    id="username"
+                    value={values.username}
+                    name="username"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    placeholder="username"
+                    inputProps={{}}
+                  />
+                  {touched.username && errors.username && (
+                    <FormHelperText error id="helper-text-username">
+                      {errors.username}
+                    </FormHelperText>
+                  )}
+                </Stack>
+              </Grid>
+              <Grid item xs={12}>
+                <Stack spacing={1} alignItems={'flex-start'}>
+                  <InputLabel htmlFor="password-signup">Password*</InputLabel>
                   <OutlinedInput
                     fullWidth
                     error={Boolean(touched.password && errors.password)}
@@ -355,7 +382,19 @@ const SignUp = () => {
                     Create Account
                   </Button>
                 </AnimateButton> */}
-                <LoadingButton
+                <AnimateButton>
+                  <LoadingButton
+                    type="submit"
+                    fullWidth
+                    loading={isSubmitting}
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                    color="success"
+                  >
+                    {t('th_key_signup')}
+                  </LoadingButton>
+                </AnimateButton>
+                {/* <LoadingButton
                   // type="submit"
                   onClick={handleSubmit}
                   fullWidth
@@ -365,7 +404,7 @@ const SignUp = () => {
                   color="success"
                 >
                   {t('th_key_signin')}
-                </LoadingButton>
+                </LoadingButton> */}
               </Grid>
               <Grid item xs={12}>
                 <Divider>

@@ -37,6 +37,8 @@ const Finding = (props) => {
   const [sortOption, setSortOption] = useState(1);
   const [price, setPrice] = useState([1, 100]);
 
+  // const [isShowDate ]
+
   const [isfetchTaskerData, setIsfetchTaskerData] = useState(false);
 
   const paramsQuery = {
@@ -101,6 +103,8 @@ const Finding = (props) => {
   const handlePageChange = (event, value) => {
     setPageNum(value);
   };
+
+  const handleOnSelect = () => {};
 
   return (
     <Box sx={{ width: '100%' }}>
