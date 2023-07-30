@@ -171,6 +171,19 @@ exports.login = catchAsync(async (req, res, next) => {
   createAndSendToken(user, 200, req, res);
 });
 
+exports.resetLogin = catchAsync(async (req, res, next) => {
+  const { id } = req.body;
+
+  const user = await User.findById(id);
+
+  if (!user) {
+    return next(new AppError('Invalid user!', 400));
+  }
+
+  // 3) If everything ok, send token to client
+  createAndSendToken(user, 200, req, res);
+});
+
 exports.logout = (req, res) => {
   res.cookie('jwt', 'logout', {
     expires: new Date(Date.now() + 10 * 1000),

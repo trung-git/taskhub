@@ -6,6 +6,7 @@ const postController = require('../controllers/postController');
 
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
+router.post('/reset-login', authController.resetLogin);
 router.get('/logout', authController.logout);
 
 router.get('/tasker', userController.getTaskers);
