@@ -87,18 +87,18 @@ exports.signup = catchAsync(async (req, res, next) => {
   const emailToken = newUser.createVerifyEmailToken();
   const finalUser = await newUser.save();
 
-  try {
-    const URL = `${req.protocol}://${req.get(
-      'host'
-    )}/api/v1/user/verify-email/${emailToken}`;
+  // try {
+  //   const URL = `${req.protocol}://${req.get(
+  //     'host'
+  //   )}/api/v1/user/verify-email/${emailToken}`;
 
-    await new Email(finalUser, URL).sendWelcome();
-  } catch (error) {
-    finalUser.verifyEmailToken = undefined;
-    finalUser.verifyEmailExpired = undefined;
-    await finalUser.save();
-    return next(new AppError('Send email fail! Please try again.', 500));
-  }
+  //   await new Email(finalUser, URL).sendWelcome();
+  // } catch (error) {
+  //   finalUser.verifyEmailToken = undefined;
+  //   finalUser.verifyEmailExpired = undefined;
+  //   await finalUser.save();
+  //   return next(new AppError('Send email fail! Please try again.', 500));
+  // }
   createAndSendToken(finalUser, 201, req, res, false);
 });
 
