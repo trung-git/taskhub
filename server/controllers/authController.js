@@ -21,18 +21,20 @@ const signToken = (id) => {
   });
 };
 
-const createAndSendToken = (user, statusCode, req, res) => {
+const createAndSendToken = (user, statusCode, req, res, rememberMe = true) => {
   const token = signToken(user._id);
-  const cookieOptions = {
-    expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-    ),
-    httpOnly: true,
-  };
-  if (req.secure || req.headers['x-forwarded-proto'] === 'https') {
-    cookieOptions.secure = true;
+  if (rememberMe) {
+    const cookieOptions = {
+      expires: new Date(
+        Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+      ),
+      httpOnly: true,
+    };
+    if (req.secure || req.headers['x-forwarded-proto'] === 'https') {
+      cookieOptions.secure = true;
+    }
+    res.cookie('jwt', token, cookieOptions);
   }
-  res.cookie('jwt', token, cookieOptions);
   user.password = undefined;
   res.status(statusCode).json({
     status: 'success',
@@ -97,7 +99,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     await finalUser.save();
     return next(new AppError('Send email fail! Please try again.', 500));
   }
-  createAndSendToken(finalUser, 201, req, res);
+  createAndSendToken(finalUser, 201, req, res, false);
 });
 
 exports.verifyEmail = catchAsync(async (req, res, next) => {
@@ -149,7 +151,7 @@ exports.generateVerifyEmailToken = catchAsync(async (req, res, next) => {
 });
 
 exports.login = catchAsync(async (req, res, next) => {
-  const { username, password, role } = req.body;
+  const { username, password, role, rememberMe } = req.body;
   const Object = getObjectModel(role);
 
   if (!Object) {
@@ -168,7 +170,7 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   // 3) If everything ok, send token to client
-  createAndSendToken(user, 200, req, res);
+  createAndSendToken(user, 200, req, res, rememberMe);
 });
 
 exports.resetLogin = catchAsync(async (req, res, next) => {
