@@ -161,5 +161,6 @@ exports.getMessages = catchAsync(async (req, res, next) => {
     recordsPerPage,
     totalPage: Math.ceil(count / recordsPerPage),
     pageNum,
+    totalRecords: count
   });
 });

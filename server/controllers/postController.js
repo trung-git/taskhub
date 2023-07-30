@@ -30,6 +30,7 @@ const getPosts = catchAsync(async (req, res, next) => {
     recordsPerPage,
     totalPage: Math.ceil(count / recordsPerPage),
     pageNum,
+    totalRecords: count
   });
 });
 const getPostById = catchAsync(async (req, res, next) => {
