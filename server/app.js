@@ -29,6 +29,7 @@ const taskTagRouter = require('./routes/taskTagRoutes.js');
 const areaRouter = require('./routes/areaRoutes.js');
 const postRouter = require('./routes/postRoutes.js');
 const chatRouter = require('./routes/chatRoutes.js');
+const contractRouter = require('./routes/contractRoutes.js');
 
 // Utils
 const globalErrorHandler = require('./controllers/errorController');
@@ -42,6 +43,7 @@ app.use('/api/v1/task-tag', taskTagRouter);
 app.use('/api/v1/area', areaRouter);
 app.use('/api/v1/post', postRouter);
 app.use('/api/v1/chat', chatRouter);
+app.use('/api/v1/contract', contractRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Not found ${req.originalUrl}`, 404));
