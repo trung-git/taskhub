@@ -196,7 +196,6 @@ const updatePost = catchAsync(async (req, res, next) => {
   post.address = req.body.address || post.address;
   post.taskTag = req.body.taskTagId || post.taskTag;
   post.workLocation = req.body.workLocationId || post.workLocation;
-  post.price = req.body.price || post.price;
   post.workTime = req.body.workTime || post.workTime;
 
   const updatedPost = await post.save();
