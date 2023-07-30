@@ -35,19 +35,19 @@ function NavBar({ isLogin = true }) {
     {
       languageKey: 'th_key_navbar_task_feed',
       onClick: () => {
-        navigate('/signin');
+        navigate('/login');
       },
     },
     {
       languageKey: 'th_key_navbar_services',
       onClick: () => {
-        navigate('/signin');
+        navigate('/login');
       },
     },
     {
       languageKey: 'th_key_navbar_signup_login',
       onClick: () => {
-        navigate('/signin');
+        navigate('/login');
       },
     },
   ];
@@ -55,25 +55,25 @@ function NavBar({ isLogin = true }) {
     {
       languageKey: 'th_key_navbar_task_feed',
       onClick: () => {
-        navigate('/signin');
+        navigate('/login');
       },
     },
     {
       languageKey: 'th_key_navbar_services',
       onClick: () => {
-        navigate('/signin');
+        navigate('/login');
       },
     },
     {
       languageKey: 'th_key_navbar_signup_login',
       onClick: () => {
-        navigate('/signin');
+        navigate('/login');
       },
     },
     {
       languageKey: 'th_key_navbar_becometasker',
       onClick: () => {
-        navigate('/signin');
+        navigate('/login');
       },
     },
   ];

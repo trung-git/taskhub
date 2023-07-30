@@ -32,9 +32,10 @@ const Finding = (props) => {
   const [districtSelected, setDistrictSelected] = useState('');
 
   const [districtsSelected, setDistrictsSelected] = useState([]);
-  const [pageNume, setPageNume] = useState(1);
+  const [pageNum, setPageNum] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
   const [sortOption, setSortOption] = useState(1);
-  const [price, setPrice] = useState([5, 100]);
+  const [price, setPrice] = useState([1, 100]);
 
   const [isfetchTaskerData, setIsfetchTaskerData] = useState(false);
 
@@ -44,7 +45,7 @@ const Finding = (props) => {
       districtsSelected.length > 0
         ? districtsSelected.join(',')
         : districtsSelected[0],
-    pageNume: pageNume,
+    pageNum: pageNum,
     price: price.join(','),
     sortOption: sortOption,
   };
@@ -73,6 +74,7 @@ const Finding = (props) => {
         { params }
       );
       const responseData = response.data.data;
+      setTotalPage(response.data.totalPage);
       setTaskerData(responseData);
       setActiveStep(1);
     } catch (error) {
@@ -87,17 +89,17 @@ const Finding = (props) => {
         districtsSelected.length > 0
           ? districtsSelected.join(',')
           : districtsSelected[0],
-      pageNume: pageNume,
+      pageNum: pageNum,
       price: price.join(','),
       sortOption: sortOption,
     };
-    fetchTaskerData(paramsQuery);
-  }, [districtsSelected, pageNume, price, sortOption]);
+    activeStep === 1 && fetchTaskerData(paramsQuery);
+  }, [districtsSelected, pageNum, price, sortOption, activeStep, id]);
 
   console.log('activeStep', taskerData);
 
   const handlePageChange = (event, value) => {
-    setPageNume(value);
+    setPageNum(value);
   };
 
   return (
@@ -214,8 +216,8 @@ const Finding = (props) => {
                   justifyContent={'center'}
                 >
                   <Pagination
-                    count={10}
-                    page={pageNume}
+                    count={totalPage}
+                    page={pageNum}
                     onChange={handlePageChange}
                     color="success"
                     size="large"
@@ -231,10 +233,23 @@ const Finding = (props) => {
                     p: 2,
                     border: '1px solid #b3b3b3',
                     borderRadius: 2,
-                    height: 2000,
+                    height: 'auto',
                   }}
                 >
                   <Typography>{t('Không tìm thấy người dùng')}</Typography>
+                  <Stack
+                    direction={'row'}
+                    sx={{ mt: 2, width: '100%' }}
+                    justifyContent={'center'}
+                  >
+                    <Pagination
+                      count={totalPage}
+                      page={pageNum}
+                      onChange={handlePageChange}
+                      color="success"
+                      size="large"
+                    />
+                  </Stack>
                 </Grid>
               </Grid>
             )}

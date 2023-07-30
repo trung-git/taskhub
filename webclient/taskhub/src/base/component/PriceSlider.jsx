@@ -11,8 +11,8 @@ const PriceSlider = ({ value, onChange }) => {
       label: '$ 1',
     },
     {
-      value: 999,
-      label: '$ 999',
+      value: 100,
+      label: '$ 100',
     },
   ];
 
@@ -67,7 +67,7 @@ const PriceSlider = ({ value, onChange }) => {
       onChangeCommitted={handleOnChange}
       min={1}
       step={1}
-      max={999}
+      max={100}
       marks={marks}
       valueLabelDisplay="auto"
       disableSwap

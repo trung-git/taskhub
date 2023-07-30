@@ -337,7 +337,7 @@ const TaskerCard = ({ taskerData }) => {
               <Typography fontSize={18} fontWeight={600}>
                 {t('Work photos')}:
               </Typography>
-              <ImagesSlider images={taskerData?.photos} />
+              {/* <ImagesSlider images={taskerData?.photos} /> */}
             </Box>
           )}
           <Stack
