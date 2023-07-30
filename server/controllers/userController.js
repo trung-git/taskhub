@@ -92,6 +92,28 @@ exports.getTaskers = catchAsync(async (req, res, next) => {
       },
     },
   ];
+  const paginationPipeline = [
+    {
+      $skip: recordsPerPage * (pageNum - 1),
+    },
+    {
+      $limit: recordsPerPage,
+    },
+  ];
+  const countPipeline = [
+    {
+      $group: {
+        _id: null,
+        totalRecord: { $sum: 1 },
+      },
+    },
+    {
+      $project: {
+        totalRecord: 1,
+      },
+    },
+  ];
+  
   if (price) {
     aggregatePipeline.push({
       $match: {
@@ -126,27 +148,7 @@ exports.getTaskers = catchAsync(async (req, res, next) => {
     default:
       break;
   }
-  const paginationPipeline = [
-    {
-      $skip: recordsPerPage * (pageNum - 1),
-    },
-    {
-      $limit: recordsPerPage,
-    },
-  ];
-  const countPipeline = [
-    {
-      $group: {
-        _id: null,
-        totalRecord: { $sum: 1 },
-      },
-    },
-    {
-      $project: {
-        totalRecord: 1,
-      }
-    }
-  ];
+  
   const tasker = await Tasker.aggregate([
     ...aggregatePipeline,
     ...paginationPipeline,
@@ -154,16 +156,18 @@ exports.getTaskers = catchAsync(async (req, res, next) => {
 
   const count = await Tasker.aggregate([
     ...aggregatePipeline,
-    ...countPipeline
+    ...countPipeline,
   ]);
-  const totalPage = Math.ceil(count[0].totalRecord / recordsPerPage)
+  const totalPage =
+    count.length === 0 ? 1 : Math.ceil(count[0].totalRecord / recordsPerPage);
 
   res.status(200).json({
     status: 'success',
     data: tasker,
     recordsPerPage,
     pageNum,
-    totalPage
+    totalPage,
+    totalRecords: count[0]?.totalRecord || 0
   });
 });
 
