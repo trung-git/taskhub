@@ -24,15 +24,5 @@ router.post(
   authController.generateVerifyEmailToken
 );
 
-router.patch(
-  '/register-post-candidate/:postId',
-  authController.restrictTo('Tasker'),
-  postController.registerPostCandidate
-);
-router.patch(
-  '/unregister-post-candidate/:postId',
-  authController.restrictTo('Tasker'),
-  postController.unRegisterPostCandidate
-);
 
 module.exports = router;
