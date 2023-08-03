@@ -1,6 +1,7 @@
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import { Box } from '@mui/material';
+import logo from '../../../assets/img/logo/logo.png';
 
 // ==============================|| AUTH BLUR BACK SVG ||============================== //
 
@@ -8,9 +9,16 @@ const AuthBackground = () => {
   const theme = useTheme();
   return (
     <Box
-      sx={{ position: 'absolute', filter: 'blur(18px)', zIndex: -1, bottom: 0 }}
+      sx={{
+        position: 'absolute',
+        filter: 'blur(18px)',
+        zIndex: -1,
+        bottom: 0,
+        left: 0,
+        transform: 'translate(50%, -22%)',
+      }}
     >
-      <svg
+      {/* <svg
         width="100%"
         height="calc(100vh - 175px)"
         viewBox="0 0 405 809"
@@ -31,7 +39,12 @@ const AuthBackground = () => {
           fill={theme.palette.error.lighter}
           opacity="1"
         />
-      </svg>
+      </svg> */}
+      <img
+        style={{ width: '100%', objectFit: 'cover', height: '100%' }}
+        src={logo}
+        alt="logo"
+      />
     </Box>
   );
 };

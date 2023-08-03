@@ -6,7 +6,7 @@ import { Box, Grid } from '@mui/material';
 // project import
 import AuthCard from './AuthCard';
 // import Logo from 'components/Logo';
-import TaskHubLogo from '../../base/component/TaskHubLogo';
+import { TaskHubLogo } from '../../base/component/TaskHubLogo';
 // import AuthFooter from 'components/cards/AuthFooter';
 
 // assets
@@ -26,7 +26,7 @@ const AuthWrapper = ({ children }) => (
       }}
     >
       <Grid item xs={12} sx={{ ml: 3, mt: 3 }}>
-        <TaskHubLogo />
+        <TaskHubLogo type="vertical" size={{ width: 100, height: 100 }} />
       </Grid>
       <Grid item xs={12}>
         <Grid

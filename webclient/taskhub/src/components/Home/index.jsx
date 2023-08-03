@@ -9,11 +9,11 @@ import PopularTask from './PopularTask';
 
 const Home = () => {
   const navigate = useNavigate();
-  const logincontext = useContext(LoginContext);
+  // const logincontext = useContext(LoginContext);
   const { isLogin } = useContext(LoginContext);
   const { t } = useTranslation();
 
-  console.log('logincontext', logincontext);
+  // console.log('logincontext', logincontext);
 
   return (
     <Box sx={{ width: '100%' }}>

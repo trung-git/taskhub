@@ -12,7 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import TaskHubLogo from '../../base/component/TaskHubLogo';
+import { TaskHubLogo } from '../../base/component/TaskHubLogo';
 import { navBarHeight } from '../../base/config';
 import { useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -21,6 +21,9 @@ import { AccountCircle } from '@mui/icons-material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MessageIcon from '@mui/icons-material/Message';
 import LanguageSwitch from '../../base/component/LanguageSwitch';
+import useLogin from '../../hooks/useLogin';
+import { LoginContext } from '../../provider/LoginContext';
+import { useContext } from 'react';
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
@@ -30,6 +33,8 @@ function NavBar({ isLogin = true }) {
   const theme = useTheme();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const { logOut } = useLogin();
+  const logincontext = useContext(LoginContext);
 
   const pages = [
     {
@@ -100,6 +105,12 @@ function NavBar({ isLogin = true }) {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    setAnchorEl(null);
+    logincontext.setIsLogin(false);
+    logOut();
   };
 
   return (
@@ -239,7 +250,7 @@ function NavBar({ isLogin = true }) {
               >
                 <MenuItem onClick={handleClose}>Thông tin cá nhân</MenuItem>
                 <MenuItem onClick={handleClose}>Quản lý công việc</MenuItem>
-                <MenuItem onClick={handleClose}>
+                <MenuItem onClick={handleLogout}>
                   <Typography color={'error'} sx={{ mr: 1 }}>
                     {t('Đăng xuất')}
                   </Typography>

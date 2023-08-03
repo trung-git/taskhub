@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import './App.css';
 import Scrolltop from './components/Scrolltop';
 import { Box, CssBaseline } from '@mui/material';
@@ -10,6 +10,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import 'dayjs/locale/en';
+import { LoginContext } from './provider/LoginContext';
+import useLogin from './hooks/useLogin';
 
 const theme = createTheme({
   palette: {

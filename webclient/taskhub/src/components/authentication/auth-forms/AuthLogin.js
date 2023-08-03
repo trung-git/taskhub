@@ -35,6 +35,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { API_URL } from '../../../base/config';
 import { LoginContext } from '../../../provider/LoginContext';
 import AnimateButton from '../../../base/component/AnimateButton';
+import useLogin from '../../../hooks/useLogin';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
@@ -43,6 +44,8 @@ const AuthLogin = () => {
   const logincontext = useContext(LoginContext);
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  const { setUserData } = useLogin();
 
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => {
@@ -64,6 +67,7 @@ const AuthLogin = () => {
       .then((response) => {
         // Handle successful login
         console.log('userData', response);
+        setUserData(response?.data?.data?.user);
         setSubmitting(false);
         setStatus({ success: true });
         logincontext.setIsLogin(true);
