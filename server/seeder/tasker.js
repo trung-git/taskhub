@@ -13,7 +13,7 @@ const taskers = [
     email: 'trunght1810@gmail.com',
     phoneNumber: '0123456789',
     gender: 'Male',
-    image: '',
+    image: 'https://res.cloudinary.com/dxohnl1zt/image/upload/v1690676260/userAvatar/rkc7g9uh9ffnftyssjj2.jpg',
     password: bcrypt.hashSync('123456789', 10),
     workLocation: [
       mongoose.Types.ObjectId.createFromHexString('64a129fd40878eb40868ebd0'),
@@ -97,7 +97,7 @@ const taskers = [
     email: 'bao1@gmail.com',
     phoneNumber: '0123456789',
     gender: 'Male',
-    image: '',
+    image: 'https://res.cloudinary.com/dxohnl1zt/image/upload/v1690822142/userAvatar/ryuaapki5tmic26nzwn2.jpg',
     password: bcrypt.hashSync('123456789', 10),
     workLocation: [
       mongoose.Types.ObjectId.createFromHexString('64a129fd40878eb40868ebd0'),
@@ -178,7 +178,7 @@ const taskers = [
     email: 'ly1@gmail.com',
     phoneNumber: '0123456789',
     gender: 'Female',
-    image: '',
+    image: 'https://res.cloudinary.com/dxohnl1zt/image/upload/v1690822142/userAvatar/ryuaapki5tmic26nzwn2.jpg',
     password: bcrypt.hashSync('123456789', 10),
     workLocation: [
       mongoose.Types.ObjectId.createFromHexString('64a129fd40878eb40868ebd0'),
@@ -275,7 +275,7 @@ const taskers = [
     email: 'hai122@gmail.com',
     phoneNumber: '0123456789',
     gender: 'Female',
-    image: '',
+    image: 'https://res.cloudinary.com/dxohnl1zt/image/upload/v1690822142/userAvatar/ryuaapki5tmic26nzwn2.jpg',
     password: bcrypt.hashSync('123456789', 10),
     workLocation: [
       mongoose.Types.ObjectId.createFromHexString('64a129fd40878eb40868ebd0'),
