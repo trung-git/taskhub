@@ -35,6 +35,16 @@ const posts = [
         price: 2,
       },
     ],
+    address: "abc",
+    workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
+    workTime: {
+      date: "2023-08-08",
+      time: {
+        from : "13:00",
+        to: "14:00"
+      },
+      hour: 1
+    }
   },
   {
     _id: mongoose.Types.ObjectId.createFromHexString(
@@ -63,6 +73,16 @@ const posts = [
         price: 100,
       },
     ],
+    address: "abc",
+    workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
+    workTime: {
+      date: "2023-08-08",
+      time: {
+        from : "13:00",
+        to: "14:00"
+      },
+      hour: 1
+    }
   },
   {
     _id: mongoose.Types.ObjectId.createFromHexString(
@@ -82,6 +102,16 @@ const posts = [
       '64a0163810f4179aa8f4c7b3'
     ),
     text: 'Aliquip Lorem laboris et anim ipsum tempor. Proident ex non cillum nisi nisi tempor velit nulla reprehenderit sit sint quis. Nisi eu deserunt aliquip ea sunt mollit. Proident cupidatat sint ad esse eu voluptate. Ut dolor proident nulla proident duis. Proident ea laboris deserunt quis. Aliquip cupidatat cillum velit irure.',
+    address: "abc",
+    workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
+    workTime: {
+      date: "2023-08-08",
+      time: {
+        from : "13:00",
+        to: "14:00"
+      },
+      hour: 1
+    }
   },
   {
     _id: mongoose.Types.ObjectId.createFromHexString(
@@ -101,6 +131,16 @@ const posts = [
       '64a0163810f4179aa8f4c7b3'
     ),
     text: 'Aliquip Lorem laboris et anim ipsum tempor. Proident ex non cillum nisi nisi tempor velit nulla reprehenderit sit sint quis. Nisi eu deserunt aliquip ea sunt mollit. Proident cupidatat sint ad esse eu voluptate. Ut dolor proident nulla proident duis. Proident ea laboris deserunt quis. Aliquip cupidatat cillum velit irure.',
+    address: "abc",
+    workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
+    workTime: {
+      date: "2023-08-08",
+      time: {
+        from : "13:00",
+        to: "14:00"
+      },
+      hour: 1
+    }
   },
   {
     _id: mongoose.Types.ObjectId.createFromHexString(
@@ -120,6 +160,16 @@ const posts = [
       '64a01c50024571ad8ba9e11e'
     ),
     text: 'Aliquip Lorem laboris et anim ipsum tempor. Proident ex non cillum nisi nisi tempor velit nulla reprehenderit sit sint quis. Nisi eu deserunt aliquip ea sunt mollit. Proident cupidatat sint ad esse eu voluptate. Ut dolor proident nulla proident duis. Proident ea laboris deserunt quis. Aliquip cupidatat cillum velit irure.',
+    address: "abc",
+    workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
+    workTime: {
+      date: "2023-08-08",
+      time: {
+        from : "13:00",
+        to: "14:00"
+      },
+      hour: 1
+    }
   },
   {
     _id: mongoose.Types.ObjectId.createFromHexString(
@@ -139,6 +189,16 @@ const posts = [
       '64a01c324227a31165bc4bfb'
     ),
     text: 'Aliquip Lorem laboris et anim ipsum tempor. Proident ex non cillum nisi nisi tempor velit nulla reprehenderit sit sint quis. Nisi eu deserunt aliquip ea sunt mollit. Proident cupidatat sint ad esse eu voluptate. Ut dolor proident nulla proident duis. Proident ea laboris deserunt quis. Aliquip cupidatat cillum velit irure.',
+    address: "abc",
+    workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
+    workTime: {
+      date: "2023-08-08",
+      time: {
+        from : "13:00",
+        to: "14:00"
+      },
+      hour: 1
+    }
   },
   {
     _id: mongoose.Types.ObjectId.createFromHexString(
@@ -158,6 +218,16 @@ const posts = [
       '64a01c237aa7438ccab0850b'
     ),
     text: 'Aliquip Lorem laboris et anim ipsum tempor. Proident ex non cillum nisi nisi tempor velit nulla reprehenderit sit sint quis. Nisi eu deserunt aliquip ea sunt mollit. Proident cupidatat sint ad esse eu voluptate. Ut dolor proident nulla proident duis. Proident ea laboris deserunt quis. Aliquip cupidatat cillum velit irure.',
+    address: "abc",
+    workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
+    workTime: {
+      date: "2023-08-08",
+      time: {
+        from : "13:00",
+        to: "14:00"
+      },
+      hour: 1
+    }
   },
   {
     _id: mongoose.Types.ObjectId.createFromHexString(
@@ -177,6 +247,16 @@ const posts = [
       '64a01990544c07c755c71904'
     ),
     text: 'Aliquip Lorem laboris et anim ipsum tempor. Proident ex non cillum nisi nisi tempor velit nulla reprehenderit sit sint quis. Nisi eu deserunt aliquip ea sunt mollit. Proident cupidatat sint ad esse eu voluptate. Ut dolor proident nulla proident duis. Proident ea laboris deserunt quis. Aliquip cupidatat cillum velit irure.',
+    address: "abc",
+    workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
+    workTime: {
+      date: "2023-08-08",
+      time: {
+        from : "13:00",
+        to: "14:00"
+      },
+      hour: 1
+    }
   },
   {
     user: mongoose.Types.ObjectId.createFromHexString(
@@ -209,6 +289,16 @@ const posts = [
         price: 2,
       },
     ],
+    address: "abc",
+    workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
+    workTime: {
+      date: "2023-08-08",
+      time: {
+        from : "13:00",
+        to: "14:00"
+      },
+      hour: 1
+    }
   },
   {
     user: mongoose.Types.ObjectId.createFromHexString(
@@ -241,6 +331,16 @@ const posts = [
         price: 2,
       },
     ],
+    address: "abc",
+    workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
+    workTime: {
+      date: "2023-08-08",
+      time: {
+        from : "13:00",
+        to: "14:00"
+      },
+      hour: 1
+    }
   },
   {
     user: mongoose.Types.ObjectId.createFromHexString(
@@ -266,6 +366,16 @@ const posts = [
         price: 2,
       },
     ],
+    address: "abc",
+    workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
+    workTime: {
+      date: "2023-08-08",
+      time: {
+        from : "13:00",
+        to: "14:00"
+      },
+      hour: 1
+    }
   },
   {
     user: mongoose.Types.ObjectId.createFromHexString(
@@ -291,6 +401,16 @@ const posts = [
         price: 2,
       },
     ],
+    address: "abc",
+    workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
+    workTime: {
+      date: "2023-08-08",
+      time: {
+        from : "13:00",
+        to: "14:00"
+      },
+      hour: 1
+    }
   },
   {
     user: mongoose.Types.ObjectId.createFromHexString(
@@ -316,6 +436,16 @@ const posts = [
         price: 2,
       },
     ],
+    address: "abc",
+    workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
+    workTime: {
+      date: "2023-08-08",
+      time: {
+        from : "13:00",
+        to: "14:00"
+      },
+      hour: 1
+    }
   },
   {
     user: mongoose.Types.ObjectId.createFromHexString(
@@ -341,6 +471,16 @@ const posts = [
         price: 2,
       },
     ],
+    address: "abc",
+    workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
+    workTime: {
+      date: "2023-08-08",
+      time: {
+        from : "13:00",
+        to: "14:00"
+      },
+      hour: 1
+    }
   },
   {
     user: mongoose.Types.ObjectId.createFromHexString(
@@ -366,6 +506,16 @@ const posts = [
         price: 2,
       },
     ],
+    address: "abc",
+    workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
+    workTime: {
+      date: "2023-08-08",
+      time: {
+        from : "13:00",
+        to: "14:00"
+      },
+      hour: 1
+    }
   },
   {
     user: mongoose.Types.ObjectId.createFromHexString(
@@ -391,6 +541,16 @@ const posts = [
         price: 2,
       },
     ],
+    address: "abc",
+    workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
+    workTime: {
+      date: "2023-08-08",
+      time: {
+        from : "13:00",
+        to: "14:00"
+      },
+      hour: 1
+    }
   },
   {
     user: mongoose.Types.ObjectId.createFromHexString(
@@ -416,6 +576,16 @@ const posts = [
         price: 2,
       },
     ],
+    address: "abc",
+    workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
+    workTime: {
+      date: "2023-08-08",
+      time: {
+        from : "13:00",
+        to: "14:00"
+      },
+      hour: 1
+    }
   },
   {
     user: mongoose.Types.ObjectId.createFromHexString(
@@ -441,6 +611,16 @@ const posts = [
         price: 2,
       },
     ],
+    address: "abc",
+    workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
+    workTime: {
+      date: "2023-08-08",
+      time: {
+        from : "13:00",
+        to: "14:00"
+      },
+      hour: 1
+    }
   },
   {
     user: mongoose.Types.ObjectId.createFromHexString(
@@ -466,6 +646,16 @@ const posts = [
         price: 2,
       },
     ],
+    address: "abc",
+    workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
+    workTime: {
+      date: "2023-08-08",
+      time: {
+        from : "13:00",
+        to: "14:00"
+      },
+      hour: 1
+    }
   },
   {
     user: mongoose.Types.ObjectId.createFromHexString(
@@ -491,6 +681,16 @@ const posts = [
         price: 2,
       },
     ],
+    address: "abc",
+    workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
+    workTime: {
+      date: "2023-08-08",
+      time: {
+        from : "13:00",
+        to: "14:00"
+      },
+      hour: 1
+    }
   },
   {
     user: mongoose.Types.ObjectId.createFromHexString(
@@ -516,6 +716,16 @@ const posts = [
         price: 2,
       },
     ],
+    address: "abc",
+    workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
+    workTime: {
+      date: "2023-08-08",
+      time: {
+        from : "13:00",
+        to: "14:00"
+      },
+      hour: 1
+    }
   },
   {
     user: mongoose.Types.ObjectId.createFromHexString(
@@ -541,6 +751,16 @@ const posts = [
         price: 2,
       },
     ],
+    address: "abc",
+    workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
+    workTime: {
+      date: "2023-08-08",
+      time: {
+        from : "13:00",
+        to: "14:00"
+      },
+      hour: 1
+    }
   },
   {
     user: mongoose.Types.ObjectId.createFromHexString(
@@ -566,6 +786,16 @@ const posts = [
         price: 2,
       },
     ],
+    address: "abc",
+    workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
+    workTime: {
+      date: "2023-08-08",
+      time: {
+        from : "13:00",
+        to: "14:00"
+      },
+      hour: 1
+    }
   },
   {
     user: mongoose.Types.ObjectId.createFromHexString(
@@ -591,6 +821,16 @@ const posts = [
         price: 2,
       },
     ],
+    address: "abc",
+    workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
+    workTime: {
+      date: "2023-08-08",
+      time: {
+        from : "13:00",
+        to: "14:00"
+      },
+      hour: 1
+    }
   },
 ];
 
