@@ -61,6 +61,8 @@ exports.getTaskers = catchAsync(async (req, res, next) => {
         vehicle: 1,
         contracts: 1,
         averageRating: 1,
+        unavailableTime: 1,
+        isVerified: 1,
         taskInfo: {
           _id: '$taskInfo._id',
           title: '$taskInfo.title',
