@@ -19,7 +19,7 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
       color: '#fff',
       transform: 'translateX(22px)',
       '& .MuiSwitch-thumb:before': {
-        backgroundImage: `url('https://flagcdn.com/w40/vn.png')`,
+        backgroundImage: `url('https://flagcdn.com/w40/gb.png')`,
       },
       '& + .MuiSwitch-track': {
         opacity: 1,
@@ -40,7 +40,8 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
       top: 0,
       backgroundRepeat: 'no-repeat',
       backgroundPosition: 'center',
-      backgroundImage: `url('https://flagcdn.com/w40/gb.png')`,
+      backgroundImage: `url('https://flagcdn.com/w40/vn.png')`,
+
       backgroundSize: 'cover',
       borderRadius: '50%',
     },

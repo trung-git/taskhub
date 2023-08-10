@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import NavBar from '../Home/NavBar';
 import { useTranslation } from 'react-i18next';
-import TaskHubLogo from '../../base/component/TaskHubLogo';
+import { TaskHubLogo } from '../../base/component/TaskHubLogo';
 import { navBarHeight } from '../../base/config';
 import SearchHome from '../Home/SearchHome';
 import PopularTask from '../Home/PopularTask';
