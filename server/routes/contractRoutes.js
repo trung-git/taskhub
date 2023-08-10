@@ -9,7 +9,7 @@ router.post('/', createContract);
 router.get('/', getContracts);
 router.get('/:contractId', getContractById);
 router.delete('/:contractId', deleteContract);
-router.delete('/active/:contractId', activeContract);
 router.patch('/:contractId', updateContract);
+router.patch('/active/:contractId', activeContract);
 
 module.exports = router;

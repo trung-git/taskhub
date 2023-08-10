@@ -89,7 +89,7 @@ exports.getContractById = catchAsync(async (req, res, next) => {
 exports.deleteContract = catchAsync(async (req, res, next) => {
   const { contractId } = req.params;
 
-  const contract = await Contract.deleteOne({
+  const contract = await Contract.findOneAndDelete({
     _id: contractId,
     finder: req.user._id,
   });
@@ -103,7 +103,7 @@ exports.deleteContract = catchAsync(async (req, res, next) => {
 exports.activeContract = catchAsync(async (req, res, next) => {
   const { contractId } = req.params;
 
-  const contract = await Contract.deleteOne({
+  const contract = await Contract.findOne({
     _id: contractId,
     finder: req.user._id,
   });
