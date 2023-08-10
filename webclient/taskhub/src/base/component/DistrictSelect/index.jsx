@@ -2,6 +2,7 @@ import { Autocomplete, MenuItem, Select, TextField } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { API_URL } from '../../config';
 
 const DistrictSelect = ({ cityId, onChange, value }) => {
   const [selectedValue, setSelectedValue] = useState(value);
@@ -31,9 +32,7 @@ const DistrictSelect = ({ cityId, onChange, value }) => {
     // console.log('cityIdChangefetchDistricData', cityId);
 
     axios
-      .get(
-        `https://taskhub-mhm7.onrender.com/api/v1/area/districts-by-city/${cityId}`
-      )
+      .get(`${API_URL}api/v1/area/districts-by-city/${cityId}`)
       .then((response) => {
         const responseData = response.data.data;
         setDistrict(responseData);

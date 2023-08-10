@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { green } from '@mui/material/colors';
 import ImagesSlider from '../../base/component/ImagesSlider';
 
-const TaskerCard = ({ taskerData }) => {
+const TaskerCard = ({ taskerData, onSelect }) => {
   const [isOpenUserModal, setIsOpenUserModal] = useState(false);
   const { t } = useTranslation();
   const theme = useTheme();
@@ -39,83 +39,6 @@ const TaskerCard = ({ taskerData }) => {
       value: 'Car',
     },
   ];
-
-  // const taskerData = {
-  //   _id: '64b253f56dc6525e4693f475',
-  //   workLocation: ['64a129fd40878eb40868ebd0'],
-  //   workTime: [
-  //     {
-  //       date: '',
-  //       start: '08:00',
-  //       end: '17:00',
-  //       _id: '64bea1f6b2e715f49d051fd4',
-  //     },
-  //     {
-  //       date: '',
-  //       start: '08:00',
-  //       end: '17:00',
-  //       _id: '64bea1f6b2e715f49d051fd5',
-  //     },
-  //     {
-  //       date: '',
-  //       start: '08:00',
-  //       end: '17:00',
-  //       _id: '64bea1f6b2e715f49d051fd6',
-  //     },
-  //     {
-  //       date: '',
-  //       start: '08:00',
-  //       end: '17:00',
-  //       _id: '64bea1f6b2e715f49d051fd7',
-  //     },
-  //     {
-  //       date: '',
-  //       start: '08:00',
-  //       end: '17:00',
-  //       _id: '64bea1f6b2e715f49d051fd8',
-  //     },
-  //     {
-  //       date: '',
-  //       start: '08:00',
-  //       end: '17:00',
-  //       _id: '64bea1f6b2e715f49d051fd9',
-  //     },
-  //     {
-  //       date: '',
-  //       start: '08:00',
-  //       end: '17:00',
-  //       _id: '64bea1f6b2e715f49d051fda',
-  //     },
-  //   ],
-  //   aboutMe:
-  //     'Ex tempor exercitation aliqua eiusmod. Sint exercitation exercitation Lorem velit labore proident Lorem quis fugiat. Velit Lorem consequat laboris adipisicing ex ut aliqua ut et et qui. Sint cillum cupidatat non proident do in esse amet ex ullamco id cillum deserunt. Esse velit irure sint veniam mollit aute aliqua eu aliquip Lorem ad. Consectetur velit consectetur fugiat amet pariatur eiusmod.',
-  //   skillAndExperience:
-  //     'Magna dolor officia consequat cupidatat nostrud. In proident ex irure reprehenderit do adipisicing sunt ullamco mollit proident dolor voluptate elit. Eu adipisicing elit enim elit nulla laborum. Mollit fugiat consectetur cillum elit nisi cupidatat occaecat. Ea deserunt exercitation laborum enim aute et aliqua aliqua adipisicing incididunt est laboris. Incididunt est et proident excepteur reprehenderit eiusmod proident laboris consequat anim sint mollit consectetur. Ipsum tempor id aliquip magna ad non pariatur qui Lorem quis cupidatat consequat enim.',
-  //   photos: [],
-  //   vehicle: 'Bike',
-  //   contracts: [],
-  //   averageRating: 4.5,
-  //   username: 'trunghuynh',
-  //   firstName: 'Trung',
-  //   lastName: 'Huynh',
-  //   dateOfBirth: '1993-02-11T00:00:00.000Z',
-  //   email: 'trunght1810@gmail.com',
-  //   phoneNumber: '0123456789',
-  //   gender: 'Male',
-  //   image:
-  //     'http://res.cloudinary.com/dxohnl1zt/image/upload/v1690478159/userAvatar/tfpbidvzdyryxi3domxi.jpg',
-  //   taskInfo: {
-  //     _id: '64a0163810f4179aa8f4c7b3',
-  //     title: 'Errands',
-  //     description:
-  //       'Ex velit aliquip cillum duis ut nisi ipsum. Id laborum esse cupidatat ut aliquip veniam fugiat dolore et. Sit amet aliquip sit nisi qui. Minim id culpa excepteur duis ullamco in.',
-  //     langKey: 'th_task_errands',
-  //     avgPrice: [5, 30],
-  //     defaultPrice: 6.12,
-  //     photo: '',
-  //     price: 7,
-  //   },
-  // };
 
   return (
     <React.Fragment>
@@ -151,6 +74,9 @@ const TaskerCard = ({ taskerData }) => {
               variant="contained"
               color="success"
               sx={{ textTransform: 'unset', fontSize: 18 }}
+              onClick={() => {
+                onSelect && onSelect(taskerData);
+              }}
             >
               {t('th_key_btn_select_continue')}
             </Button>
@@ -350,6 +276,9 @@ const TaskerCard = ({ taskerData }) => {
               variant="contained"
               color="success"
               sx={{ textTransform: 'unset', fontSize: 14 }}
+              onClick={() => {
+                onSelect && onSelect(taskerData);
+              }}
             >
               {t('th_key_btn_select_continue')}
             </Button>

@@ -2,6 +2,7 @@ import { Autocomplete, MenuItem, Select, TextField } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { API_URL } from '../../config';
 
 const CitySelect = ({ value, onChange }) => {
   const [selectedValue, setSelectedValue] = useState('');
@@ -25,9 +26,7 @@ const CitySelect = ({ value, onChange }) => {
       setLoading(true);
 
       // Gọi API để lấy danh sách các mục
-      const response = await axios.get(
-        'https://taskhub-mhm7.onrender.com/api/v1/area/city'
-      );
+      const response = await axios.get(`${API_URL}api/v1/area/city`);
       const responseData = response.data.data;
       console.log('responseDataCity', responseData);
 

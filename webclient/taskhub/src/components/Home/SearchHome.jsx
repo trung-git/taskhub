@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
+import { API_URL } from '../../base/config';
 
 const SearchHome = () => {
   const { t } = useTranslation();
@@ -29,9 +30,7 @@ const SearchHome = () => {
       setLoading(true);
 
       // Gọi API để lấy danh sách các mục
-      const response = await axios.get(
-        'https://taskhub-mhm7.onrender.com/api/v1/task-tag/'
-      );
+      const response = await axios.get(`${API_URL}api/v1/task-tag/`);
       const responseData = response.data.data;
       console.log('responseData', responseData);
       setData(responseData);

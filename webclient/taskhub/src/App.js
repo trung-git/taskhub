@@ -12,6 +12,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import 'dayjs/locale/en';
 import { LoginContext } from './provider/LoginContext';
 import useLogin from './hooks/useLogin';
+import { viVN } from '@mui/x-date-pickers/locales';
 
 const theme = createTheme({
   palette: {
@@ -39,7 +40,12 @@ const darkTheme = createTheme({
 
 function App() {
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <LocalizationProvider
+      localeText={
+        viVN.components.MuiLocalizationProvider.defaultProps.localeText
+      }
+      dateAdapter={AdapterDayjs}
+    >
       <MuiThemeProvider theme={darkTheme}>
         <I18nextProvider i18n={i18n}>
           <CssBaseline />
