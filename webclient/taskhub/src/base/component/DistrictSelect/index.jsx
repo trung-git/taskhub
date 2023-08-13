@@ -54,7 +54,9 @@ const DistrictSelect = ({ cityId, onChange, value }) => {
   const handleValueChange = (event) => {
     setSelectedValue(event.target.value);
     console.log('handleValueChange', event.target.value);
-    onChange && onChange(event.target.value);
+    // onChange && onChange(event.target.value);
+    onChange &&
+      onChange(district?.find((_ele) => _ele?._id === event.target.value));
   };
 
   return (

@@ -36,6 +36,7 @@ import { API_URL } from '../../base/config';
 import { LoginContext } from '../../provider/LoginContext';
 import AuthLogin from '../authentication/auth-forms/AuthLogin';
 import DateBookingModal from './DateBookingModal';
+import InvationDetail from './InvationDetail';
 
 const Finding = (props) => {
   const params = useParams();
@@ -58,8 +59,9 @@ const Finding = (props) => {
 
   const { isLogin } = useContext(LoginContext);
 
-  const [showDateBook, setshowDateBook] = useState(false);
+  const [showDateBook, setshowDateBook] = useState(false); // hiện form chọn ngày và giờ
   const [showLoginForm, setShowLoginForm] = useState(false);
+  const [showInvationDetail, setShowInvationDetail] = useState(false); // hiện form điền chi tiết
   const [selectedTasker, setSelectedTasker] = useState();
 
   // const [isfetchTaskerData, setIsfetchTaskerData] = useState(false);
@@ -115,14 +117,15 @@ const Finding = (props) => {
       taskTagId: id,
       districtIds:
         districtsSelected.length > 0
-          ? districtsSelected.join(',')
-          : districtsSelected[0],
+          ? districtsSelected.map((_item) => _item?._id).join(',')
+          : districtsSelected[0]?._id,
       pageNum: pageNum,
       price: price.join(','),
       sortOption: sortOption,
     };
-    activeStep === 1 && fetchTaskerData(paramsQuery);
-  }, [districtsSelected, pageNum, price, sortOption, activeStep, id]);
+    // activeStep === 1 && fetchTaskerData(paramsQuery);
+    fetchTaskerData(paramsQuery);
+  }, [districtsSelected, pageNum, price, sortOption, id]);
 
   console.log('activeStep', taskerData);
 
@@ -136,6 +139,8 @@ const Finding = (props) => {
 
   const handleCloseBookingForm = () => {
     setshowDateBook(false);
+    setShowInvationDetail(false);
+    setActiveStep(1);
   };
 
   const handleOnSelect = useCallback(
@@ -144,25 +149,44 @@ const Finding = (props) => {
       if (isLogin) {
         setSelectedTasker(taskerData);
         setshowDateBook(true);
+        setActiveStep(2);
       } else {
         setShowLoginForm(true);
       }
     },
-    [isLogin]
+    [isLogin, taskerData]
   );
+
+  const [bookingData, setBookingData] = useState(null);
+
+  const handleOnShowInvation = (bookingDataForm) => {
+    if (bookingDataForm) {
+      const inVationData = {
+        tasker: selectedTasker,
+        taskData: taskData,
+        city: citySelected,
+        district: districtSelected,
+        workTime: bookingDataForm,
+      };
+      setBookingData(inVationData);
+    }
+    setshowDateBook(false);
+    setShowInvationDetail(true);
+    setActiveStep(3);
+  };
 
   return (
     <React.Fragment>
-      {loading ? (
-        <Backdrop
-          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={loading}
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
-      ) : (
-        <Box sx={{ width: '100%' }}>
-          <NavBarStepper curStep={activeStep} />
+      <Box sx={{ width: '100%' }}>
+        <NavBarStepper curStep={activeStep} />
+        {loading ? (
+          <Backdrop
+            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={loading}
+          >
+            <CircularProgress color="success" />
+          </Backdrop>
+        ) : (
           <Container maxWidth="lg" sx={{ height: '100%' }}>
             {taskData && activeStep === 0 && (
               <Stack direction={'column'}>
@@ -186,7 +210,7 @@ const Finding = (props) => {
                     {t('th_key_select_city')}
                   </Typography>
                   <CitySelect
-                    value={citySelected}
+                    value={citySelected?._id}
                     onChange={(value) => {
                       // console.log('handleTaskDescripeChangeCity', value);
                       // handleTaskDescripeChange('city', value);
@@ -198,8 +222,8 @@ const Finding = (props) => {
                     {t('th_key_select_district')}
                   </Typography>
                   <DistrictSelect
-                    cityId={citySelected}
-                    value={districtSelected}
+                    cityId={citySelected?._id}
+                    value={districtSelected?._id}
                     onChange={(value) => {
                       setDistrictSelected(value);
                       setDistrictsSelected([value]);
@@ -218,7 +242,7 @@ const Finding = (props) => {
                 </Box>
               </Stack>
             )}
-            {taskData && activeStep === 1 && (
+            {taskData && activeStep >= 1 && (
               <Grid
                 container
                 spacing={2}
@@ -248,14 +272,14 @@ const Finding = (props) => {
                     <Box sx={{ width: '100%', mt: 2, px: 1 }}>
                       <PriceSlider value={price} onChange={setPrice} />
                     </Box>
-                    <Typography sx={{ fontWeight: 600, my: 0.5 }}>
+                    {/* <Typography sx={{ fontWeight: 600, my: 0.5 }}>
                       District:
                     </Typography>
                     <DistrictSelectMulti
                       cityId={citySelected}
                       value={districtsSelected}
                       onChange={(val) => setDistrictsSelected(val)}
-                    />
+                    /> */}
                   </Box>
                 </Grid>
                 {taskerData?.length > 0 ? (
@@ -333,12 +357,21 @@ const Finding = (props) => {
               </Grid>
             )}
           </Container>
-        </Box>
-      )}
+        )}
+      </Box>
+
       {showDateBook && (
         <DateBookingModal
           isOpen={showDateBook}
           userData={selectedTasker}
+          handleCloseBookingForm={handleCloseBookingForm}
+          onInvation={(bookingData) => handleOnShowInvation(bookingData)}
+        />
+      )}
+      {showInvationDetail && (
+        <InvationDetail
+          isOpen={showInvationDetail}
+          bookingData={bookingData}
           handleCloseBookingForm={handleCloseBookingForm}
         />
       )}

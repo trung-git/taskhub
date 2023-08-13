@@ -278,6 +278,7 @@ const TaskerCard = ({ taskerData, onSelect }) => {
               sx={{ textTransform: 'unset', fontSize: 14 }}
               onClick={() => {
                 onSelect && onSelect(taskerData);
+                handleCloseUserModal();
               }}
             >
               {t('th_key_btn_select_continue')}

@@ -45,6 +45,7 @@ const ImagesSlider = (props) => {
   const { images } = props;
 
   const theme = useTheme();
+  const matchDownMD = useMediaQuery(theme.breakpoints.down('md'));
   const matchUpLG = useMediaQuery(theme.breakpoints.up('lg'));
 
   const vertical = false;
@@ -120,7 +121,7 @@ const ImagesSlider = (props) => {
     centerMode: true,
     swipeToSlide: true,
     focusOnSelect: true,
-    centerPadding: '10px',
+    centerPadding: '0px',
     slidesToShow: 5,
     prevArrow: <ArrowUp />,
     nextArrow: <ArrowDown />,
@@ -128,15 +129,45 @@ const ImagesSlider = (props) => {
 
   return (
     <Box
+      // sx={{
+      //   '& .slick-slider': {
+      //     display: 'flex',
+      //     alignItems: 'center',
+      //     mt: vertical ? 2 : 1,
+      //     '& .slick-list': {
+      //       width: '100%',
+      //     },
+      //   },
+      // }}
       sx={{
+        // '& .slick-slider': {
+        //   display: 'flex',
+        //   alignItems: 'center',
+        //   mt: 2,
+        // },
+        display: 'flex',
+        width: '100%',
+        height: '100%',
         '& .slick-slider': {
           display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
           alignItems: 'center',
-          mt: vertical ? 2 : 1,
-          '& .slick-list': {
-            width: '100%',
-          },
+          mt: '10px',
+          width: 100,
         },
+        '& .slick-arrow': {
+          '&:hover': { bgcolor: theme.palette.grey.A200 },
+          position: 'initial',
+          color: theme.palette.grey[500],
+          bgcolor: theme.palette.grey.A200,
+          p: 0,
+          transform: 'rotate(90deg)',
+          borderRadius: '50%',
+          height: 17,
+          width: 19,
+        },
+        backgroundColor: 'red',
       }}
     >
       {images?.length ? (
@@ -144,15 +175,7 @@ const ImagesSlider = (props) => {
           {images?.map((item, index) => {
             return (
               <Box key={index}>
-                <ImageStyle src={item} sizes="xl" variant="rounded">
-                  {/* <Box
-                      component={'img'}
-                      src={item}
-                      className="rounded"
-                      alt=""
-                      sx={{ width: '100%', height: '100%' }}
-                    /> */}
-                </ImageStyle>
+                <ImageStyle src={item} sizes="xl" variant="rounded" />
               </Box>
             );
           })}

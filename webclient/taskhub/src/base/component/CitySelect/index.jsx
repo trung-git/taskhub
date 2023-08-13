@@ -44,8 +44,8 @@ const CitySelect = ({ value, onChange }) => {
 
   const handleValueChange = (event) => {
     setSelectedValue(event.target.value);
-    console.log('handleValueChange', event.target.value);
-    onChange && onChange(event.target.value);
+    onChange &&
+      onChange(data?.find((_ele) => _ele?._id === event.target.value));
   };
 
   return (
