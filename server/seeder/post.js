@@ -38,12 +38,8 @@ const posts = [
     address: "abc",
     workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
     workTime: {
-      date: "2023-08-08",
-      time: {
-        from : "13:00",
-        to: "14:00"
-      },
-      hour: 1
+      from : Date.now(),
+      to: Date.now() + (1000 * 60 * 60 * 2)
     }
   },
   {
@@ -76,12 +72,8 @@ const posts = [
     address: "abc",
     workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
     workTime: {
-      date: "2023-08-08",
-      time: {
-        from : "13:00",
-        to: "14:00"
-      },
-      hour: 1
+      from : Date.now(),
+      to: Date.now() + (1000 * 60 * 60 * 2)
     }
   },
   {
@@ -105,12 +97,8 @@ const posts = [
     address: "abc",
     workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
     workTime: {
-      date: "2023-08-08",
-      time: {
-        from : "13:00",
-        to: "14:00"
-      },
-      hour: 1
+      from : Date.now(),
+      to: Date.now() + (1000 * 60 * 60 * 2)
     }
   },
   {
@@ -134,12 +122,8 @@ const posts = [
     address: "abc",
     workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
     workTime: {
-      date: "2023-08-08",
-      time: {
-        from : "13:00",
-        to: "14:00"
-      },
-      hour: 1
+      from : Date.now(),
+      to: Date.now() + (1000 * 60 * 60 * 2)
     }
   },
   {
@@ -163,12 +147,8 @@ const posts = [
     address: "abc",
     workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
     workTime: {
-      date: "2023-08-08",
-      time: {
-        from : "13:00",
-        to: "14:00"
-      },
-      hour: 1
+      from : Date.now(),
+      to: Date.now() + (1000 * 60 * 60 * 2)
     }
   },
   {
@@ -192,12 +172,8 @@ const posts = [
     address: "abc",
     workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
     workTime: {
-      date: "2023-08-08",
-      time: {
-        from : "13:00",
-        to: "14:00"
-      },
-      hour: 1
+      from : Date.now(),
+      to: Date.now() + (1000 * 60 * 60 * 2)
     }
   },
   {
@@ -221,12 +197,8 @@ const posts = [
     address: "abc",
     workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
     workTime: {
-      date: "2023-08-08",
-      time: {
-        from : "13:00",
-        to: "14:00"
-      },
-      hour: 1
+      from : Date.now(),
+      to: Date.now() + (1000 * 60 * 60 * 2)
     }
   },
   {
@@ -250,12 +222,8 @@ const posts = [
     address: "abc",
     workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
     workTime: {
-      date: "2023-08-08",
-      time: {
-        from : "13:00",
-        to: "14:00"
-      },
-      hour: 1
+      from : Date.now(),
+      to: Date.now() + (1000 * 60 * 60 * 2)
     }
   },
   {
@@ -292,12 +260,8 @@ const posts = [
     address: "abc",
     workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
     workTime: {
-      date: "2023-08-08",
-      time: {
-        from : "13:00",
-        to: "14:00"
-      },
-      hour: 1
+      from : Date.now(),
+      to: Date.now() + (1000 * 60 * 60 * 2)
     }
   },
   {
@@ -334,12 +298,8 @@ const posts = [
     address: "abc",
     workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
     workTime: {
-      date: "2023-08-08",
-      time: {
-        from : "13:00",
-        to: "14:00"
-      },
-      hour: 1
+      from : Date.now(),
+      to: Date.now() + (1000 * 60 * 60 * 2)
     }
   },
   {
@@ -369,12 +329,8 @@ const posts = [
     address: "abc",
     workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
     workTime: {
-      date: "2023-08-08",
-      time: {
-        from : "13:00",
-        to: "14:00"
-      },
-      hour: 1
+      from : Date.now(),
+      to: Date.now() + (1000 * 60 * 60 * 2)
     }
   },
   {
@@ -404,12 +360,8 @@ const posts = [
     address: "abc",
     workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
     workTime: {
-      date: "2023-08-08",
-      time: {
-        from : "13:00",
-        to: "14:00"
-      },
-      hour: 1
+      from : Date.now(),
+      to: Date.now() + (1000 * 60 * 60 * 2)
     }
   },
   {
@@ -439,12 +391,8 @@ const posts = [
     address: "abc",
     workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
     workTime: {
-      date: "2023-08-08",
-      time: {
-        from : "13:00",
-        to: "14:00"
-      },
-      hour: 1
+      from : Date.now(),
+      to: Date.now() + (1000 * 60 * 60 * 2)
     }
   },
   {
@@ -474,12 +422,8 @@ const posts = [
     address: "abc",
     workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
     workTime: {
-      date: "2023-08-08",
-      time: {
-        from : "13:00",
-        to: "14:00"
-      },
-      hour: 1
+      from : Date.now(),
+      to: Date.now() + (1000 * 60 * 60 * 2)
     }
   },
   {
@@ -509,12 +453,8 @@ const posts = [
     address: "abc",
     workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
     workTime: {
-      date: "2023-08-08",
-      time: {
-        from : "13:00",
-        to: "14:00"
-      },
-      hour: 1
+      from : Date.now(),
+      to: Date.now() + (1000 * 60 * 60 * 2)
     }
   },
   {
@@ -544,12 +484,8 @@ const posts = [
     address: "abc",
     workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
     workTime: {
-      date: "2023-08-08",
-      time: {
-        from : "13:00",
-        to: "14:00"
-      },
-      hour: 1
+      from : Date.now(),
+      to: Date.now() + (1000 * 60 * 60 * 2)
     }
   },
   {
@@ -579,12 +515,8 @@ const posts = [
     address: "abc",
     workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
     workTime: {
-      date: "2023-08-08",
-      time: {
-        from : "13:00",
-        to: "14:00"
-      },
-      hour: 1
+      from : Date.now(),
+      to: Date.now() + (1000 * 60 * 60 * 2)
     }
   },
   {
@@ -614,12 +546,8 @@ const posts = [
     address: "abc",
     workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
     workTime: {
-      date: "2023-08-08",
-      time: {
-        from : "13:00",
-        to: "14:00"
-      },
-      hour: 1
+      from : Date.now(),
+      to: Date.now() + (1000 * 60 * 60 * 2)
     }
   },
   {
@@ -649,12 +577,8 @@ const posts = [
     address: "abc",
     workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
     workTime: {
-      date: "2023-08-08",
-      time: {
-        from : "13:00",
-        to: "14:00"
-      },
-      hour: 1
+      from : Date.now(),
+      to: Date.now() + (1000 * 60 * 60 * 2)
     }
   },
   {
@@ -684,12 +608,8 @@ const posts = [
     address: "abc",
     workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
     workTime: {
-      date: "2023-08-08",
-      time: {
-        from : "13:00",
-        to: "14:00"
-      },
-      hour: 1
+      from : Date.now(),
+      to: Date.now() + (1000 * 60 * 60 * 2)
     }
   },
   {
@@ -719,12 +639,8 @@ const posts = [
     address: "abc",
     workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
     workTime: {
-      date: "2023-08-08",
-      time: {
-        from : "13:00",
-        to: "14:00"
-      },
-      hour: 1
+      from : Date.now(),
+      to: Date.now() + (1000 * 60 * 60 * 2)
     }
   },
   {
@@ -754,12 +670,8 @@ const posts = [
     address: "abc",
     workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
     workTime: {
-      date: "2023-08-08",
-      time: {
-        from : "13:00",
-        to: "14:00"
-      },
-      hour: 1
+      from : Date.now(),
+      to: Date.now() + (1000 * 60 * 60 * 2)
     }
   },
   {
@@ -789,12 +701,8 @@ const posts = [
     address: "abc",
     workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
     workTime: {
-      date: "2023-08-08",
-      time: {
-        from : "13:00",
-        to: "14:00"
-      },
-      hour: 1
+      from : Date.now(),
+      to: Date.now() + (1000 * 60 * 60 * 2)
     }
   },
   {
@@ -824,12 +732,8 @@ const posts = [
     address: "abc",
     workLocation: mongoose.Types.ObjectId.createFromHexString("64a129fd40878eb40868ebd0"),
     workTime: {
-      date: "2023-08-08",
-      time: {
-        from : "13:00",
-        to: "14:00"
-      },
-      hour: 1
+      from : Date.now(),
+      to: Date.now() + (1000 * 60 * 60 * 2)
     }
   },
 ];

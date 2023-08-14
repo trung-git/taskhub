@@ -44,12 +44,8 @@ const postSchema = new mongoose.Schema(
     },
     workTime: {
       type: {
-        date: Date,
-        time: {
-          from: String,
-          to: String,
-        },
-        hour: Number,
+        from: Date,
+        to: Date,
       },
       required: [true, 'work Time can not empty!'],
     },
