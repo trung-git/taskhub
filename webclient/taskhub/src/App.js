@@ -8,6 +8,7 @@ import i18n from './i18n';
 import Routes from './routes';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import ThemeCustomization from './themes';
 
 import 'dayjs/locale/en';
 import { LoginContext } from './provider/LoginContext';
@@ -40,24 +41,26 @@ const darkTheme = createTheme({
 
 function App() {
   return (
-    <LocalizationProvider
-      localeText={
-        viVN.components.MuiLocalizationProvider.defaultProps.localeText
-      }
-      dateAdapter={AdapterDayjs}
-    >
-      <MuiThemeProvider theme={darkTheme}>
-        <I18nextProvider i18n={i18n}>
-          <CssBaseline />
-          <Box className="App">
-            <Scrolltop>
-              <Routes />
-            </Scrolltop>
-            <div id="toast"></div>
-          </Box>
-        </I18nextProvider>
-      </MuiThemeProvider>
-    </LocalizationProvider>
+    <ThemeCustomization>
+      <LocalizationProvider
+        localeText={
+          viVN.components.MuiLocalizationProvider.defaultProps.localeText
+        }
+        dateAdapter={AdapterDayjs}
+      >
+        <MuiThemeProvider theme={darkTheme}>
+          <I18nextProvider i18n={i18n}>
+            <CssBaseline />
+            <Box className="App">
+              <Scrolltop>
+                <Routes />
+              </Scrolltop>
+              <div id="toast"></div>
+            </Box>
+          </I18nextProvider>
+        </MuiThemeProvider>
+      </LocalizationProvider>
+    </ThemeCustomization>
   );
 }
 

@@ -248,7 +248,9 @@ function NavBar({ isLogin = true }) {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Thông tin cá nhân</MenuItem>
+                <MenuItem onClick={() => navigate('/profile/personal')}>
+                  Thông tin cá nhân
+                </MenuItem>
                 <MenuItem onClick={handleClose}>Quản lý công việc</MenuItem>
                 <MenuItem onClick={handleLogout}>
                   <Typography color={'error'} sx={{ mr: 1 }}>
