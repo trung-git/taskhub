@@ -458,7 +458,7 @@ const SignUp = () => {
                   loading={isSubmitting}
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
-                  color="success"
+                  // color="success"
                 >
                   {t('th_key_signin')}
                 </LoadingButton>

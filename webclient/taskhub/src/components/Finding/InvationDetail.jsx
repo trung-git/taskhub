@@ -191,7 +191,7 @@ const InvationDetail = ({ bookingData, isOpen, handleCloseBookingForm }) => {
           >
             <Button
               variant="contained"
-              color="success"
+              // color="success"
               // disabled={!isValidTime}
               // onClick={() => handleOnInvation()}
               sx={{ textTransform: 'unset' }}

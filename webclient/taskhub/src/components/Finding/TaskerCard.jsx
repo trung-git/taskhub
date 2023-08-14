@@ -64,7 +64,7 @@ const TaskerCard = ({ taskerData, onSelect }) => {
             />
             <Button
               variant="text"
-              color="success"
+              // color="success"
               onClick={handleOpenUserModal}
               sx={{ textTransform: 'unset', fontSize: 16 }}
             >
@@ -72,7 +72,7 @@ const TaskerCard = ({ taskerData, onSelect }) => {
             </Button>
             <Button
               variant="contained"
-              color="success"
+              // color="success"
               sx={{ textTransform: 'unset', fontSize: 18 }}
               onClick={() => {
                 onSelect && onSelect(taskerData);
@@ -132,7 +132,7 @@ const TaskerCard = ({ taskerData, onSelect }) => {
                 mt: 1,
                 alignItems: 'flex-start',
                 p: 3,
-                backgroundColor: green[100],
+                backgroundColor: theme.palette.primary.lighter,
                 borderRadius: 2,
               }}
             >
@@ -154,7 +154,7 @@ const TaskerCard = ({ taskerData, onSelect }) => {
               </Typography>
               <Button
                 variant="text"
-                color="success"
+                // color="success"
                 sx={{ p: '0px !important' }}
                 onClick={handleOpenUserModal}
               >
@@ -274,7 +274,7 @@ const TaskerCard = ({ taskerData, onSelect }) => {
           >
             <Button
               variant="contained"
-              color="success"
+              // color="success"
               sx={{ textTransform: 'unset', fontSize: 14 }}
               onClick={() => {
                 onSelect && onSelect(taskerData);

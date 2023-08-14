@@ -1,4 +1,4 @@
-import { useEffect, useState, ChangeEvent } from 'react';
+import { useEffect, useState, ChangeEvent, useContext } from 'react';
 import { Link } from 'react-router-dom';
 
 // material-ui
@@ -33,6 +33,7 @@ import ProfileTab from './ProfileTab';
 
 // import IconButton from 'components/@extended/IconButton';
 import MainCard from '../../base/component/MainCard';
+import { LoginContext } from '../../provider/LoginContext';
 
 // const avatarImage = require.context('assets/images/users', true);
 
@@ -48,6 +49,18 @@ const ProfileTabs = ({ focusInput }) => {
       setAvatar(URL.createObjectURL(selectedImage));
     }
   }, [selectedImage]);
+
+  const { currentUser } = useContext(LoginContext);
+
+  const [userData, setUserData] = useState();
+
+  useEffect(() => {
+    if (currentUser) {
+      setUserData(currentUser);
+    }
+  }, [currentUser]);
+
+  console.log('userDataProfileTabs', userData);
 
   //   const [anchorEl, setAnchorEl] =
   //     (useState < Element) | ((element) => Element) | null | (undefined > null);
@@ -165,7 +178,10 @@ const ProfileTabs = ({ focusInput }) => {
               onChange={(e) => setSelectedImage(e.target.files?.[0])}
             />
             <Stack spacing={0.5} alignItems="center">
-              <Typography variant="h5">Stebin Ben</Typography>
+              <Stack direction={'row'} alignItems="center" spacing={0.5}>
+                <Typography variant="h5">{userData?.firstName}</Typography>
+                <Typography variant="h5">{userData?.lastName}</Typography>
+              </Stack>
               <Typography color="green">Full Stack Developer</Typography>
             </Stack>
             <Stack
@@ -188,17 +204,17 @@ const ProfileTabs = ({ focusInput }) => {
           >
             <Stack spacing={0.5} alignItems="center">
               <Typography variant="h5">86</Typography>
-              <Typography color="green">Post</Typography>
+              <Typography color="green">Bài đăng</Typography>
             </Stack>
             <Divider orientation="vertical" flexItem />
             <Stack spacing={0.5} alignItems="center">
               <Typography variant="h5">40</Typography>
-              <Typography color="green">Project</Typography>
+              <Typography color="green">Công việc</Typography>
             </Stack>
             <Divider orientation="vertical" flexItem />
             <Stack spacing={0.5} alignItems="center">
-              <Typography variant="h5">4.5K</Typography>
-              <Typography color="green">Members</Typography>
+              <Typography variant="h5">60</Typography>
+              <Typography color="green">Taskoin</Typography>
             </Stack>
           </Stack>
         </Grid>

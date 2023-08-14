@@ -64,7 +64,7 @@ const ProfileTab = () => {
     >
       <ListItemButton
         selected={selectedIndex === 0}
-        onClick={() => handleListItemClick(0, '/apps/profiles/user/personal')}
+        onClick={() => handleListItemClick(0, '/profile/personal')}
       >
         <ListItemIcon>
           <PersonIcon />
@@ -73,7 +73,7 @@ const ProfileTab = () => {
       </ListItemButton>
       <ListItemButton
         selected={selectedIndex === 1}
-        onClick={() => handleListItemClick(1, '/apps/profiles/user/payment')}
+        onClick={() => handleListItemClick(1, '/profile/payment')}
       >
         <ListItemIcon>
           <PaymentsIcon />
@@ -82,7 +82,7 @@ const ProfileTab = () => {
       </ListItemButton>
       <ListItemButton
         selected={selectedIndex === 2}
-        onClick={() => handleListItemClick(2, '/apps/profiles/user/password')}
+        onClick={() => handleListItemClick(2, '/profile/password')}
       >
         <ListItemIcon>
           <LockIcon />
@@ -91,7 +91,7 @@ const ProfileTab = () => {
       </ListItemButton>
       <ListItemButton
         selected={selectedIndex === 3}
-        onClick={() => handleListItemClick(3, '/apps/profiles/user/settings')}
+        onClick={() => handleListItemClick(3, '/profile/settings')}
       >
         <ListItemIcon>
           <SettingsIcon />

@@ -139,7 +139,7 @@ function NavBar({ isLogin = true }) {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color="inherit"
+              // color="inherit"
             >
               <MenuIcon />
             </IconButton>
@@ -207,7 +207,7 @@ function NavBar({ isLogin = true }) {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={() => navigate('/chat')}
-              color="success"
+              // color="success"
             >
               <MessageIcon />
             </IconButton>
@@ -215,7 +215,7 @@ function NavBar({ isLogin = true }) {
           {!isLogin && (
             <Button
               variant="contained"
-              color="success"
+              // color="success"
               sx={{ display: { xs: 'none', md: 'block' } }}
             >
               {t('th_key_navbar_becometasker')}
@@ -229,7 +229,7 @@ function NavBar({ isLogin = true }) {
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={handleMenu}
-                color="success"
+                // color="success"
               >
                 <AccountCircle />
               </IconButton>

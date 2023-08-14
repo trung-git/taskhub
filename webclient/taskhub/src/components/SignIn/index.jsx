@@ -140,7 +140,7 @@ export default function SignInSide() {
                 name="username"
                 autoComplete="username"
                 autoFocus
-                color="success"
+                // color="success"
               />
               {/* <TextField
                 margin="normal"
@@ -151,7 +151,6 @@ export default function SignInSide() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
-                color="success"
               /> */}
               <FormControl fullWidth variant="outlined">
                 <InputLabel htmlFor="outlined-adornment-password">
@@ -159,7 +158,7 @@ export default function SignInSide() {
                 </InputLabel>
                 <OutlinedInput
                   id="outlined-adornment-password"
-                  color="success"
+                  // color="success"
                   type={showPassword ? 'text' : 'password'}
                   endAdornment={
                     <InputAdornment position="end">
@@ -190,7 +189,7 @@ export default function SignInSide() {
                 loading={isFetchLogin}
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                color="success"
+                // color="success"
               >
                 {t('th_key_signin')}
               </LoadingButton>

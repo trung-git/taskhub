@@ -230,7 +230,7 @@ const Finding = (props) => {
                     }}
                   />
                   <Button
-                    color="success"
+                    // color="success"
                     sx={{ width: 280, mt: 2, alignSelf: 'center' }}
                     size="large"
                     variant="contained"
@@ -320,7 +320,7 @@ const Finding = (props) => {
                         count={totalPage}
                         page={pageNum}
                         onChange={handlePageChange}
-                        color="success"
+                        // color="success"
                         size="large"
                       />
                     </Stack>
@@ -347,7 +347,7 @@ const Finding = (props) => {
                           count={totalPage}
                           page={pageNum}
                           onChange={handlePageChange}
-                          color="success"
+                          // color="success"
                           size="large"
                         />
                       </Stack>

@@ -73,7 +73,7 @@ function NavBarStepper({ curStep }) {
             }}
           >
             <Stepper
-              color="success"
+              // color="success"
               activeStep={activeStep}
               sx={{
                 '& .MuiStepIcon-root': {

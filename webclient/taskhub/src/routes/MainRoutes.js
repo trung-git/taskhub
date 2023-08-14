@@ -22,15 +22,15 @@ import UserPage from '../components/UserPage';
 const UserTabPersonal = Loadable(
   lazy(() => import('../components/UserPage/TabPersonal'))
 );
-// const UserTabPayment = Loadable(
-//   lazy(() => import('../components/UserPage/TabPayment'))
-// );
-// const UserTabPassword = Loadable(
-//   lazy(() => import('../components/UserPage/TabPassword'))
-// );
-// const UserTabSettings = Loadable(
-//   lazy(() => import('../components/UserPage/TabSettings'))
-// );
+const UserTabPayment = Loadable(
+  lazy(() => import('../components/UserPage/TabPayment'))
+);
+const UserTabPassword = Loadable(
+  lazy(() => import('../components/UserPage/TabPassword'))
+);
+const UserTabSettings = Loadable(
+  lazy(() => import('../components/UserPage/TabSettings'))
+);
 
 const MainRoutes = {
   path: '/',
@@ -63,18 +63,18 @@ const MainRoutes = {
           path: 'personal',
           element: <UserTabPersonal />,
         },
-        // {
-        //   path: 'payment',
-        //   element: <UserTabPayment />,
-        // },
-        // {
-        //   path: 'password',
-        //   element: <UserTabPassword />,
-        // },
-        // {
-        //   path: 'settings',
-        //   element: <UserTabSettings />,
-        // },
+        {
+          path: 'payment',
+          element: <UserTabPayment />,
+        },
+        {
+          path: 'password',
+          element: <UserTabPassword />,
+        },
+        {
+          path: 'settings',
+          element: <UserTabSettings />,
+        },
       ],
     },
   ],

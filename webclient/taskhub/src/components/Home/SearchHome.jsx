@@ -5,6 +5,7 @@ import {
   Autocomplete,
   Box,
   Button,
+  Paper,
   Stack,
   TextField,
   Typography,
@@ -60,11 +61,12 @@ const SearchHome = () => {
         sx={{
           width: 600,
           height: 300,
-          backgroundColor: '#fff',
+          // backgroundColor: '#fff',
           borderRadius: 3,
           display: 'flex',
           alignItems: 'center',
         }}
+        component={Paper}
       >
         <Stack direction={'column'} spacing={2} sx={{ width: '100%' }}>
           <Typography sx={{ fontSize: 32, fontWeight: 600 }}>
@@ -89,11 +91,11 @@ const SearchHome = () => {
                   {...params}
                 />
               )}
-              color="success"
+              // color="success"
               onChange={handleValueChange}
             />
             <Button
-              color="success"
+              // color="success"
               sx={{ width: 280 }}
               size="large"
               variant="contained"

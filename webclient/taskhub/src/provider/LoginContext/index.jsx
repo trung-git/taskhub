@@ -14,6 +14,7 @@ function LoginProvider({ children }) {
     const userData = getUserData();
     if (userData) {
       setIsLogin(true);
+      setCurrentUser(userData);
     } else {
       setIsLogin(false);
     }

@@ -10,6 +10,8 @@ import useLocalStorage from '../hooks/useLocalStorage';
 // initial state
 const initialState = {
   // ...config,
+  presetColor: 'theme3',
+  mode: 'dark',
   onChangeContainer: () => {},
   onChangeLocalization: (lang) => {},
   onChangeMode: (mode) => {},
