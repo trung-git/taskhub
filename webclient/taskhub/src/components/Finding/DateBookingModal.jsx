@@ -69,7 +69,10 @@ const DateBookingModal = ({
   // const [selectedTimeTo, setSelectedTimeTo] = useState(
   //   dayjs(parseStrTimeToDate(time2RoundedTime())).add(1, 'hour')
   // );
-  console.log('time2RoundedTime', time2RoundedTime());
+  console.log(
+    'time2RoundedTime',
+    dayjs(parseStrTimeToDate(time2RoundedTime()))
+  );
   const [isValidTime, setIsValidTime] = useState(true);
   const [unavailableList, setUnavailableList] = useState([]);
 

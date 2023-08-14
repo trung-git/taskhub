@@ -12,6 +12,7 @@ const initialState = {
   // ...config,
   presetColor: 'theme3',
   mode: 'dark',
+  fontFamily: "'Poppins', sans-serif",
   onChangeContainer: () => {},
   onChangeLocalization: (lang) => {},
   onChangeMode: (mode) => {},
@@ -27,6 +28,8 @@ const ConfigContext = createContext(initialState);
 
 function ConfigProvider({ children }) {
   const [config, setConfig] = useLocalStorage('th-page-config', initialState);
+
+  console.log('configConfigProvider', config);
 
   const onChangeContainer = () => {
     setConfig({

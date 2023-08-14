@@ -85,9 +85,9 @@ const Chat = () => {
       </Box>
     </Box>
   ) : (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%', height: '100vh' }}>
       <NavBar isLogin={isLogin} />
-      <Container maxWidth="xl" sx={{ height: '100%' }}>
+      <Container maxWidth="lg" sx={{ height: '100%' }}>
         <Box
           sx={{
             mt: 3,

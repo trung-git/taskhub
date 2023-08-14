@@ -24,6 +24,7 @@ import LanguageSwitch from '../../base/component/LanguageSwitch';
 import useLogin from '../../hooks/useLogin';
 import { LoginContext } from '../../provider/LoginContext';
 import { useContext } from 'react';
+import ThemeModeSwitch from '../../base/component/ThemeModeSwitch';
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
@@ -262,6 +263,7 @@ function NavBar({ isLogin = true }) {
             </div>
           )}
           <LanguageSwitch />
+          <ThemeModeSwitch />
         </Toolbar>
       </Container>
     </AppBar>

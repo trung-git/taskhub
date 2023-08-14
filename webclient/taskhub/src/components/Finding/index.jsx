@@ -37,6 +37,7 @@ import { LoginContext } from '../../provider/LoginContext';
 import AuthLogin from '../authentication/auth-forms/AuthLogin';
 import DateBookingModal from './DateBookingModal';
 import InvationDetail from './InvationDetail';
+import { LoadingButton } from '@mui/lab';
 
 const Finding = (props) => {
   const params = useParams();
@@ -111,6 +112,7 @@ const Finding = (props) => {
       console.error('Error fetching data:', error);
     }
   };
+  const [enableSearch, setEnableSearch] = useState(false);
 
   useEffect(() => {
     const paramsQuery = {
@@ -123,9 +125,17 @@ const Finding = (props) => {
       price: price.join(','),
       sortOption: sortOption,
     };
-    // activeStep === 1 && fetchTaskerData(paramsQuery);
-    fetchTaskerData(paramsQuery);
-  }, [districtsSelected, pageNum, price, sortOption, id]);
+    enableSearch && fetchTaskerData(paramsQuery);
+    // fetchTaskerData(paramsQuery);
+  }, [
+    districtsSelected,
+    pageNum,
+    price,
+    sortOption,
+    id,
+    // activeStep,
+    enableSearch,
+  ]);
 
   console.log('activeStep', taskerData);
 
@@ -229,16 +239,18 @@ const Finding = (props) => {
                       setDistrictsSelected([value]);
                     }}
                   />
-                  <Button
+                  <LoadingButton
+                    loading={loadingTasker}
+                    loadingPosition="start"
                     // color="success"
                     sx={{ width: 280, mt: 2, alignSelf: 'center' }}
                     size="large"
                     variant="contained"
                     disabled={!citySelected || !districtSelected}
-                    onClick={() => fetchTaskerData(paramsQuery)}
+                    onClick={() => setEnableSearch(true)}
                   >
                     {t('th_key_home_finding_now')}
-                  </Button>
+                  </LoadingButton>
                 </Box>
               </Stack>
             )}
