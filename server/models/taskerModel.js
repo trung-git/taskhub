@@ -11,13 +11,6 @@ const baseOptions = {
 const taskerSchema = new mongoose.Schema(
   {
     workLocation: [{ type: mongoose.Schema.ObjectId, ref: 'District' }],
-    workTime: [
-      {
-        index: { type: String },
-        start: { type: String },
-        end: { type: String },
-      },
-    ],
     unavailableTime: [
       {
         date: Date,

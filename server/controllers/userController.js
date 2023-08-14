@@ -54,7 +54,6 @@ exports.getTaskers = catchAsync(async (req, res, next) => {
         image: 1,
         city: 1,
         workLocation: 1,
-        workTime: 1,
         aboutMe: 1,
         skillAndExperience: 1,
         photos: 1,
@@ -227,7 +226,6 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   }
   if (user.role === 'Tasker') {
     user.workLocation = req.body.workLocation || user.workLocation;
-    user.workTime = req.body.workTime || user.workTime;
     user.taskTag = req.body.taskTag || user.taskTag;
     user.aboutMe = req.body.aboutMe || user.aboutMe;
     user.skillAndExperience =

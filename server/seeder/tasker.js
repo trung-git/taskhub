@@ -26,43 +26,6 @@ const taskers = [
         price: 7,
       },
     ],
-    workTime: [
-      {
-        index: '01',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '02',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '03',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '04',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '05',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '06',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '07',
-        start: '08:00',
-        end: '17:00',
-      },
-    ],
     reviews: [
       mongoose.Types.ObjectId.createFromHexString('64a029cd505314a289b1c18d'),
     ],
@@ -110,43 +73,6 @@ const taskers = [
         price: 7,
       },
     ],
-    workTime: [
-      {
-        index: '01',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '02',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '03',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '04',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '05',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '06',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '07',
-        start: '08:00',
-        end: '17:00',
-      },
-    ],
     reviews: [
       mongoose.Types.ObjectId.createFromHexString('64a029cd505314a289b1c18d'),
     ],
@@ -189,43 +115,6 @@ const taskers = [
           '64a0163810f4179aa8f4c7b3'
         ),
         price: 9,
-      },
-    ],
-    workTime: [
-      {
-        index: '01',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '02',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '03',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '04',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '05',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '06',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '07',
-        start: '08:00',
-        end: '17:00',
       },
     ],
     unavailableTime: [
@@ -288,43 +177,6 @@ const taskers = [
         price: 11,
       },
     ],
-    workTime: [
-      {
-        index: '01',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '02',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '03',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '04',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '05',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '06',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '07',
-        start: '08:00',
-        end: '17:00',
-      },
-    ],
     unavailableTime: [
       {
         date: '2023-08-11',
@@ -375,43 +227,6 @@ const taskers = [
         price: 15,
       },
     ],
-    workTime: [
-      {
-        index: '01',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '02',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '03',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '04',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '05',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '06',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '07',
-        start: '08:00',
-        end: '17:00',
-      },
-    ],
     reviews: [
       mongoose.Types.ObjectId.createFromHexString('64a029cd505314a289b1c18d'),
     ],
@@ -444,43 +259,6 @@ const taskers = [
           '64a0163810f4179aa8f4c7b3'
         ),
         price: 5,
-      },
-    ],
-    workTime: [
-      {
-        index: '01',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '02',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '03',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '04',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '05',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '06',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '07',
-        start: '08:00',
-        end: '17:00',
       },
     ],
     reviews: [
@@ -523,43 +301,6 @@ const taskers = [
         price: 20,
       },
     ],
-    workTime: [
-      {
-        index: '01',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '02',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '03',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '04',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '05',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '06',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '07',
-        start: '08:00',
-        end: '17:00',
-      },
-    ],
     reviews: [
       mongoose.Types.ObjectId.createFromHexString('64a029d2f3638096a8cf4de7'),
     ],
@@ -591,43 +332,6 @@ const taskers = [
           '64a01c237aa7438ccab0850b'
         ),
         price: 77,
-      },
-    ],
-    workTime: [
-      {
-        index: '01',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '02',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '03',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '04',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '05',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '06',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '07',
-        start: '08:00',
-        end: '17:00',
       },
     ],
     reviews: [
@@ -664,43 +368,6 @@ const taskers = [
         price: 55,
       },
     ],
-    workTime: [
-      {
-        index: '01',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '02',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '03',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '04',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '05',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '06',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '07',
-        start: '08:00',
-        end: '17:00',
-      },
-    ],
     reviews: [
       mongoose.Types.ObjectId.createFromHexString('64a02beae0dd076a732bc0f2'),
     ],
@@ -733,43 +400,6 @@ const taskers = [
           '64a0163810f4179aa8f4c7b3'
         ),
         price: 33,
-      },
-    ],
-    workTime: [
-      {
-        index: '01',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '02',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '03',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '04',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '05',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '06',
-        start: '08:00',
-        end: '17:00',
-      },
-      {
-        index: '07',
-        start: '08:00',
-        end: '17:00',
       },
     ],
     reviews: [
