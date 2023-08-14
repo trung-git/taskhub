@@ -13,6 +13,7 @@ exports.createContract = catchAsync(async (req, res, next) => {
     workLocationId,
     description,
     workTime,
+    expiredAt
   } = req.body;
 
   const tasker = await Tasker.findById(taskerId);
@@ -46,6 +47,7 @@ exports.createContract = catchAsync(async (req, res, next) => {
     price: taskTag.price,
     workTime,
     description,
+    expiredAt: expiredAt
   });
 
   return res.status(200).json({
@@ -59,6 +61,7 @@ exports.getContracts = catchAsync(async (req, res, next) => {
 
   const contracts = await Contract.find({
     [role.toLowerCase()]: _id,
+    expiredAt: {$gt: Date.now()}
   });
 
   return res.status(200).json({
@@ -74,6 +77,7 @@ exports.getContractById = catchAsync(async (req, res, next) => {
   const contract = await Contract.findOne({
     _id: contractId,
     [role.toLowerCase()]: _id,
+    expiredAt: {$gt: Date.now()}
   });
 
   if (!contract) {
@@ -140,6 +144,7 @@ exports.updateContract = catchAsync(async (req, res, next) => {
   contract.workTime = req.body.workTime || contract.workTime;
   contract.description = req.body.description || contract.description;
   contract.otherProps = req.body.otherProps || contract.otherProps;
+  contract.expiredAt = req.body.expiredAt || contract.expiredAt;
 
   const updatedContract = await contract.save();
 

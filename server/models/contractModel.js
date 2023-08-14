@@ -60,6 +60,9 @@ const contractModel = new mongoose.Schema(
       },
       required: [true, 'work Time can not empty!'],
     },
+    expiredAt: {
+      type: Date,
+    },
     description: {
       type: String,
       required: [true, 'Description can not empty!'],
