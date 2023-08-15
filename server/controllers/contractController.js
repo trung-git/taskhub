@@ -137,21 +137,25 @@ exports.updateContract = catchAsync(async (req, res, next) => {
     return next(new AppError('Contract not found', 400));
   }
 
-  const workLocation = await District.findById(req.body.workLocationId);
-  if (!workLocation) {
-    return next(new AppError("Work location not found"))
+  if (req.body.workLocationId) {
+    const workLocation = await District.findById(req.body.workLocationId);
+    if (!workLocation) {
+      return next(new AppError("Work location not found"))
+    }
+    contract.workLocation = workLocation._id || contract.workLocation;
   }
 
-  const taskTag = contract.tasker.taskTag.find((v) => {
-    return String(v.taskInfo._id) === req.body.taskTagId;
-  });
-  if (!taskTag) {
-    return next(new AppError('Invalid Task Tag', 400));
+  if (req.body.taskTagId) {
+    const taskTag = contract.tasker.taskTag.find((v) => {
+      return String(v.taskInfo._id) === req.body.taskTagId;
+    });
+    if (!taskTag) {
+      return next(new AppError('Invalid Task Tag', 400));
+    }
+    contract.taskTag = taskTag._id || contract.taskTag;
   }
 
   contract.address = req.body.address || contract.address;
-  contract.workLocation = workLocation._id || contract.workLocation;
-  contract.taskTag = taskTag._id || contract.taskTag;
   contract.price = req.body.price || contract.price;
   contract.status = req.body.status || contract.status;
   contract.isPaid = req.body.isPaid || contract.isPaid;
