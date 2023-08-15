@@ -62,10 +62,17 @@ exports.createContract = catchAsync(async (req, res, next) => {
 
 exports.getContracts = catchAsync(async (req, res, next) => {
   const { _id, role } = req.user;
+  const { status } = req.query;
 
-  const contracts = await Contract.find({
+  const query = {
     [role.toLowerCase()]: _id,
-  }).populate({
+  };
+
+  if (status) {
+    query.status = status;
+  }
+
+  const contracts = await Contract.find(query).populate({
     path: 'finder tasker taskTag workLocation',
   });
 
@@ -78,11 +85,18 @@ exports.getContracts = catchAsync(async (req, res, next) => {
 exports.getContractById = catchAsync(async (req, res, next) => {
   const { contractId } = req.params;
   const { _id, role } = req.user;
-
-  const contract = await Contract.findOne({
+  const { status } = req.query;
+  
+  const query = {
     _id: contractId,
     [role.toLowerCase()]: _id,
-  }).populate({
+  };
+  
+  if (status) {
+    query.status = status;
+  };
+
+  const contract = await Contract.findOne(query).populate({
     path: 'finder tasker taskTag workLocation',
   });
 
