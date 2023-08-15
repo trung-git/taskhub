@@ -33,21 +33,22 @@ const contractModel = new mongoose.Schema(
     price: {
       type: Number,
     },
+    status: {
+      type: String,
+      enum: {
+        values: ["invitation", "discuss", "start", "end", "finish"]
+      },
+      default: "invitation"
+    },
     isPaid: {
       type: Boolean,
       default: false,
     },
-    isActive: {
-      type: Boolean,
-      default: false,
+    startTime: {
+      type: Date,
     },
-    isStart: {
-      type: Boolean,
-      default: false,
-    },
-    isDone: {
-      type: Boolean,
-      default: false,
+    endTime: {
+      type: Date,
     },
     workTime: {
       type: {
@@ -56,8 +57,9 @@ const contractModel = new mongoose.Schema(
       },
       required: [true, 'work Time can not empty!'],
     },
-    expiredAt: {
+    expireAt: {
       type: Date,
+      expires: 0
     },
     description: {
       type: String,

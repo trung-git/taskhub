@@ -13,7 +13,7 @@ exports.createContract = catchAsync(async (req, res, next) => {
     workLocationId,
     description,
     workTime,
-    expiredAt
+    expireAt
   } = req.body;
 
   const tasker = await Tasker.findById(taskerId);
@@ -47,12 +47,16 @@ exports.createContract = catchAsync(async (req, res, next) => {
     price: taskTag.price,
     workTime,
     description,
-    expiredAt: expiredAt
+    expireAt: expireAt
+  });
+  
+  const populatedContract = await Contract.populate(contract ,{
+    path: 'finder tasker taskTag workLocation',
   });
 
   return res.status(200).json({
     status: 'success',
-    data: contract,
+    data: populatedContract,
   });
 });
 
@@ -61,7 +65,8 @@ exports.getContracts = catchAsync(async (req, res, next) => {
 
   const contracts = await Contract.find({
     [role.toLowerCase()]: _id,
-    expiredAt: {$gt: Date.now()}
+  }).populate({
+    path: 'finder tasker taskTag workLocation',
   });
 
   return res.status(200).json({
@@ -77,7 +82,8 @@ exports.getContractById = catchAsync(async (req, res, next) => {
   const contract = await Contract.findOne({
     _id: contractId,
     [role.toLowerCase()]: _id,
-    expiredAt: {$gt: Date.now()}
+  }).populate({
+    path: 'finder tasker taskTag workLocation',
   });
 
   if (!contract) {
@@ -104,27 +110,6 @@ exports.deleteContract = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.activeContract = catchAsync(async (req, res, next) => {
-  const { contractId } = req.params;
-
-  const contract = await Contract.findOne({
-    _id: contractId,
-    finder: req.user._id,
-  });
-
-  if (!contract) {
-    return next(new AppError('Contract not found', 400));
-  }
-
-  contract.isActive = true;
-  const updatedContract = await contract.save();
-
-  return res.status(200).json({
-    status: 'success',
-    data: updatedContract,
-  });
-});
-
 exports.updateContract = catchAsync(async (req, res, next) => {
   const { contractId } = req.params;
   const { _id, role } = req.user;
@@ -138,18 +123,38 @@ exports.updateContract = catchAsync(async (req, res, next) => {
     return next(new AppError('Contract not found', 400));
   }
 
+  const workLocation = await District.findById(req.body.workLocationId);
+  if (!workLocation) {
+    return next(new AppError("Work location not found"))
+  }
+
+  const taskTag = contract.tasker.taskTag.find((v) => {
+    return String(v.taskInfo._id) === req.body.taskTagId;
+  });
+  if (!taskTag) {
+    return next(new AppError('Invalid Task Tag', 400));
+  }
+
   contract.address = req.body.address || contract.address;
-  contract.workLocation = req.body.workLocationId || contract.workLocation;
+  contract.workLocation = workLocation._id || contract.workLocation;
+  contract.taskTag = taskTag._id || contract.taskTag;
   contract.price = req.body.price || contract.price;
+  contract.status = req.body.status || contract.status;
+  contract.isPaid = req.body.isPaid || contract.isPaid;
+  contract.startTime = req.body.startTime || contract.startTime;
+  contract.endTime = req.body.endTime || contract.endTime;
   contract.workTime = req.body.workTime || contract.workTime;
+  contract.expireAt = req.body.updateExpires ? req.body.expireAt : contract.expireAt;
   contract.description = req.body.description || contract.description;
   contract.otherProps = req.body.otherProps || contract.otherProps;
-  contract.expiredAt = req.body.expiredAt || contract.expiredAt;
 
   const updatedContract = await contract.save();
 
+  const populatedContract = await Contract.populate(updatedContract ,{
+    path: 'finder tasker taskTag workLocation',
+  });
   return res.status(200).json({
     status: 'success',
-    data: updatedContract,
+    data: populatedContract,
   });
 });
