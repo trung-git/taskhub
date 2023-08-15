@@ -40,6 +40,7 @@ const MainCard = forwardRef(
       codeHighlight = false,
       codeString,
       modal = false,
+      headerSXProps,
       ...others
     },
     ref
@@ -91,7 +92,7 @@ const MainCard = forwardRef(
         {/* card header and action */}
         {!darkTitle && title && (
           <CardHeader
-            sx={headerSX}
+            sx={{ ...headerSX, ...headerSXProps }}
             titleTypographyProps={{ variant: 'subtitle1' }}
             title={title}
             action={secondary}

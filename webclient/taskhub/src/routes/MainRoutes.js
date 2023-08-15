@@ -11,13 +11,10 @@ import AuthRegister from '../components/authentication/Register';
 import Loadable from '../base/component/Loadable';
 import Finding from '../components/Finding';
 import UserPage from '../components/UserPage';
+import TaskList from '../components/TaskList';
+import TaskDetail from '../components/TaskDetail';
 
-// const AuthLogin = Loadable(
-//   lazy(() => import('../components/authentication/Login'))
-// );
-// const AuthRegister = Loadable(
-//   lazy(() => import('../components/authentication/Register'))
-// );
+// const Finding = Loadable(lazy(() => import('../components/Finding')));
 
 const UserTabPersonal = Loadable(
   lazy(() => import('../components/UserPage/TabPersonal'))
@@ -54,6 +51,14 @@ const MainRoutes = {
     {
       path: 'find/:id',
       element: <Finding />,
+    },
+    {
+      path: 'tasklist',
+      element: <TaskList />,
+    },
+    {
+      path: 'tasklist/:id',
+      element: <TaskDetail />,
     },
     {
       path: 'profile',

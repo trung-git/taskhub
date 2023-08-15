@@ -41,13 +41,13 @@ function NavBar({ isLogin = true }) {
     {
       languageKey: 'th_key_navbar_task_feed',
       onClick: () => {
-        navigate('/login');
+        navigate('/post');
       },
     },
     {
       languageKey: 'th_key_navbar_services',
       onClick: () => {
-        navigate('/login');
+        navigate('/tasklist');
       },
     },
     {
@@ -61,13 +61,13 @@ function NavBar({ isLogin = true }) {
     {
       languageKey: 'th_key_navbar_task_feed',
       onClick: () => {
-        navigate('/login');
+        navigate('/post');
       },
     },
     {
       languageKey: 'th_key_navbar_services',
       onClick: () => {
-        navigate('/login');
+        navigate('/tasklist');
       },
     },
     {
@@ -250,12 +250,12 @@ function NavBar({ isLogin = true }) {
                 onClose={handleClose}
               >
                 <MenuItem onClick={() => navigate('/profile/personal')}>
-                  Thông tin cá nhân
+                  {t('th_key_person_information')}
                 </MenuItem>
-                <MenuItem onClick={handleClose}>Quản lý công việc</MenuItem>
+                {/* <MenuItem onClick={handleClose}>Quản lý công việc</MenuItem> */}
                 <MenuItem onClick={handleLogout}>
                   <Typography color={'error'} sx={{ mr: 1 }}>
-                    {t('Đăng xuất')}
+                    {t('th_key_logout')}
                   </Typography>
                   <LogoutIcon color="error" fontSize="small" />
                 </MenuItem>

@@ -9,11 +9,22 @@ const useLogin = () => {
     localStorage.setItem('users_taskhub_app_value', JSON.stringify(data));
   }
 
-  function logOut() {
-    localStorage.removeItem('users_taskhub_app_value');
+  function getUserToken() {
+    const token =
+      JSON.parse(localStorage.getItem('users_taskhub_app_token')) ?? null;
+    return token;
   }
 
-  return { getUserData, setUserData, logOut };
+  function setUserToken(data) {
+    localStorage.setItem('users_taskhub_app_token', JSON.stringify(data));
+  }
+
+  function logOut() {
+    localStorage.removeItem('users_taskhub_app_value');
+    localStorage.removeItem('users_taskhub_app_token');
+  }
+
+  return { getUserData, setUserData, logOut, setUserToken, getUserToken };
 };
 
 export default useLogin;

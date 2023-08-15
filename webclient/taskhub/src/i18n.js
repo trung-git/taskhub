@@ -11,8 +11,12 @@ const resources = {
       //
       th_key_main_switch_lang: 'English',
       //
+      th_task_errands: 'Errands',
+      //
       th_key_signup: 'Sign Up',
       th_key_signin: 'Sign In',
+      th_key_logout: 'Log out',
+      th_key_person_information: 'Personal',
       //
       th_key_navbar_becometasker: 'Become a Tasker',
       th_key_navbar_signup_login: 'Sign up / Log in',
@@ -47,6 +51,11 @@ const resources = {
       th_key_vhc_car: 'Car',
       th_key_how_i_can_help: 'How I can help',
       th_key_about_me: 'About me',
+      th_key_tasklist_tab_current: 'Current',
+      th_key_tasklist_tab_invation: 'Invationed',
+      th_key_tasklist_tab_finish: 'Finished',
+      th_key_tasklist_manage: 'Manage task list',
+      th_key_tasklist_btn_view_detail: 'View detail',
     },
   },
   vi: {
@@ -54,12 +63,16 @@ const resources = {
       //
       th_key_main_switch_lang: 'Tiếng Việt',
       //
+      th_task_errands: 'Việc vặt',
+      //
       th_key_signup: 'Đăng ký',
       th_key_signin: 'Đăng nhập',
+      th_key_logout: 'Đăng xuất',
+      th_key_person_information: 'Thông tin cá nhân',
       //
       th_key_navbar_becometasker: 'Nhận việc',
       th_key_navbar_signup_login: 'Đăng ký / Đăng nhập',
-      th_key_navbar_services: 'Dịch vụ',
+      th_key_navbar_services: 'Quản lý việc',
       th_key_navbar_task_feed: 'Bảng tin việc',
       //
       th_key_home_help_search_title: 'Bạn cần giúp đỡ gì ?',
@@ -89,6 +102,11 @@ const resources = {
       th_key_vhc_car: 'Xe hơi',
       th_key_how_i_can_help: 'Tôi có thể giúp gì',
       th_key_about_me: 'Giới thiệu',
+      th_key_tasklist_tab_current: 'Hiện tại',
+      th_key_tasklist_tab_invation: 'Đã gửi lời mời',
+      th_key_tasklist_tab_finish: 'Đã hoàn thành',
+      th_key_tasklist_manage: 'Quản lý danh sách công việc',
+      th_key_tasklist_btn_view_detail: 'Xem chi tiết',
     },
   },
 };

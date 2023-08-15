@@ -45,7 +45,7 @@ const AuthLogin = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const { setUserData } = useLogin();
+  const { setUserData, setUserToken } = useLogin();
 
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => {
@@ -68,6 +68,7 @@ const AuthLogin = () => {
         // Handle successful login
         console.log('userData', response);
         setUserData(response?.data?.data?.user);
+        setUserToken(response?.data?.token);
         setSubmitting(false);
         setStatus({ success: true });
         logincontext.setIsLogin(true);
