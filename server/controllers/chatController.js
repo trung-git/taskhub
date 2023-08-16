@@ -3,7 +3,6 @@ const Chat = require('../models/chatModel');
 const Message = require('../models/messageModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
-const User = require('../models/userModel');
 
 exports.getChats = catchAsync(async (req, res, next) => {
   const chats = await Chat.find({
@@ -73,33 +72,11 @@ exports.getAchievedChats = catchAsync(async (req, res, next) => {
 });
 
 exports.sendMessage = catchAsync(async (req, res, next) => {
-  const { userId, message } = req.body;
+  const { chatId, message } = req.body;
 
-  const receiveUser = await User.findById(userId);
-  if (!receiveUser) {
-    return next(new AppError('User not found'), 400);
-  }
-
-  let chat = await Chat.findOne({
-    $or: [
-      {
-        $and: [
-          { 'users.1.user': req.user._id },
-          { 'users.0.user': receiveUser._id },
-        ],
-      },
-      {
-        $and: [
-          { 'users.0.user': req.user._id }, 
-          { 'users.1.user': receiveUser._id },
-        ],
-      },
-    ],
-  });
+  let chat = await Chat.findById(chatId);
   if (!chat) {
-    chat = await Chat.create({
-      users: [{ user: req.user._id }, { user: receiveUser._id }],
-    });
+    return next(new AppError('Chat not found'), 400);
   }
   const newMessage = await Message.create({
     chat: chat._id,
