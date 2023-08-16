@@ -7,7 +7,7 @@ const fileUpload = require('express-fileupload');
 
 const corsOptions = {
   origin: ['http://localhost:3000'],
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  credentials: true,
 };
 
 //Set up
@@ -30,6 +30,7 @@ const areaRouter = require('./routes/areaRoutes.js');
 const postRouter = require('./routes/postRoutes.js');
 const chatRouter = require('./routes/chatRoutes.js');
 const contractRouter = require('./routes/contractRoutes.js');
+const reviewRouter = require('./routes/reviewRoutes.js');
 
 // Utils
 const globalErrorHandler = require('./controllers/errorController');
@@ -44,6 +45,7 @@ app.use('/api/v1/area', areaRouter);
 app.use('/api/v1/post', postRouter);
 app.use('/api/v1/chat', chatRouter);
 app.use('/api/v1/contract', contractRouter);
+app.use('/api/v1/review', reviewRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Not found ${req.originalUrl}`, 404));

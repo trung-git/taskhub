@@ -66,6 +66,10 @@ const contractModel = new mongoose.Schema(
       required: [true, 'Description can not empty!'],
     },
     otherProps: [{ key: { type: String }, value: [{ type: String }] }],
+    review: {
+      type: mongoose.Types.ObjectId,
+      ref: "Review",
+    }
   },
   { timestamps: true }
 );

@@ -64,10 +64,13 @@ const taskerSchema = new mongoose.Schema(
 );
 
 taskerSchema.pre('save', async function (next) {
-  const reviewIds = this.reviews; // Mảng các reference id
+  // Only run this function if reviews was actually modified
+  if (!this.isModified('reviews')) return next();
+
+  const reviewIds = this.reviews;
   const reviews = await Review.find({ _id: { $in: reviewIds } });
   const total = reviews.reduce((sum, review) => sum + review.rating, 0);
-  this.averagePrice = reviews.length > 0 ? total / reviews.length : 0;
+  this.averageRating = reviews.length > 0 ? total / reviews.length : 0;
   next();
 });
 

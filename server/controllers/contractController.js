@@ -73,7 +73,7 @@ exports.getContracts = catchAsync(async (req, res, next) => {
   }
 
   const contracts = await Contract.find(query).populate({
-    path: 'finder tasker taskTag workLocation',
+    path: 'finder tasker taskTag workLocation review',
   });
 
   return res.status(200).json({
@@ -97,7 +97,7 @@ exports.getContractById = catchAsync(async (req, res, next) => {
   };
 
   const contract = await Contract.findOne(query).populate({
-    path: 'finder tasker taskTag workLocation',
+    path: 'finder tasker taskTag workLocation review',
   });
 
   if (!contract) {
@@ -173,7 +173,7 @@ exports.updateContract = catchAsync(async (req, res, next) => {
   const updatedContract = await contract.save();
 
   const populatedContract = await Contract.populate(updatedContract ,{
-    path: 'finder tasker taskTag workLocation',
+    path: 'finder tasker taskTag workLocation review',
   });
   return res.status(200).json({
     status: 'success',
