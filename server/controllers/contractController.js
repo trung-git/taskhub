@@ -118,6 +118,10 @@ exports.deleteContract = catchAsync(async (req, res, next) => {
     finder: req.user._id,
   });
 
+  await Chat.findOneAndDelete({
+    _id: contract.chat
+  })
+
   return res.status(200).json({
     status: 'success',
     data: contract,
