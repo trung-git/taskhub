@@ -39,6 +39,7 @@ const TaskCard = ({ task }) => {
     createdAt,
     price,
     _id: id,
+    expireAt,
   } = task;
   const { t } = useTranslation();
   // const [open, setOpen] = useState(false);
@@ -198,6 +199,9 @@ const TaskCard = ({ task }) => {
             </Grid>
           </Grid>
         </Grid>
+        <Grid item xs={12}>
+          <Divider />
+        </Grid>
       </Grid>
       <Stack
         direction="row"
@@ -206,9 +210,16 @@ const TaskCard = ({ task }) => {
         justifyContent="space-between"
         sx={{ mt: 'auto', mb: 0, pt: 2.25 }}
       >
-        <Typography variant="caption" color="secondary">
-          Ngày tạo {dayjs(createdAt).format('DD/MM/YYYY HH:mm')}
-        </Typography>
+        <Stack direction={'column'} sx={{ alignItems: 'flex-start' }}>
+          <Typography variant="caption" color="secondary">
+            Ngày tạo {dayjs(createdAt).format('DD/MM/YYYY HH:mm')}
+          </Typography>
+          <Typography variant="caption" color="secondary">
+            {`${t('Thời hạn phản hồi')} : ${dayjs(expireAt).format(
+              'DD/MM/YYYY HH:mm'
+            )}`}
+          </Typography>
+        </Stack>
         <Button variant="outlined" size="small" onClick={handleClickOpen}>
           {t('th_key_tasklist_btn_view_detail')}
         </Button>
