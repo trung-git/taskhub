@@ -181,15 +181,22 @@ const updatePost = catchAsync(async (req, res, next) => {
       return next(new AppError('Failed to upload files.'));
     }
   }
-  if (photos && req.body.photos) {
-    post.photos = [...req.body.photos, ...photos];
-  } else if (photos && !req.body.photos) {
-    post.photos = [...(post.photos.length === 0 ? [] : post.photos), ...photos];
-  } else if (!photos && req.body.photos) {
+  
+  if (!photos && req.body.photos) {
     post.photos = req.body.photos;
-
-    // TODO delete photo
-    // const deletedPhotos = post.photos.filter(v => !req.body.photos.includes(v));
+    const deletedPhotos = post.photos.filter(v => !req.body.photos.includes(v));
+    if (deletedPhotos.length > 0) {
+      try {
+        deletedPhotos.forEach(async v => {
+          await cloudinary.uploader.destroy(v);
+        })
+      } catch (error) {
+        console.error(error);
+        return next(new AppError('Failed to delete files.'));
+      }
+    }
+  } else if (photos && req.body.photos) {
+    post.photos = [...(post.photos.length === 0 ? [] : post.photos), ...photos];
   }
 
   post.text = req.body.text || post.text;
