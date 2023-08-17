@@ -31,6 +31,7 @@ const postRouter = require('./routes/postRoutes.js');
 const chatRouter = require('./routes/chatRoutes.js');
 const contractRouter = require('./routes/contractRoutes.js');
 const reviewRouter = require('./routes/reviewRoutes.js');
+const walletRouter = require('./routes/walletRoutes.js');
 
 // Utils
 const globalErrorHandler = require('./controllers/errorController');
@@ -46,6 +47,7 @@ app.use('/api/v1/post', postRouter);
 app.use('/api/v1/chat', chatRouter);
 app.use('/api/v1/contract', contractRouter);
 app.use('/api/v1/review', reviewRouter);
+app.use('/api/v1/wallet', walletRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Not found ${req.originalUrl}`, 404));
