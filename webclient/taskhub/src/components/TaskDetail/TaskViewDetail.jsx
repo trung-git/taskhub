@@ -2,6 +2,7 @@
 import {
   Button,
   Grid,
+  IconButton,
   InputLabel,
   Stack,
   TextField,
@@ -13,6 +14,10 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import MainCard from '../../base/component/MainCard';
 import { useTheme } from '@emotion/react';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ChatIcon from '@mui/icons-material/Chat';
+import SpeakerNotesOffIcon from '@mui/icons-material/SpeakerNotesOff';
 
 const validationSchema = yup.object({
   email: yup
@@ -25,26 +30,17 @@ const validationSchema = yup.object({
     .required('Password is required'),
 });
 
-const TaskViewDetail = ({ task }) => {
+const TaskViewDetail = ({ task, onSubmit, viewChat, onToggleChat }) => {
+  const { taskTag, workLocation, address, workTime, price } = task;
   const theme = useTheme();
   const formik = useFormik({
     initialValues: {
-      email: '',
+      address: '',
       password: '',
     },
-    validationSchema,
+    // validationSchema,
     onSubmit: (values) => {
-      //   dispatch(
-      //     openSnackbar({
-      //       open: true,
-      //       message: 'Submit Success',
-      //       variant: 'alert',
-      //       alert: {
-      //         color: 'success'
-      //       },
-      //       close: false
-      //     })
-      //   );
+      onSubmit && onSubmit(values);
     },
   });
 
@@ -62,7 +58,6 @@ const TaskViewDetail = ({ task }) => {
     >
       <Grid
         container
-        spacing={3}
         sx={{
           height: '100%',
         }}
@@ -71,152 +66,188 @@ const TaskViewDetail = ({ task }) => {
           item
           xs={12}
           sx={{
-            bgcolor: theme.palette.background.paper,
-            pr: 2,
+            bgcolor:
+              theme.palette.mode === 'dark'
+                ? theme.palette.background.paper
+                : undefined,
+            pr: 0,
             pb: 2,
+            mr: 2,
             borderBottom: `1px solid ${theme.palette.divider}`,
           }}
         >
           <Grid container justifyContent="space-between" alignItems={'center'}>
-            <Grid item>
-              <Stack direction="row" alignItems="center" spacing={1}>
-                <Stack direction={'row'} alignItems={'center'}>
-                  <Typography variant="subtitle1">
-                    Thông tin công việc
-                  </Typography>
-                </Stack>
+            <Grid item xs={12}>
+              <Stack
+                direction="row"
+                alignItems="center"
+                sx={{ width: '100%' }}
+                justifyContent={'space-between'}
+              >
+                <IconButton variant="outlined" color="secondary">
+                  <ArrowBackIcon />
+                </IconButton>
+                <Typography variant="subtitle1">Thông tin công việc</Typography>
+                <IconButton
+                  variant="outlined"
+                  color="secondary"
+                  onClick={onToggleChat}
+                >
+                  {viewChat ? <SpeakerNotesOffIcon /> : <ChatIcon />}
+                </IconButton>
               </Stack>
             </Grid>
           </Grid>
         </Grid>
         <Grid item xs={12} sx={{ height: '100%', pr: 2, pb: 3 }}>
-          <form onSubmit={formik.handleSubmit} style={{ height: '100%' }}>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Stack spacing={1}>
-                  <InputLabel htmlFor="email" sx={{ textAlign: 'start' }}>
-                    Task
-                  </InputLabel>
-                  <TextField
-                    fullWidth
-                    id="email"
-                    name="email"
-                    placeholder="Enter email address"
-                    value={formik.values.email}
-                    onChange={formik.handleChange}
-                    error={formik.touched.email && Boolean(formik.errors.email)}
-                    helperText={formik.touched.email && formik.errors.email}
-                  />
-                </Stack>
+          <form
+            onSubmit={formik.handleSubmit}
+            style={{ height: '100%', pb: 4 }}
+          >
+            <Stack
+              direction={'column'}
+              justifyContent={'space-between'}
+              sx={{ height: '100%', pb: 6 }}
+            >
+              <Grid container spacing={3} sx={{ mt: 0 }}>
+                <Grid item xs={12}>
+                  <Stack spacing={1}>
+                    <InputLabel htmlFor="email" sx={{ textAlign: 'start' }}>
+                      Task
+                    </InputLabel>
+                    <TextField
+                      fullWidth
+                      id="email"
+                      name="email"
+                      placeholder="Enter email address"
+                      value={formik.values.email}
+                      onChange={formik.handleChange}
+                      error={
+                        formik.touched.email && Boolean(formik.errors.email)
+                      }
+                      helperText={formik.touched.email && formik.errors.email}
+                    />
+                  </Stack>
+                </Grid>
+                <Grid item xs={12}>
+                  <Stack spacing={1}>
+                    <InputLabel htmlFor="email" sx={{ textAlign: 'start' }}>
+                      Work Location
+                    </InputLabel>
+                    <TextField
+                      fullWidth
+                      id="password"
+                      name="password"
+                      placeholder="Enter your password"
+                      type="password"
+                      value={formik.values.password}
+                      onChange={formik.handleChange}
+                      error={
+                        formik.touched.password &&
+                        Boolean(formik.errors.password)
+                      }
+                      helperText={
+                        formik.touched.password && formik.errors.password
+                      }
+                    />
+                  </Stack>
+                </Grid>
+                <Grid item xs={12}>
+                  <Stack spacing={1}>
+                    <InputLabel htmlFor="email" sx={{ textAlign: 'start' }}>
+                      Address
+                    </InputLabel>
+                    <TextField
+                      fullWidth
+                      id="email"
+                      name="email"
+                      placeholder="Enter email address"
+                      value={formik.values.email}
+                      onChange={formik.handleChange}
+                      error={
+                        formik.touched.email && Boolean(formik.errors.email)
+                      }
+                      helperText={formik.touched.email && formik.errors.email}
+                    />
+                  </Stack>
+                </Grid>
+                <Grid item xs={12}>
+                  <Stack spacing={1}>
+                    <InputLabel htmlFor="email" sx={{ textAlign: 'start' }}>
+                      Working time
+                    </InputLabel>
+                    <TextField
+                      fullWidth
+                      id="email"
+                      name="email"
+                      placeholder="Enter email address"
+                      value={formik.values.email}
+                      onChange={formik.handleChange}
+                      error={
+                        formik.touched.email && Boolean(formik.errors.email)
+                      }
+                      helperText={formik.touched.email && formik.errors.email}
+                    />
+                  </Stack>
+                </Grid>
+                <Grid item xs={12}>
+                  <Stack spacing={1}>
+                    <InputLabel htmlFor="email" sx={{ textAlign: 'start' }}>
+                      Price
+                    </InputLabel>
+                    <TextField
+                      fullWidth
+                      id="email"
+                      name="email"
+                      placeholder="Enter email address"
+                      value={formik.values.email}
+                      onChange={formik.handleChange}
+                      error={
+                        formik.touched.email && Boolean(formik.errors.email)
+                      }
+                      helperText={formik.touched.email && formik.errors.email}
+                    />
+                  </Stack>
+                </Grid>
+                <Grid item xs={12}>
+                  <Stack spacing={1}>
+                    <InputLabel htmlFor="email" sx={{ textAlign: 'start' }}>
+                      Description
+                    </InputLabel>
+                    <TextField
+                      fullWidth
+                      id="email"
+                      name="email"
+                      placeholder="Enter email address"
+                      value={formik.values.email}
+                      onChange={formik.handleChange}
+                      error={
+                        formik.touched.email && Boolean(formik.errors.email)
+                      }
+                      helperText={formik.touched.email && formik.errors.email}
+                    />
+                  </Stack>
+                </Grid>
               </Grid>
-              <Grid item xs={12}>
-                <Stack spacing={1}>
-                  <InputLabel htmlFor="email" sx={{ textAlign: 'start' }}>
-                    Work Location
-                  </InputLabel>
-                  <TextField
-                    fullWidth
-                    id="password"
-                    name="password"
-                    placeholder="Enter your password"
-                    type="password"
-                    value={formik.values.password}
-                    onChange={formik.handleChange}
-                    error={
-                      formik.touched.password && Boolean(formik.errors.password)
-                    }
-                    helperText={
-                      formik.touched.password && formik.errors.password
-                    }
-                  />
-                </Stack>
-              </Grid>
-              <Grid item xs={12}>
-                <Stack spacing={1}>
-                  <InputLabel htmlFor="email" sx={{ textAlign: 'start' }}>
-                    Address
-                  </InputLabel>
-                  <TextField
-                    fullWidth
-                    id="email"
-                    name="email"
-                    placeholder="Enter email address"
-                    value={formik.values.email}
-                    onChange={formik.handleChange}
-                    error={formik.touched.email && Boolean(formik.errors.email)}
-                    helperText={formik.touched.email && formik.errors.email}
-                  />
-                </Stack>
-              </Grid>
-              <Grid item xs={12}>
-                <Stack spacing={1}>
-                  <InputLabel htmlFor="email" sx={{ textAlign: 'start' }}>
-                    Working time
-                  </InputLabel>
-                  <TextField
-                    fullWidth
-                    id="email"
-                    name="email"
-                    placeholder="Enter email address"
-                    value={formik.values.email}
-                    onChange={formik.handleChange}
-                    error={formik.touched.email && Boolean(formik.errors.email)}
-                    helperText={formik.touched.email && formik.errors.email}
-                  />
-                </Stack>
-              </Grid>
-              <Grid item xs={12}>
-                <Stack spacing={1}>
-                  <InputLabel htmlFor="email" sx={{ textAlign: 'start' }}>
-                    Price
-                  </InputLabel>
-                  <TextField
-                    fullWidth
-                    id="email"
-                    name="email"
-                    placeholder="Enter email address"
-                    value={formik.values.email}
-                    onChange={formik.handleChange}
-                    error={formik.touched.email && Boolean(formik.errors.email)}
-                    helperText={formik.touched.email && formik.errors.email}
-                  />
-                </Stack>
-              </Grid>
-              <Grid item xs={12}>
-                <Stack spacing={1}>
-                  <InputLabel htmlFor="email" sx={{ textAlign: 'start' }}>
-                    Description
-                  </InputLabel>
-                  <TextField
-                    fullWidth
-                    id="email"
-                    name="email"
-                    placeholder="Enter email address"
-                    value={formik.values.email}
-                    onChange={formik.handleChange}
-                    error={formik.touched.email && Boolean(formik.errors.email)}
-                    helperText={formik.touched.email && formik.errors.email}
-                  />
-                </Stack>
-              </Grid>
-              <Grid item xs={12}>
-                <Stack spacing={1}>
-                  <InputLabel htmlFor="email" sx={{ textAlign: 'start' }}>
-                    Lasted update at: 23:20 17/08/2023
-                  </InputLabel>
-                </Stack>
-              </Grid>
-              <Grid item xs={12} sx={{}}>
-                <Stack direction="row" justifyContent="flex-end" spacing={2}>
-                  <Button variant="outlined" color="secondary">
-                    Làm mới
-                  </Button>
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                spacing={2}
+                alignItems={'center'}
+              >
+                <InputLabel htmlFor="email" sx={{ textAlign: 'start' }}>
+                  Lasted update at: 23:20 17/08/2023
+                </InputLabel>
+                <Stack spacing={3} direction={'row'}>
+                  <IconButton variant="outlined" color="secondary">
+                    <RefreshIcon />
+                  </IconButton>
                   <Button variant="contained" type="submit">
-                    Cập nhật
+                    Save
                   </Button>
                 </Stack>
-              </Grid>
-            </Grid>
+              </Stack>
+            </Stack>
           </form>
         </Grid>
       </Grid>

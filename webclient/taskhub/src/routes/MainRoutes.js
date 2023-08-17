@@ -13,6 +13,7 @@ import Finding from '../components/Finding';
 import UserPage from '../components/UserPage';
 import TaskList from '../components/TaskList';
 import TaskDetail from '../components/TaskDetail';
+import PostList from '../components/PostList';
 
 // const Finding = Loadable(lazy(() => import('../components/Finding')));
 
@@ -59,6 +60,10 @@ const MainRoutes = {
     {
       path: 'tasklist/:id',
       element: <TaskDetail />,
+    },
+    {
+      path: 'post',
+      element: <PostList />,
     },
     {
       path: 'profile',

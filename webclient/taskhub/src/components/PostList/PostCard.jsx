@@ -27,10 +27,11 @@ import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router';
+import { MoreOutlined } from '@mui/icons-material';
 
-const TaskCard = ({ task }) => {
+const PostCard = ({ post }) => {
   const {
-    tasker,
+    user,
     address,
     workLocation,
     workTime,
@@ -40,7 +41,7 @@ const TaskCard = ({ task }) => {
     price,
     _id: id,
     expireAt,
-  } = task;
+  } = post;
   const { t } = useTranslation();
   // const [open, setOpen] = useState(false);
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ const TaskCard = ({ task }) => {
     navigate(`/tasklist/${id}`);
   };
 
-  console.log('taskTaskCard', task);
+  console.log('postCard', post);
 
   // const handleClose = () => {
   //   setOpen(false);
@@ -64,7 +65,6 @@ const TaskCard = ({ task }) => {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
-
   return (
     <MainCard
       sx={{
@@ -79,18 +79,30 @@ const TaskCard = ({ task }) => {
       <Grid container spacing={2.25}>
         <Grid item xs={12}>
           <List sx={{ width: 1, p: 0 }}>
-            <ListItem disablePadding>
+            <ListItem
+              disablePadding
+              secondaryAction={
+                <IconButton
+                  edge="end"
+                  aria-label="comments"
+                  color="secondary"
+                  onClick={handleMenuClick}
+                >
+                  <MoreOutlined style={{ fontSize: '1.15rem' }} />
+                </IconButton>
+              }
+            >
               <ListItemAvatar>
                 <Avatar
                   sx={{ width: 50, height: 50 }}
-                  alt={tasker?.firstName}
-                  src={tasker?.image}
+                  alt={user?.firstName}
+                  src={user?.image}
                 />
               </ListItemAvatar>
               <ListItemText
                 primary={
                   <Typography variant="subtitle1">
-                    {`${tasker?.firstName} ${tasker?.lastName}`}
+                    {`${user?.firstName} ${user?.lastName}`}
                   </Typography>
                 }
                 secondary={
@@ -101,7 +113,7 @@ const TaskCard = ({ task }) => {
               />
             </ListItem>
           </List>
-          {/* <Menu
+          <Menu
             id="fade-menu"
             MenuListProps={{
               'aria-labelledby': 'fade-button',
@@ -119,11 +131,9 @@ const TaskCard = ({ task }) => {
               horizontal: 'right',
             }}
           >
-            <MenuItem onClick={handleClickOpen}>Preview</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Share</MenuItem>
             <MenuItem onClick={handleMenuClose}>Edit</MenuItem>
             <MenuItem onClick={handleMenuClose}>Delete</MenuItem>
-          </Menu> */}
+          </Menu>
         </Grid>
         <Grid item xs={12}>
           <Divider />
@@ -157,7 +167,7 @@ const TaskCard = ({ task }) => {
                   <ListItemIcon>
                     <AttachMoneyOutlinedIcon color="primary" />
                   </ListItemIcon>
-                  <ListItemText primary={price.toString()} />
+                  <ListItemText primary={price?.toString()} />
                 </ListItem>
                 <ListItem>
                   <ListItemIcon>
@@ -230,4 +240,4 @@ const TaskCard = ({ task }) => {
   );
 };
 
-export default TaskCard;
+export default PostCard;

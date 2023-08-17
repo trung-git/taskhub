@@ -68,6 +68,7 @@ const ChatHistory = ({ data, theme, user }) => {
                             <Typography
                               variant="h6"
                               color={theme.palette.grey[0]}
+                              sx={{ overflowWrap: 'anywhere', float: 'left' }}
                             >
                               {history.text}
                             </Typography>
@@ -109,7 +110,11 @@ const ChatHistory = ({ data, theme, user }) => {
                     <CardContent sx={{ p: 1, pb: '8px !important' }}>
                       <Grid container spacing={1}>
                         <Grid item xs={12}>
-                          <Typography variant="h6" color="textPrimary">
+                          <Typography
+                            variant="h6"
+                            color="textPrimary"
+                            sx={{ textAlign: 'left' }}
+                          >
                             {history.text}
                           </Typography>
                         </Grid>

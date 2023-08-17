@@ -1,6 +1,7 @@
 import {
   Box,
   ClickAwayListener,
+  Collapse,
   Container,
   Grid,
   IconButton,
@@ -91,7 +92,7 @@ const TaskDetail = () => {
 
   const matchDownSM = useMediaQuery(theme.breakpoints.down('lg'));
   const matchDownMD = useMediaQuery(theme.breakpoints.down('md'));
-  const [emailDetails, setEmailDetails] = useState(false);
+  const [viewChat, setViewChat] = useState(false);
   const [user, setUser] = useState({});
 
   const [data, setData] = useState([]);
@@ -106,8 +107,8 @@ const TaskDetail = () => {
     setAnchorEl(null);
   };
 
-  const handleUserChange = () => {
-    setEmailDetails((prev) => !prev);
+  const handleToggleChat = () => {
+    setViewChat((prev) => !prev);
   };
 
   const [openChatDrawer, setOpenChatDrawer] = useState(true);
@@ -199,131 +200,132 @@ const TaskDetail = () => {
   return (
     <Box sx={{ width: '100%' }}>
       <NavBar isLogin={isLogin} />
-      <Container maxWidth="lg" sx={{ mt: 3 }}>
-        <Box sx={{ display: 'flex' }}>
+      <Container maxWidth="lg" sx={{ mt: 3, height: 'calc(100vh - 116px)' }}>
+        <Box sx={{ display: 'flex', height: '100%' }}>
           <Main theme={theme} open={openChatDrawer}>
-            <Grid container>
-              {!matchDownMD && (
-                <Grid item xs={12} md={6} xl={6}>
-                  <TaskViewDetail task={taskData} />
+            <Grid container sx={{ height: '100%' }}>
+              {!matchDownMD && taskData && (
+                <Grid
+                  item
+                  xs={12}
+                  md={viewChat ? 6 : 12}
+                  xl={viewChat ? 6 : 12}
+                >
+                  <TaskViewDetail
+                    task={taskData}
+                    viewChat={viewChat}
+                    onToggleChat={handleToggleChat}
+                  />
                 </Grid>
               )}
-              <Grid item xs={12} md={6} xl={6}>
-                <MainCard
-                  content={false}
-                  sx={{
-                    bgcolor:
-                      theme.palette.mode === 'dark' ? 'dark.main' : 'grey.50',
-                    pt: 2,
-                    pl: 2,
-                    borderRadius: emailDetails ? '0' : '0 4px 4px 0',
-                  }}
-                >
-                  <Grid container spacing={3}>
-                    <Grid
-                      item
-                      xs={12}
-                      sx={{
-                        bgcolor: theme.palette.background.paper,
-                        pr: 2,
-                        pb: 2,
-                        borderBottom: `1px solid ${theme.palette.divider}`,
-                      }}
-                    >
+              {viewChat && (
+                <Grid item xs={12} md={6} xl={6}>
+                  <MainCard
+                    content={false}
+                    sx={{
+                      bgcolor:
+                        theme.palette.mode === 'dark' ? 'dark.main' : 'grey.50',
+                      pt: 2,
+                      pl: 2,
+                      borderRadius: viewChat ? '0' : '0 4px 4px 0',
+                      height: '100%',
+                    }}
+                  >
+                    <Grid container spacing={3}>
                       <Grid
-                        container
-                        justifyContent="space-between"
-                        alignItems={'center'}
-                      >
-                        <Grid item>
-                          <Stack
-                            direction="row"
-                            alignItems="center"
-                            spacing={1}
-                          >
-                            <Stack direction={'row'} alignItems={'center'}>
-                              <Typography variant="subtitle1">
-                                Trò chuyện
-                              </Typography>
-                            </Stack>
-                          </Stack>
-                        </Grid>
-                        {/* <Grid item>
-                          <Stack
-                            direction="row"
-                            alignItems="center"
-                            justifyContent="flex-end"
-                            spacing={1}
-                          >
-                            <IconButton
-                              onClick={handleUserChange}
-                              size="large"
-                              color={emailDetails ? 'error' : 'secondary'}
-                            ></IconButton>
-                          </Stack>
-                        </Grid> */}
-                      </Grid>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <SimpleBar
+                        item
+                        xs={12}
                         sx={{
-                          overflowX: 'hidden',
-                          height: 'calc(100vh - 410px)',
-                          minHeight: 420,
+                          bgcolor: theme.palette.background.paper,
+                          pr: 2,
+                          pb: 2,
+                          borderBottom: `1px solid ${theme.palette.divider}`,
                         }}
                       >
-                        <Box sx={{ pl: 1, pr: 3 }}>
-                          <ChatHistory theme={theme} user={user} data={data} />
-                        </Box>
-                      </SimpleBar>
-                    </Grid>
-                    <Grid
-                      item
-                      xs={12}
-                      sx={{
-                        mt: 3,
-                        bgcolor: theme.palette.background.paper,
-                        borderTop: `1px solid ${theme.palette.divider}`,
-                      }}
-                    >
-                      <Stack>
-                        <TextField
-                          inputRef={textInput}
-                          fullWidth
-                          multiline
-                          rows={2}
-                          placeholder="Your Message..."
-                          value={message}
-                          onChange={(e) =>
-                            setMessage(
-                              e.target.value.length <= 1
-                                ? e.target.value.trim()
-                                : e.target.value
-                            )
-                          }
-                          onKeyPress={handleEnter}
-                          variant="standard"
-                          sx={{
-                            pr: 2,
-                            '& .MuiInput-root:before': {
-                              borderBottomColor: theme.palette.divider,
-                            },
-                          }}
-                        />
-                        <Stack
-                          direction="row"
+                        <Grid
+                          container
                           justifyContent="space-between"
-                          alignItems="center"
+                          alignItems={'center'}
                         >
-                          <Stack direction="row" sx={{ py: 2, ml: -1 }}>
-                            <IconButton
-                              sx={{ opacity: 0.5 }}
-                              size="medium"
-                              color="secondary"
+                          <Grid item>
+                            <Stack
+                              direction="row"
+                              alignItems="center"
+                              spacing={1}
                             >
-                              <ImageIcon />
-                            </IconButton>
-                            {/* <Grid item>
+                              <Stack direction={'row'} alignItems={'center'}>
+                                <Typography variant="subtitle1">
+                                  Trò chuyện
+                                </Typography>
+                              </Stack>
+                            </Stack>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <SimpleBar
+                          sx={{
+                            overflowX: 'hidden',
+                            height: 'calc(100vh - 410px)',
+                            minHeight: 420,
+                          }}
+                        >
+                          <Box sx={{ pl: 1, pr: 3 }}>
+                            <ChatHistory
+                              theme={theme}
+                              user={user}
+                              data={data}
+                            />
+                          </Box>
+                        </SimpleBar>
+                      </Grid>
+                      <Grid
+                        item
+                        xs={12}
+                        sx={{
+                          mt: 3,
+                          bgcolor: theme.palette.background.paper,
+                          borderTop: `1px solid ${theme.palette.divider}`,
+                        }}
+                      >
+                        <Stack>
+                          <TextField
+                            inputRef={textInput}
+                            fullWidth
+                            multiline
+                            rows={2}
+                            placeholder="Your Message..."
+                            value={message}
+                            onChange={(e) =>
+                              setMessage(
+                                e.target.value.length <= 1
+                                  ? e.target.value.trim()
+                                  : e.target.value
+                              )
+                            }
+                            onKeyPress={handleEnter}
+                            variant="standard"
+                            sx={{
+                              pr: 2,
+                              '& .MuiInput-root:before': {
+                                borderBottomColor: theme.palette.divider,
+                              },
+                            }}
+                          />
+                          <Stack
+                            direction="row"
+                            justifyContent="space-between"
+                            alignItems="center"
+                          >
+                            <Stack direction="row" sx={{ py: 2, ml: -1 }}>
+                              <IconButton
+                                sx={{ opacity: 0.5 }}
+                                size="medium"
+                                color="secondary"
+                              >
+                                <ImageIcon />
+                              </IconButton>
+                              {/* <Grid item>
                               <IconButton
                                 ref={anchorElEmoji}
                                 aria-describedby={emojiId}
@@ -367,36 +369,55 @@ const TaskDetail = () => {
                                 </ClickAwayListener>
                               </Popper>
                             </Grid> */}
-                            {/* <IconButton
+                              {/* <IconButton
                               sx={{ opacity: 0.5 }}
                               size="medium"
                               color="secondary"
                             >
                               <SoundOutlined />
                             </IconButton> */}
+                            </Stack>
+                            <IconButton
+                              color="primary"
+                              onClick={handleOnSend}
+                              size="large"
+                              sx={{ mr: 1.5 }}
+                            >
+                              <SendIcon />
+                            </IconButton>
                           </Stack>
-                          <IconButton
-                            color="primary"
-                            onClick={handleOnSend}
-                            size="large"
-                            sx={{ mr: 1.5 }}
-                          >
-                            <SendIcon />
-                          </IconButton>
                         </Stack>
-                      </Stack>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </MainCard>
-              </Grid>
+                  </MainCard>
+                </Grid>
+              )}
 
               {/* {matchDownMD && (
                 <Dialog
-                  onClose={handleUserChange}
-                  open={emailDetails}
+                  onClose={handleToggleChat}
+                  open={viewChat}
                   scroll="body"
                 >
-                  <UserDetails user={user} />
+                  <Grid
+                          container
+                          justifyContent="space-between"
+                          alignItems={'center'}
+                        >
+                          <Grid item>
+                            <Stack
+                              direction="row"
+                              alignItems="center"
+                              spacing={1}
+                            >
+                              <Stack direction={'row'} alignItems={'center'}>
+                                <Typography variant="subtitle1">
+                                  Trò chuyện
+                                </Typography>
+                              </Stack>
+                            </Stack>
+                          </Grid>
+                        </Grid>
                 </Dialog>
               )} */}
             </Grid>
