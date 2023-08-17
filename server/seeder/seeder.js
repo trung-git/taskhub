@@ -11,6 +11,7 @@ const District = require('../models/districtModel');
 const Post = require('../models/postModel');
 const Chat = require('../models/chatModel');
 const Message = require('../models/messageModel');
+const Wallet = require('../models/walletModel');
 
 const taskTagData = require('./taskTag');
 const finderData = require('./finder');
@@ -18,11 +19,13 @@ const reviewData = require('./review');
 const taskerData = require('./tasker');
 const areaData = require('./area');
 const postData = require('./post');
+const walletData = require('./wallet');
 const { messages: messageData, chats: chatData } = require('./chat');
 
 const importData = async () => {
   try {
     await User.collection.deleteMany({});
+    await Wallet.collection.deleteMany({});
     await Review.collection.deleteMany({});
     await TaskTag.collection.deleteMany({});
     await Review.collection.deleteMany({});
@@ -33,6 +36,7 @@ const importData = async () => {
     await Chat.collection.deleteMany({});
 
     if (process.argv[2] !== '-d') {
+      await Wallet.insertMany(walletData);
       await TaskTag.insertMany(taskTagData);
       await City.insertMany(areaData.cities);
       await District.insertMany(areaData.districts);

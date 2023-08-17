@@ -48,6 +48,9 @@ const taskers = [
     averageRating: 5,
     contracts: [],
     isVerified: true,
+    wallet:  mongoose.Types.ObjectId.createFromHexString(
+      '64dd92f71c8fbdf37da82771'
+    ),
   },
   {
     _id: mongoose.Types.ObjectId.createFromHexString(
@@ -95,6 +98,9 @@ const taskers = [
     averageRating: 5,
     contracts: [],
     isVerified: true,
+    wallet:  mongoose.Types.ObjectId.createFromHexString(
+      '64dd934a11e7450d2ee15f4d'
+    ),
   },
   {
     username: 'ly1',
@@ -155,6 +161,9 @@ const taskers = [
     averageRating: 4,
     contracts: [],
     isVerified: true,
+    wallet:  mongoose.Types.ObjectId.createFromHexString(
+      '64dd937455b4a52823412337'
+    ),
   },
   {
     username: 'hai122',
@@ -205,6 +214,9 @@ const taskers = [
     averageRating: 4.4,
     contracts: [],
     isVerified: true,
+    wallet:  mongoose.Types.ObjectId.createFromHexString(
+      '64dd93875e7bdfe4dda87704'
+    ),
   },
   {
     username: 'kien111',
@@ -239,6 +251,9 @@ const taskers = [
     averageRating: 3,
     contracts: [],
     isVerified: true,
+    wallet:  mongoose.Types.ObjectId.createFromHexString(
+      '64dd939d45366be8233e1fa1'
+    ),
   },
   {
     username: 'mai1123',
@@ -273,6 +288,9 @@ const taskers = [
     averageRating: 3.8,
     contracts: [],
     isVerified: true,
+    wallet:  mongoose.Types.ObjectId.createFromHexString(
+      '64dd93b2ed3a3d38ac32ec6e'
+    ),
   },
   {
     username: 'tin1212',
@@ -312,6 +330,9 @@ const taskers = [
     vehicle: 'Bike',
     averageRating: 3.5,
     contracts: [],
+    wallet:  mongoose.Types.ObjectId.createFromHexString(
+      '64dd93c6d65cdcfa85b3a865'
+    ),
   },
   {
     username: 'kien121',
@@ -380,6 +401,9 @@ const taskers = [
     contracts: [],
     averageRating: 4.5,
     isVerified: true,
+    wallet:  mongoose.Types.ObjectId.createFromHexString(
+      '64dd93d936827abbd7de8667'
+    ),
   },
   {
     username: 'hien11',
@@ -413,6 +437,9 @@ const taskers = [
     vehicle: 'Bike',
     contracts: [],
     averageRating: 3.5,
+    wallet:  mongoose.Types.ObjectId.createFromHexString(
+      '64dd93ee4717938968bd230c'
+    ),
   },
 ];
 

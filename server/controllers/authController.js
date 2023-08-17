@@ -3,7 +3,6 @@ const { promisify } = require('util');
 const crypto = require('crypto');
 
 const User = require('../models/userModel');
-const Review = require('../models/reviewModel');
 
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
@@ -14,6 +13,7 @@ const City = require('../models/cityModel');
 const { getObjectModel } = require('../utils');
 const { ROLE } = require('../utils/constantVariables');
 const Email = require('../utils/email');
+const Wallet = require('../models/walletModel');
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -52,7 +52,6 @@ exports.signup = catchAsync(async (req, res, next) => {
   if (!Object) {
     return next(new AppError('Invalid role!', 400));
   }
-
   const user = {
     username: req.body.username,
     firstName: req.body.firstName,
@@ -82,23 +81,26 @@ exports.signup = catchAsync(async (req, res, next) => {
     }
     user.city = [city._id];
   }
+  const wallet = await Wallet.create({});
+  user.wallet = wallet._id;
+  
   const newUser = await Object.create(user);
 
   const emailToken = newUser.createVerifyEmailToken();
   const finalUser = await newUser.save();
 
-  // try {
-  //   const URL = `${req.protocol}://${req.get(
-  //     'host'
-  //   )}/api/v1/user/verify-email/${emailToken}`;
+  try {
+    const URL = `${req.protocol}://${req.get(
+      'host'
+    )}/api/v1/user/verify-email/${emailToken}`;
 
-  //   await new Email(finalUser, URL).sendWelcome();
-  // } catch (error) {
-  //   finalUser.verifyEmailToken = undefined;
-  //   finalUser.verifyEmailExpired = undefined;
-  //   await finalUser.save();
-  //   return next(new AppError('Send email fail! Please try again.', 500));
-  // }
+    await new Email(finalUser, URL).sendWelcome();
+  } catch (error) {
+    finalUser.verifyEmailToken = undefined;
+    finalUser.verifyEmailExpired = undefined;
+    await finalUser.save();
+    return next(new AppError('Send email fail! Please try again.', 500));
+  }
   createAndSendToken(finalUser, 201, req, res, false);
 });
 
