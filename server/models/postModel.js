@@ -65,6 +65,9 @@ postSchema.pre(/^find/, function (next) {
     path: 'candidate.user',
     select: '-__v -updatedAt -createdAt -password',
   });
+  this.populate({
+    path: 'workLocation',
+  });
   next();
 });
 const Post = mongoose.model('Post', postSchema);
