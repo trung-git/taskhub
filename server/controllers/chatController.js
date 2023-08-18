@@ -127,6 +127,7 @@ exports.getMessages = catchAsync(async (req, res, next) => {
   };
 
   const messages = await Message.find(findCondition)
+    .sort({ createdAt: 'desc'})
     .skip(recordsPerPage * (pageNum - 1))
     .limit(recordsPerPage);
 
