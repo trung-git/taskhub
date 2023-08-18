@@ -29,6 +29,7 @@ import SendIcon from '@mui/icons-material/Send';
 import ImageIcon from '@mui/icons-material/Image';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import TaskViewDetail from './TaskViewDetail';
+import ChatScreen from './ChatScreen';
 
 const drawerWidth = 320;
 
@@ -295,10 +296,10 @@ const TaskDetail = () => {
               <Grid
                 item
                 xs={12}
-                // md={viewChat ? 6 : 12}
-                // xl={viewChat ? 6 : 12}
-                md={6}
-                xl={6}
+                md={viewChat ? 6 : 12}
+                xl={viewChat ? 6 : 12}
+                // md={6}
+                // xl={6}
               >
                 <TaskViewDetail
                   task={taskData}
@@ -309,7 +310,7 @@ const TaskDetail = () => {
             )}
             {/* {viewChat && ( */}
             <Grid item xs={12} md={6} xl={6}>
-              <MainCard
+              {/* <MainCard
                 content={false}
                 sx={{
                   bgcolor:
@@ -348,13 +349,6 @@ const TaskDetail = () => {
                     </Grid>
                   </Grid>
                   <Grid item xs={12}>
-                    {/* <SimpleBar
-                          sx={{
-                            overflowX: 'hidden',
-                            height: 'calc(100vh - 410px)',
-                            minHeight: 420,
-                          }}
-                        > */}
                     <Box
                       sx={{
                         pl: 1,
@@ -369,13 +363,11 @@ const TaskDetail = () => {
                         theme={theme}
                         user={currentUser}
                         data={data}
-                        // onLoadMore={fetchLoadOldChat(lastChatId)}
                         isLoadingMore={isLoadingMore}
                         isScrollBottom={isScrollBottom}
                         scrollToId={lastOldChatId}
                       />
                     </Box>
-                    {/* </SimpleBar> */}
                   </Grid>
                   <Grid
                     item
@@ -423,57 +415,6 @@ const TaskDetail = () => {
                           >
                             <ImageIcon />
                           </IconButton>
-                          {/* <Grid item>
-                              <IconButton
-                                ref={anchorElEmoji}
-                                aria-describedby={emojiId}
-                                onClick={handleOnEmojiButtonClick}
-                                sx={{ opacity: 0.5 }}
-                                size="medium"
-                                color="secondary"
-                              >
-                                <SentimentSatisfiedAltIcon />
-                              </IconButton>
-                              <Popper
-                                id={emojiId}
-                                open={emojiOpen}
-                                anchorEl={anchorElEmoji}
-                                disablePortal
-                                popperOptions={{
-                                  modifiers: [
-                                    {
-                                      name: 'offset',
-                                      options: {
-                                        offset: [-20, 20],
-                                      },
-                                    },
-                                  ],
-                                }}
-                              >
-                                <ClickAwayListener
-                                  onClickAway={handleCloseEmoji}
-                                >
-                                  <>
-                                    {emojiOpen && (
-                                      <MainCard elevation={8} content={false}>
-                                        <Picker
-                                          onEmojiClick={onEmojiClick}
-                                          skinTone={SKIN_TONE_MEDIUM_DARK}
-                                          disableAutoFocus
-                                        />
-                                      </MainCard>
-                                    )}
-                                  </>
-                                </ClickAwayListener>
-                              </Popper>
-                            </Grid> */}
-                          {/* <IconButton
-                              sx={{ opacity: 0.5 }}
-                              size="medium"
-                              color="secondary"
-                            >
-                              <SoundOutlined />
-                            </IconButton> */}
                         </Stack>
                         <IconButton
                           color="primary"
@@ -487,39 +428,10 @@ const TaskDetail = () => {
                     </Stack>
                   </Grid>
                 </Grid>
-              </MainCard>
+              </MainCard> */}
+              {viewChat && <ChatScreen chatId={chatId} user={currentUser} />}
             </Grid>
-            {/* )} */}
-
-            {/* {matchDownMD && (
-                <Dialog
-                  onClose={handleToggleChat}
-                  open={viewChat}
-                  scroll="body"
-                >
-                  <Grid
-                          container
-                          justifyContent="space-between"
-                          alignItems={'center'}
-                        >
-                          <Grid item>
-                            <Stack
-                              direction="row"
-                              alignItems="center"
-                              spacing={1}
-                            >
-                              <Stack direction={'row'} alignItems={'center'}>
-                                <Typography variant="subtitle1">
-                                  Trò chuyện
-                                </Typography>
-                              </Stack>
-                            </Stack>
-                          </Grid>
-                        </Grid>
-                </Dialog>
-              )} */}
           </Grid>
-          {/* </Main> */}
         </Box>
       </Container>
     </Box>
