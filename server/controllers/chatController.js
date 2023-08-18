@@ -137,7 +137,7 @@ exports.getMessages = catchAsync(async (req, res, next) => {
 
     res.status(200).json({
       status: 'success',
-      data: messages,
+      data: messages.reverse(),
       length: messages.length,
       recordsPerPage,
     });
@@ -150,7 +150,7 @@ exports.getMessages = catchAsync(async (req, res, next) => {
 
     res.status(200).json({
       status: 'success',
-      data: messages,
+      data: messages.reverse(),
       length: messages.length,
       recordsPerPage,
     });
