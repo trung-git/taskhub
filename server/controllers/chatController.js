@@ -119,26 +119,40 @@ exports.achieveChat = catchAsync(async (req, res, next) => {
 });
 
 exports.getMessages = catchAsync(async (req, res, next) => {
-  const pageNum = Number(req.query.pageNum) || 1;
+  const { messageId } = req.query;
   const recordsPerPage = Number(process.env.MESSAGES_PER_PAGE);
 
-  const findCondition = {
-    chat: mongoose.Types.ObjectId.createFromHexString(req.params.chatId),
-  };
+  if (messageId) {
+    const specificMessage = await Message.findById(messageId);
+    if (!specificMessage) {
+      return next(new AppError('Invalid message', 400));
+    }
 
-  const messages = await Message.find(findCondition)
-    .sort({ createdAt: 'desc'})
-    .skip(recordsPerPage * (pageNum - 1))
-    .limit(recordsPerPage);
+    const messages = await Message.find({
+      chat: mongoose.Types.ObjectId.createFromHexString(req.params.chatId),
+      createdAt: { $lt: specificMessage.createdAt },
+    })
+      .sort({ createdAt: 'desc' })
+      .limit(recordsPerPage);
 
-  const count = await Message.countDocuments(findCondition);
+    res.status(200).json({
+      status: 'success',
+      data: messages,
+      length: messages.length,
+      recordsPerPage,
+    });
+  } else {
+    const messages = await Message.find({
+      chat: mongoose.Types.ObjectId.createFromHexString(req.params.chatId),
+    })
+      .sort({ createdAt: 'desc' })
+      .limit(recordsPerPage);
 
-  res.status(200).json({
-    status: 'success',
-    data: messages,
-    recordsPerPage,
-    totalPage: Math.ceil(count / recordsPerPage),
-    pageNum,
-    totalRecords: count
-  });
+    res.status(200).json({
+      status: 'success',
+      data: messages,
+      length: messages.length,
+      recordsPerPage,
+    });
+  }
 });
