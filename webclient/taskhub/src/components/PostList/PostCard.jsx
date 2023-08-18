@@ -28,6 +28,7 @@ import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router';
 import { MoreOutlined } from '@mui/icons-material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const PostCard = ({ post }) => {
   const {
@@ -88,7 +89,7 @@ const PostCard = ({ post }) => {
                   color="secondary"
                   onClick={handleMenuClick}
                 >
-                  <MoreOutlined style={{ fontSize: '1.15rem' }} />
+                  <MoreVertIcon style={{ fontSize: '1.15rem' }} />
                 </IconButton>
               }
             >

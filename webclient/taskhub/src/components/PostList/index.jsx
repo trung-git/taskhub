@@ -54,7 +54,7 @@ const PostList = () => {
   return (
     <Box sx={{ width: '100%' }}>
       <NavBar isLogin={isLogin} />
-      <Container maxWidth="lg" sx={{ mt: 3 }}>
+      <Container maxWidth="sm" sx={{ mt: 3 }}>
         {isFetchingPostList ? (
           <Stack
             sx={{ height: 300 }}

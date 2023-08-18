@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 // material-ui
 import {
@@ -10,6 +10,7 @@ import {
   Theme,
   Typography,
 } from '@mui/material';
+import dayjs from 'dayjs';
 
 // project imports
 // import UserAvatar from './UserAvatar';
@@ -20,24 +21,36 @@ import {
 
 // ==============================|| CHAT MESSAGE HISTORY ||============================== //
 
-const ChatHistory = ({ data, theme, user }) => {
-  // scroll to bottom when new message is sent or received
-  const wrapper = useRef(document.createElement('div'));
-  const el = wrapper.current;
+const ChatHistory = ({ data, theme, user, isScrollBottom, scrollToId }) => {
+  const endRef = useRef(null);
+  const topRef = useRef(null);
+
   const scrollToBottom = useCallback(() => {
-    el.scrollIntoView(false);
-  }, [el]);
+    endRef.current.scrollIntoView();
+  }, [endRef]);
+
+  const scrollToCurTop = useCallback(() => {
+    topRef.current.scrollIntoView();
+  }, [topRef]);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [data.length, scrollToBottom]);
+    if (isScrollBottom) {
+      scrollToBottom();
+    } else {
+      scrollToCurTop();
+    }
+  }, [data.length, scrollToBottom, isScrollBottom]);
 
   return (
-    <Grid container spacing={2.5} ref={wrapper}>
+    <Grid container spacing={2.5}>
       {data.map((history, index) => (
         <Grid item xs={12} key={index}>
-          {history.from !== user.name ? (
-            <Stack spacing={1.25} direction="row">
+          {history.sender === user._id ? (
+            <Stack
+              spacing={1.25}
+              direction="row"
+              ref={scrollToId === history._id ? topRef : null}
+            >
               <Grid container spacing={1} justifyContent="flex-end">
                 <Grid item xs={2} md={3} xl={4} />
                 <Grid item xs={10} md={9} xl={8}>
@@ -70,7 +83,7 @@ const ChatHistory = ({ data, theme, user }) => {
                               color={theme.palette.grey[0]}
                               sx={{ overflowWrap: 'anywhere', float: 'left' }}
                             >
-                              {history.text}
+                              {history.content}
                             </Typography>
                           </Grid>
                         </Grid>
@@ -84,14 +97,21 @@ const ChatHistory = ({ data, theme, user }) => {
                     variant="subtitle2"
                     color="textSecondary"
                   >
-                    {history.time}
+                    {history?.isSending
+                      ? 'Sending...'
+                      : dayjs(history.createdAt).format('HH:mm')}
                   </Typography>
                 </Grid>
               </Grid>
               <Avatar alt={''} src={''} sx={{ width: 40, height: 40 }} />
             </Stack>
           ) : (
-            <Stack direction="row" spacing={1.25} alignItems="flext-start">
+            <Stack
+              direction="row"
+              spacing={1.25}
+              alignItems="flext-start"
+              ref={scrollToId === history._id ? topRef : null}
+            >
               <Avatar alt={''} src={''} sx={{ width: 40, height: 40 }} />
 
               <Grid container>
@@ -115,7 +135,7 @@ const ChatHistory = ({ data, theme, user }) => {
                             color="textPrimary"
                             sx={{ textAlign: 'left' }}
                           >
-                            {history.text}
+                            {history.content}
                           </Typography>
                         </Grid>
                       </Grid>
@@ -128,7 +148,7 @@ const ChatHistory = ({ data, theme, user }) => {
                     variant="subtitle2"
                     color="textSecondary"
                   >
-                    {history.time}
+                    {dayjs(history.createdAt).format('HH:mm')}
                   </Typography>
                 </Grid>
               </Grid>
@@ -136,6 +156,7 @@ const ChatHistory = ({ data, theme, user }) => {
           )}
         </Grid>
       ))}
+      <Grid item xs={12} ref={endRef} sx={{ padding: '0px !important' }} />
     </Grid>
   );
 };

@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import { useParams } from 'react-router';
 import NavBar from '../Home/NavBar';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { LoginContext } from '../../provider/LoginContext';
 import axios from 'axios';
 import { API_URL } from '../../base/config';
@@ -55,7 +55,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
 );
 
 const TaskDetail = () => {
-  const { isLogin } = useContext(LoginContext);
+  const { isLogin, currentUser } = useContext(LoginContext);
   const params = useParams();
   const id = params?.id;
   const [loading, setLoading] = useState(false);
@@ -93,27 +93,65 @@ const TaskDetail = () => {
   const matchDownSM = useMediaQuery(theme.breakpoints.down('lg'));
   const matchDownMD = useMediaQuery(theme.breakpoints.down('md'));
   const [viewChat, setViewChat] = useState(false);
-  const [user, setUser] = useState({});
+  const [chatId, setChatId] = useState('');
+  const [lastChatId, setLastChatId] = useState('');
+  const [lastOldChatId, setOldLastChatId] = useState('');
 
+  const [loadingChat, setLoadingChat] = useState(false);
   const [data, setData] = useState([]);
-  // const chatState = useSelector((state) => state.chat);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [isHasMore, setIsHasMore] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  const handleClickSort = (event) => {
-    setAnchorEl(event?.currentTarget);
+  const fetchChatData = async (id) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}api/v1/chat/${id}/messages`,
+        config
+      );
+      const responseData = response.data.data;
+      setData(responseData);
+      setLastChatId(responseData[0]?._id);
+      setLoadingChat(false);
+      if (response.data?.lenght < response.data?.recordsPerPage) {
+        setIsHasMore(false);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   };
 
-  const handleCloseSort = () => {
-    setAnchorEl(null);
+  const fetchLoadOldChat = async (chatId, lastChatId) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}api/v1/chat/${chatId}/messages?messageId=${lastChatId}`,
+        config
+      );
+      const responseData = response.data.data;
+      setData((prev) => [...responseData, ...prev]);
+      setOldLastChatId(lastChatId);
+      setLastChatId(responseData[0]?._id);
+      setIsLoadingMore(false);
+      if (response.data?.lenght < response.data?.recordsPerPage) {
+        setIsHasMore(false);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setIsLoadingMore(false);
+    }
   };
+
+  useEffect(() => {
+    if (taskData) {
+      setLoadingChat(true);
+      // setUser(taskData?.finder);
+      setChatId(taskData?.chat);
+      fetchChatData(taskData?.chat);
+    }
+  }, [taskData]);
 
   const handleToggleChat = () => {
     setViewChat((prev) => !prev);
-  };
-
-  const [openChatDrawer, setOpenChatDrawer] = useState(true);
-  const handleDrawerOpen = () => {
-    setOpenChatDrawer((prevState) => !prevState);
   };
 
   const [anchorElEmoji, setAnchorElEmoji] =
@@ -125,31 +163,62 @@ const TaskDetail = () => {
 
   // handle new message form
   const [message, setMessage] = useState('');
+  const [isScrollBottom, setIsScrollBottom] = useState(true);
   const textInput = useRef(null);
+
+  const sendMessage = async (message) => {
+    const messageData = {
+      chatId: chatId,
+      message: message,
+    };
+    try {
+      const response = await axios.post(
+        `${API_URL}api/v1/chat/send`,
+        messageData,
+        config
+      );
+      const responseData = response.data.data;
+      setIsScrollBottom(false);
+      setData((prevState) => {
+        const newMessageIndex = prevState?.findIndex(
+          (mess) => mess.content === responseData?.message?.content
+        );
+        console.log('newMessageIndex', newMessageIndex);
+        if (newMessageIndex !== -1) {
+          let newData = [...prevState];
+          newData[newMessageIndex] = responseData?.message;
+          return newData;
+        } else {
+          return prevState;
+        }
+      });
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  console.log('dataOnchange', data);
 
   const handleOnSend = () => {
     if (message.trim() === '') {
-      // dispatch(
-      //   openSnackbar({
-      //     open: true,
-      //     message: 'Message required',
-      //     variant: 'alert',
-      //     alert: {
-      //       color: 'error'
-      //     },
-      //     close: false
-      //   })
-      // );
+      // openSnackbar({
+      //   open: true,
+      //   message: 'Message required',
+      //   variant: 'alert',
+      //   alert: {
+      //     color: 'error'
+      //   },
+      //   close: false
+      // })
     } else {
-      const d = new Date();
       const newMessage = {
-        from: 'User1',
-        to: user.name,
-        text: message,
-        time: d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        content: message,
+        isSending: true,
+        sender: currentUser._id,
       };
       setData((prevState) => [...prevState, newMessage]);
-      // dispatch(insertChat(newMessage));
+      setIsScrollBottom(true);
+      sendMessage(message);
     }
     setMessage('');
   };
@@ -173,159 +242,188 @@ const TaskDetail = () => {
     setAnchorElEmoji(null);
   };
 
-  // close sidebar when widow size below 'md' breakpoint
-  // useEffect(() => {
-  //   setOpenChatDrawer(!matchDownSM);
-  // }, [matchDownSM]);
+  const containerRef = useRef(null);
+  // const handleScroll = useCallback(() => {
+  //   console.log(
+  //     'chatIlastChatId',
+  //     chatId,
+  //     lastChatId,
+  //     isLoadingMore,
+  //     isHasMore
+  //   );
+  //   if (containerRef.current.scrollTop === 0 && !isLoadingMore && isHasMore) {
+  //     setIsLoadingMore(true);
+  //     fetchLoadOldChat(chatId, lastChatId);
+  //   }
+  // }, [chatId, lastChatId, isLoadingMore, isHasMore]);
 
-  // useEffect(() => {
-  //   setUser(chatState.user);
-  // }, [chatState.user]);
+  const handleScroll = (chatId, lastChatId, isLoadingMore, isHasMore) => {
+    console.log(
+      'chatIlastChatId',
+      chatId,
+      lastChatId,
+      isLoadingMore,
+      isHasMore
+    );
+    if (containerRef.current.scrollTop === 0 && !isLoadingMore && isHasMore) {
+      setIsLoadingMore(true);
+      fetchLoadOldChat(chatId, lastChatId);
+    }
+  };
 
-  // useEffect(() => {
-  //   setData(chatState.chats);
-  // }, [chatState.chats]);
-
-  // useEffect(() => {
-  //   // hide left drawer when email app opens
-  //   dispatch(openDrawer(false));
-  //   dispatch(getUser(1));
-  // }, []);
-
-  // useEffect(() => {
-  //   dispatch(getUserChats(user.name));
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [user]);
+  useEffect(() => {
+    containerRef?.current?.addEventListener(
+      'scroll',
+      handleScroll(chatId, lastChatId, isLoadingMore, isHasMore)
+    );
+    return () => {
+      containerRef?.current?.removeEventListener(
+        'scroll',
+        handleScroll(chatId, lastChatId, isLoadingMore, isHasMore)
+      );
+    };
+  }, [chatId, lastChatId, isLoadingMore, isHasMore]);
 
   return (
     <Box sx={{ width: '100%' }}>
       <NavBar isLogin={isLogin} />
       <Container maxWidth="lg" sx={{ mt: 3, height: 'calc(100vh - 116px)' }}>
-        <Box sx={{ display: 'flex', height: '100%' }}>
-          <Main theme={theme} open={openChatDrawer}>
-            <Grid container sx={{ height: '100%' }}>
-              {!matchDownMD && taskData && (
-                <Grid
-                  item
-                  xs={12}
-                  md={viewChat ? 6 : 12}
-                  xl={viewChat ? 6 : 12}
-                >
-                  <TaskViewDetail
-                    task={taskData}
-                    viewChat={viewChat}
-                    onToggleChat={handleToggleChat}
-                  />
-                </Grid>
-              )}
-              {viewChat && (
-                <Grid item xs={12} md={6} xl={6}>
-                  <MainCard
-                    content={false}
+        <Box sx={{ display: 'flex', height: '100%', width: '100%' }}>
+          {/* <Main theme={theme}> */}
+          <Grid container sx={{ height: '100%' }}>
+            {!matchDownMD && taskData && (
+              <Grid
+                item
+                xs={12}
+                // md={viewChat ? 6 : 12}
+                // xl={viewChat ? 6 : 12}
+                md={6}
+                xl={6}
+              >
+                <TaskViewDetail
+                  task={taskData}
+                  viewChat={viewChat}
+                  onToggleChat={handleToggleChat}
+                />
+              </Grid>
+            )}
+            {/* {viewChat && ( */}
+            <Grid item xs={12} md={6} xl={6}>
+              <MainCard
+                content={false}
+                sx={{
+                  bgcolor:
+                    theme.palette.mode === 'dark' ? 'dark.main' : 'grey.50',
+                  pt: 2,
+                  pl: 2,
+                  borderRadius: viewChat ? '0' : '0 4px 4px 0',
+                  height: '100%',
+                }}
+              >
+                <Grid container spacing={3}>
+                  <Grid
+                    item
+                    xs={12}
                     sx={{
-                      bgcolor:
-                        theme.palette.mode === 'dark' ? 'dark.main' : 'grey.50',
-                      pt: 2,
-                      pl: 2,
-                      borderRadius: viewChat ? '0' : '0 4px 4px 0',
-                      height: '100%',
+                      bgcolor: theme.palette.background.paper,
+                      pr: 2,
+                      pb: 2,
+                      borderBottom: `1px solid ${theme.palette.divider}`,
                     }}
                   >
-                    <Grid container spacing={3}>
-                      <Grid
-                        item
-                        xs={12}
-                        sx={{
-                          bgcolor: theme.palette.background.paper,
-                          pr: 2,
-                          pb: 2,
-                          borderBottom: `1px solid ${theme.palette.divider}`,
-                        }}
-                      >
-                        <Grid
-                          container
-                          justifyContent="space-between"
-                          alignItems={'center'}
-                        >
-                          <Grid item>
-                            <Stack
-                              direction="row"
-                              alignItems="center"
-                              spacing={1}
-                            >
-                              <Stack direction={'row'} alignItems={'center'}>
-                                <Typography variant="subtitle1">
-                                  Trò chuyện
-                                </Typography>
-                              </Stack>
-                            </Stack>
-                          </Grid>
-                        </Grid>
+                    <Grid
+                      container
+                      justifyContent="space-between"
+                      alignItems={'center'}
+                    >
+                      <Grid item>
+                        <Stack direction="row" alignItems="center" spacing={1}>
+                          <Stack direction={'row'} alignItems={'center'}>
+                            <Typography variant="subtitle1">
+                              Trò chuyện
+                            </Typography>
+                          </Stack>
+                        </Stack>
                       </Grid>
-                      <Grid item xs={12}>
-                        <SimpleBar
+                    </Grid>
+                  </Grid>
+                  <Grid item xs={12}>
+                    {/* <SimpleBar
                           sx={{
                             overflowX: 'hidden',
                             height: 'calc(100vh - 410px)',
                             minHeight: 420,
                           }}
-                        >
-                          <Box sx={{ pl: 1, pr: 3 }}>
-                            <ChatHistory
-                              theme={theme}
-                              user={user}
-                              data={data}
-                            />
-                          </Box>
-                        </SimpleBar>
-                      </Grid>
-                      <Grid
-                        item
-                        xs={12}
+                        > */}
+                    <Box
+                      sx={{
+                        pl: 1,
+                        pr: 3,
+                        overflowX: 'hidden',
+                        height: 'calc(100vh - 410px)',
+                        minHeight: 420,
+                      }}
+                      ref={containerRef}
+                    >
+                      <ChatHistory
+                        theme={theme}
+                        user={currentUser}
+                        data={data}
+                        // onLoadMore={fetchLoadOldChat(lastChatId)}
+                        isLoadingMore={isLoadingMore}
+                        isScrollBottom={isScrollBottom}
+                        scrollToId={lastOldChatId}
+                      />
+                    </Box>
+                    {/* </SimpleBar> */}
+                  </Grid>
+                  <Grid
+                    item
+                    xs={12}
+                    sx={{
+                      mt: 3,
+                      bgcolor: theme.palette.background.paper,
+                      borderTop: `1px solid ${theme.palette.divider}`,
+                    }}
+                  >
+                    <Stack>
+                      <TextField
+                        inputRef={textInput}
+                        fullWidth
+                        multiline
+                        rows={2}
+                        placeholder="Your Message..."
+                        value={message}
+                        onChange={(e) =>
+                          setMessage(
+                            e.target.value.length <= 1
+                              ? e.target.value.trim()
+                              : e.target.value
+                          )
+                        }
+                        onKeyPress={handleEnter}
+                        variant="standard"
                         sx={{
-                          mt: 3,
-                          bgcolor: theme.palette.background.paper,
-                          borderTop: `1px solid ${theme.palette.divider}`,
+                          pr: 2,
+                          '& .MuiInput-root:before': {
+                            borderBottomColor: theme.palette.divider,
+                          },
                         }}
+                      />
+                      <Stack
+                        direction="row"
+                        justifyContent="space-between"
+                        alignItems="center"
                       >
-                        <Stack>
-                          <TextField
-                            inputRef={textInput}
-                            fullWidth
-                            multiline
-                            rows={2}
-                            placeholder="Your Message..."
-                            value={message}
-                            onChange={(e) =>
-                              setMessage(
-                                e.target.value.length <= 1
-                                  ? e.target.value.trim()
-                                  : e.target.value
-                              )
-                            }
-                            onKeyPress={handleEnter}
-                            variant="standard"
-                            sx={{
-                              pr: 2,
-                              '& .MuiInput-root:before': {
-                                borderBottomColor: theme.palette.divider,
-                              },
-                            }}
-                          />
-                          <Stack
-                            direction="row"
-                            justifyContent="space-between"
-                            alignItems="center"
+                        <Stack direction="row" sx={{ py: 2, ml: -1 }}>
+                          <IconButton
+                            sx={{ opacity: 0.5 }}
+                            size="medium"
+                            color="secondary"
                           >
-                            <Stack direction="row" sx={{ py: 2, ml: -1 }}>
-                              <IconButton
-                                sx={{ opacity: 0.5 }}
-                                size="medium"
-                                color="secondary"
-                              >
-                                <ImageIcon />
-                              </IconButton>
-                              {/* <Grid item>
+                            <ImageIcon />
+                          </IconButton>
+                          {/* <Grid item>
                               <IconButton
                                 ref={anchorElEmoji}
                                 aria-describedby={emojiId}
@@ -369,31 +467,31 @@ const TaskDetail = () => {
                                 </ClickAwayListener>
                               </Popper>
                             </Grid> */}
-                              {/* <IconButton
+                          {/* <IconButton
                               sx={{ opacity: 0.5 }}
                               size="medium"
                               color="secondary"
                             >
                               <SoundOutlined />
                             </IconButton> */}
-                            </Stack>
-                            <IconButton
-                              color="primary"
-                              onClick={handleOnSend}
-                              size="large"
-                              sx={{ mr: 1.5 }}
-                            >
-                              <SendIcon />
-                            </IconButton>
-                          </Stack>
                         </Stack>
-                      </Grid>
-                    </Grid>
-                  </MainCard>
+                        <IconButton
+                          color="primary"
+                          onClick={handleOnSend}
+                          size="large"
+                          sx={{ mr: 1.5 }}
+                        >
+                          <SendIcon />
+                        </IconButton>
+                      </Stack>
+                    </Stack>
+                  </Grid>
                 </Grid>
-              )}
+              </MainCard>
+            </Grid>
+            {/* )} */}
 
-              {/* {matchDownMD && (
+            {/* {matchDownMD && (
                 <Dialog
                   onClose={handleToggleChat}
                   open={viewChat}
@@ -420,8 +518,8 @@ const TaskDetail = () => {
                         </Grid>
                 </Dialog>
               )} */}
-            </Grid>
-          </Main>
+          </Grid>
+          {/* </Main> */}
         </Box>
       </Container>
     </Box>

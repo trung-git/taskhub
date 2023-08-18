@@ -46,12 +46,7 @@ export default function SimpleBarScroll({ children, sx, ...other }) {
   return (
     <>
       <RootStyle>
-        <SimpleBarStyle
-          // timeout={500}
-          clickOnTrack={false}
-          sx={sx}
-          {...other}
-        >
+        <SimpleBarStyle timeout={500} clickOnTrack={false} sx={sx} {...other}>
           {children}
         </SimpleBarStyle>
       </RootStyle>
