@@ -395,6 +395,7 @@ function ChatScreen({ user, chatId, otherUser }) {
             placeholder="Type your message..."
             style={{ flex: 1, marginRight: '10px' }}
             onKeyUp={handleEnter}
+            autoComplete="off"
           />
           <IconButton onClick={handleOnSend}>
             <SendIcon />
