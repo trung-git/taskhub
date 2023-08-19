@@ -13,7 +13,10 @@ exports.createContract = catchAsync(async (req, res, next) => {
     workLocationId,
     description,
     workTime,
-    expireAt
+    expireAt,
+    paymentType,
+    paymentPlan,
+    price
   } = req.body;
 
   const tasker = await Tasker.findById(taskerId);
@@ -44,10 +47,12 @@ exports.createContract = catchAsync(async (req, res, next) => {
     address,
     workLocation: workLocation._id,
     taskTag: taskTag.taskInfo._id,
-    price: taskTag.price,
+    price: price || taskTag.price,
     workTime,
     description,
-    expireAt: expireAt
+    expireAt: expireAt,
+    paymentType,
+    paymentPlan
   });
   
   const populatedContract = await Contract.populate(contract ,{
@@ -169,6 +174,8 @@ exports.updateContract = catchAsync(async (req, res, next) => {
   contract.expireAt = req.body.updateExpires ? req.body.expireAt : contract.expireAt;
   contract.description = req.body.description || contract.description;
   contract.otherProps = req.body.otherProps || contract.otherProps;
+  contract.paymentType = req.body.paymentType || contract.paymentType;
+  contract.paymentPlan = req.body.paymentPlan || contract.paymentPlan;
 
   const updatedContract = await contract.save();
 

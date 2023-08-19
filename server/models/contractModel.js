@@ -69,6 +69,20 @@ const contractModel = new mongoose.Schema(
     review: {
       type: mongoose.Types.ObjectId,
       ref: "Review",
+    },
+    paymentType: {
+      type: String,
+      enum: {
+        values: ["by-wallet", "by-cash"]
+      },
+      default: "by-wallet"
+    },
+    paymentPlan: {
+      type: String,
+      enum: {
+        values: ["per-hour", "one-time"]
+      },
+      default: "per-hour"
     }
   },
   { timestamps: true }
