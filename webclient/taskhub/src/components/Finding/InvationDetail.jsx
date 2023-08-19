@@ -75,7 +75,7 @@ const InvationDetail = ({ bookingData, isOpen, handleCloseBookingForm }) => {
             >{`${bookingData?.tasker?.firstName} ${bookingData?.tasker?.lastName}`}</Typography>
           </Stack>
           <Stack direction={'column'} spacing={1} sx={{ mt: 3, width: '100%' }}>
-            <Grid container fullWidth>
+            <Grid container sx={{ width: '100%' }}>
               <Grid item xs={4}>
                 <Typography fontWeight={'bold'}>Công việc:</Typography>
               </Grid>

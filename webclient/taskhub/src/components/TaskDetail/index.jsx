@@ -62,12 +62,14 @@ const TaskDetail = () => {
         <Box sx={{ display: 'flex', height: '100%', width: '100%' }}>
           <Grid container sx={{ height: '100%', justifyContent: 'center' }}>
             {!matchDownMD && taskData && (
-              <Grid item xs={12} md={6} xl={6}>
-                <TaskViewDetail
-                  task={taskData}
-                  viewChat={viewChat}
-                  onToggleChat={handleToggleChat}
-                />
+              <Grid item xs={12} md={6} xl={6} height={'100%'}>
+                {taskData && (
+                  <TaskViewDetail
+                    task={taskData}
+                    viewChat={viewChat}
+                    onToggleChat={handleToggleChat}
+                  />
+                )}
               </Grid>
             )}
             <Grid

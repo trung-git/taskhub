@@ -359,7 +359,7 @@ function ChatScreen({ user, chatId, otherUser }) {
         <Stack
           spacing={1}
           direction={'row'}
-          container
+          // container
           alignItems="center"
           sx={{ pt: 2 }}
         >
