@@ -1,33 +1,12 @@
-import {
-  Box,
-  ClickAwayListener,
-  Collapse,
-  Container,
-  Grid,
-  IconButton,
-  Popper,
-  Stack,
-  TextField,
-  Typography,
-  styled,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { Box, Container, Grid, useMediaQuery, useTheme } from '@mui/material';
 import { useParams } from 'react-router';
 import NavBar from '../Home/NavBar';
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { LoginContext } from '../../provider/LoginContext';
 import axios from 'axios';
 import { API_URL } from '../../base/config';
 import useLogin from '../../hooks/useLogin';
-import MainCard from '../../base/component/MainCard';
-import ChatHistory from './ChatHistory';
-import SimpleBar from '../../base/third-party/SimpleBar';
-import Picker, { IEmojiData, SKIN_TONE_MEDIUM_DARK } from 'emoji-picker-react';
 
-import SendIcon from '@mui/icons-material/Send';
-import ImageIcon from '@mui/icons-material/Image';
-import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import TaskViewDetail from './TaskViewDetail';
 import ChatScreen from './ChatScreen';
 
@@ -76,23 +55,14 @@ const TaskDetail = () => {
   const handleToggleChat = () => {
     setViewChat((prev) => !prev);
   };
-
   return (
     <Box sx={{ width: '100%' }}>
       <NavBar isLogin={isLogin} />
       <Container maxWidth="lg" sx={{ mt: 3, height: 'calc(100vh - 116px)' }}>
         <Box sx={{ display: 'flex', height: '100%', width: '100%' }}>
-          {/* <Main theme={theme}> */}
-          <Grid container sx={{ height: '100%' }}>
+          <Grid container sx={{ height: '100%', justifyContent: 'center' }}>
             {!matchDownMD && taskData && (
-              <Grid
-                item
-                xs={12}
-                // md={viewChat ? 6 : 12}
-                // xl={viewChat ? 6 : 12}
-                md={6}
-                xl={6}
-              >
+              <Grid item xs={12} md={6} xl={6}>
                 <TaskViewDetail
                   task={taskData}
                   viewChat={viewChat}
@@ -100,8 +70,13 @@ const TaskDetail = () => {
                 />
               </Grid>
             )}
-            {/* {viewChat && ( */}
-            <Grid item xs={12} md={6} xl={6} sx={{ height: '100%' }}>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              xl={6}
+              sx={{ height: '100%', display: viewChat ? undefined : 'none' }}
+            >
               <ChatScreen
                 chatId={chatId}
                 user={currentUser}

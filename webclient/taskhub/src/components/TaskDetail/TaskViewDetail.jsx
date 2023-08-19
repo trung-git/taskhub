@@ -35,8 +35,11 @@ const TaskViewDetail = ({ task, onSubmit, viewChat, onToggleChat }) => {
   const theme = useTheme();
   const formik = useFormik({
     initialValues: {
-      address: '',
-      password: '',
+      taskTag,
+      workLocation,
+      address,
+      workTime,
+      price,
     },
     // validationSchema,
     onSubmit: (values) => {
@@ -52,7 +55,7 @@ const TaskViewDetail = ({ task, onSubmit, viewChat, onToggleChat }) => {
         pt: 2,
         pl: 2,
         borderRadius: '4px 0 0 4px',
-        borderRight: '0px',
+        borderRight: viewChat ? '0px' : undefined,
         height: '100%',
       }}
     >

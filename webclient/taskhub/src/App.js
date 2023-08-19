@@ -10,30 +10,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import ThemeCustomization from './themes';
 import { viVN } from '@mui/x-date-pickers/locales';
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#E33E7F',
-    },
-    secondary: {
-      main: '#ff0000', // very red
-    },
-  },
-});
-
-// const darkTheme = createTheme({
-//   palette: {
-//     type: 'dark',
-//     // Các màu sắc tối phổ biến
-//     primary: {
-//       main: '#90caf9',
-//     },
-//     secondary: {
-//       main: '#f48fb1',
-//     },
-//   },
-// });
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
@@ -44,17 +22,15 @@ function App() {
         }
         dateAdapter={AdapterDayjs}
       >
-        {/* <MuiThemeProvider theme={darkTheme}> */}
         <I18nextProvider i18n={i18n}>
           <CssBaseline />
           <Box className="App">
             <Scrolltop>
               <Routes />
             </Scrolltop>
-            <div id="toast"></div>
           </Box>
+          <ToastContainer />
         </I18nextProvider>
-        {/* </MuiThemeProvider> */}
       </LocalizationProvider>
     </ThemeCustomization>
   );

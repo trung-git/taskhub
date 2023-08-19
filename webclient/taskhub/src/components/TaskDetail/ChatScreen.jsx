@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
   Grid,
   TextField,
@@ -27,6 +27,7 @@ import SendIcon from '@mui/icons-material/Send';
 import ImageIcon from '@mui/icons-material/Image';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import Picker, { IEmojiData, SKIN_TONE_MEDIUM_DARK } from 'emoji-picker-react';
+import { toast } from 'react-toastify';
 
 function ChatScreen({ user, chatId, otherUser }) {
   const [messages, setMessages] = useState([]);
@@ -43,7 +44,6 @@ function ChatScreen({ user, chatId, otherUser }) {
 
   const chatContainerRef = useRef(null);
   const endRef = useRef(null);
-  const prevChatContainerHeight = useRef(0);
   const theme = useTheme();
   const [isScrollBottom, setIsScrollBottom] = useState(false);
 
@@ -51,26 +51,18 @@ function ChatScreen({ user, chatId, otherUser }) {
     if (isScrollBottom) {
       scrollToBottom();
     }
-    // prevChatContainerHeight.current = chatContainerRef.current.scrollHeight;
-    // scrollToSavedPosition();
+    setLastChatId(messages?.[messages?.length - 1]?._id);
   }, [messages, isScrollBottom]);
 
   const scrollToBottom = () => {
     endRef.current.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const scrollToSavedPosition = () => {
-    // Calculate the difference in chat container height after adding new messages
-    const chatContainerHeightDiff =
-      chatContainerRef.current.scrollHeight - prevChatContainerHeight.current;
-
-    // Scroll to the saved position by adjusting the scrollTop
-    chatContainerRef.current.scrollTop += chatContainerHeightDiff;
-  };
-
   const handleScroll = () => {
     if (
-      chatContainerRef.current.scrollTop === 0 &&
+      chatContainerRef.current.scrollHeight - 20 <=
+        chatContainerRef.current.clientHeight -
+          chatContainerRef.current.scrollTop &&
       !isLoadingMore &&
       isHasMore
     ) {
@@ -101,12 +93,9 @@ function ChatScreen({ user, chatId, otherUser }) {
       );
       const responseData = response.data.data;
       setMessages(responseData);
-      setLastChatId(responseData[0]?._id);
       setLoadingChat(false);
-      if (response.data?.lenght < response.data?.recordsPerPage) {
+      if (response.data?.lenght < 20) {
         setIsHasMore(false);
-      } else if (response.data?.lenght >= response.data?.recordsPerPage) {
-        setIsHasMore(true);
       }
       setIsScrollBottom(true);
     } catch (error) {
@@ -122,14 +111,11 @@ function ChatScreen({ user, chatId, otherUser }) {
       );
       const responseData = response.data.data;
       setIsScrollBottom(false);
-      setMessages((prev) => [...responseData, ...prev]);
+      setMessages((prev) => [...prev, ...responseData]);
       setOldLastChatId(lastChatId);
-      setLastChatId(responseData[0]?._id);
       setIsLoadingMore(false);
-      if (response.data?.lenght < response.data?.recordsPerPage) {
+      if (response.data?.lenght < 20) {
         setIsHasMore(false);
-      } else if (response.data?.lenght >= response.data?.recordsPerPage) {
-        setIsHasMore(true);
       }
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -157,58 +143,42 @@ function ChatScreen({ user, chatId, otherUser }) {
       );
       const responseData = response.data.data;
       setMessages((prevState) => {
-        // const newMessageIndex = prevState?.findIndex(
-        //   (mess) => mess.content === responseData?.message?.content
-        // );
-        // console.log('newMessageIndex', newMessageIndex);
-        // if (newMessageIndex !== -1) {
-        //   let newData = [...prevState];
-        //   newData[newMessageIndex] = responseData?.message;
-        //   return newData;
-        // } else {
-        //   return prevState;
-        // }
         return prevState?.map((_message) => {
           return {
             ..._message,
             isSending: false,
           };
         });
-        setIsScrollBottom(true);
       });
+      endRef.current.scrollTo(0, 0);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
 
-  // const [anchorElEmoji, setAnchorElEmoji] = useState(); /** No single type can cater for all elements */
-
-  // const handleOnEmojiButtonClick = (event) => {
-  //   setAnchorElEmoji(anchorElEmoji ? null : event?.currentTarget);
-  // };
-
   const handleOnSend = () => {
     if (message.trim() === '') {
-      // openSnackbar({
-      //   open: true,
-      //   message: 'Message required',
-      //   variant: 'alert',
-      //   alert: {
-      //     color: 'error'
-      //   },
-      //   close: false
-      // })
+      toast.error(`Can't send null message`, {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
+      });
     } else {
       const newMessage = {
         content: message,
         isSending: true,
         sender: user._id,
       };
-      setMessages((prevState) => [...prevState, newMessage]);
+      setMessages((prevState) => [newMessage, ...prevState]);
       sendMessage(message);
     }
     setMessage('');
-    scrollToSavedPosition();
+    scrollToBottom();
   };
 
   const [anchorElEmoji, setAnchorElEmoji] = useState();
@@ -218,8 +188,7 @@ function ChatScreen({ user, chatId, otherUser }) {
   };
 
   // handle emoji
-  const onEmojiClick = (event, emojiObject) => {
-    console.log('emojiObject', emojiObject);
+  const onEmojiClick = (emojiObject, event) => {
     setMessage(message + emojiObject.emoji);
   };
 
@@ -229,6 +198,132 @@ function ChatScreen({ user, chatId, otherUser }) {
   const handleCloseEmoji = () => {
     setAnchorElEmoji(null);
   };
+
+  const RenderChatMemo = useMemo(() => {
+    return (
+      messages?.length > 0 &&
+      messages?.map((_message, index) => {
+        return (
+          <Grid item xs={12} key={_message?._id}>
+            {_message.sender === user._id ? (
+              <Stack spacing={1.25} direction="row">
+                <Grid container spacing={1} justifyContent="flex-end">
+                  <Grid item xs={2} md={3} xl={4} />
+                  <Grid item xs={10} md={9} xl={8}>
+                    <Stack
+                      direction="row"
+                      justifyContent="flex-end"
+                      alignItems="flex-start"
+                    >
+                      <Card
+                        sx={{
+                          display: 'inline-block',
+                          float: 'right',
+                          bgcolor: theme.palette.primary.main,
+                          boxShadow: 'none',
+                          ml: 1,
+                        }}
+                      >
+                        <CardContent
+                          sx={{
+                            p: 1,
+                            pb: '8px !important',
+                            width: 'fit-content',
+                            ml: 'auto',
+                          }}
+                        >
+                          <Grid container spacing={1}>
+                            <Grid item xs={12}>
+                              <Typography
+                                variant="h6"
+                                color={theme.palette.grey[0]}
+                                sx={{
+                                  overflowWrap: 'anywhere',
+                                  textAlign: 'left',
+                                }}
+                              >
+                                {_message?.content}
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                        </CardContent>
+                      </Card>
+                    </Stack>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography
+                      align="right"
+                      variant="subtitle2"
+                      color="textSecondary"
+                    >
+                      {_message?.isSending
+                        ? 'Sending...'
+                        : dayjs(_message?.createdAt).format('HH:mm')}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Avatar
+                  alt={''}
+                  src={user?.image}
+                  sx={{ width: 40, height: 40 }}
+                />
+              </Stack>
+            ) : (
+              <Stack direction="row" spacing={1.25} alignItems="flext-start">
+                <Avatar
+                  alt={''}
+                  src={otherUser?.image}
+                  sx={{ width: 40, height: 40 }}
+                />
+
+                <Grid container>
+                  <Grid item xs={12} sm={7}>
+                    <Card
+                      sx={{
+                        display: 'inline-block',
+                        float: 'left',
+                        bgcolor:
+                          theme.palette.mode === 'dark'
+                            ? 'background.background'
+                            : 'grey.0',
+                        boxShadow: 'none',
+                      }}
+                    >
+                      <CardContent sx={{ p: 1, pb: '8px !important' }}>
+                        <Grid container spacing={1}>
+                          <Grid item xs={12}>
+                            <Typography
+                              variant="h6"
+                              color="textPrimary"
+                              sx={{
+                                overflowWrap: 'anywhere',
+                                textAlign: 'left',
+                              }}
+                            >
+                              {_message?.content}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={12} sx={{ mt: 1 }}>
+                    <Typography
+                      align="left"
+                      variant="subtitle2"
+                      color="textSecondary"
+                    >
+                      {dayjs(_message?.createdAt).format('HH:mm')}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Stack>
+            )}
+          </Grid>
+        );
+      })
+    );
+  }, [messages]);
 
   return (
     <MainCard
@@ -252,142 +347,22 @@ function ChatScreen({ user, chatId, otherUser }) {
             flex: 1,
             overflowY: 'scroll',
             display: 'flex',
-            flexDirection: 'column',
+            flexDirection: 'column-reverse',
             padding: '10px',
           }}
           onScroll={handleScroll}
         >
-          {isLoadingMore && <CircularProgress />}
-          {messages?.length > 0 &&
-            messages?.map((message, index) => {
-              console.log('messageOnMap', user);
-              return (
-                <Grid item xs={12} key={message?._id}>
-                  {message.sender === user._id ? (
-                    <Stack spacing={1.25} direction="row">
-                      <Grid container spacing={1} justifyContent="flex-end">
-                        <Grid item xs={2} md={3} xl={4} />
-                        <Grid item xs={10} md={9} xl={8}>
-                          <Stack
-                            direction="row"
-                            justifyContent="flex-end"
-                            alignItems="flex-start"
-                          >
-                            <Card
-                              sx={{
-                                display: 'inline-block',
-                                float: 'right',
-                                bgcolor: theme.palette.primary.main,
-                                boxShadow: 'none',
-                                ml: 1,
-                              }}
-                            >
-                              <CardContent
-                                sx={{
-                                  p: 1,
-                                  pb: '8px !important',
-                                  width: 'fit-content',
-                                  ml: 'auto',
-                                }}
-                              >
-                                <Grid container spacing={1}>
-                                  <Grid item xs={12}>
-                                    <Typography
-                                      variant="h6"
-                                      color={theme.palette.grey[0]}
-                                      sx={{
-                                        overflowWrap: 'anywhere',
-                                        textAlign: 'left',
-                                      }}
-                                    >
-                                      {message?.content}
-                                    </Typography>
-                                  </Grid>
-                                </Grid>
-                              </CardContent>
-                            </Card>
-                          </Stack>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Typography
-                            align="right"
-                            variant="subtitle2"
-                            color="textSecondary"
-                          >
-                            {message?.isSending
-                              ? 'Sending...'
-                              : dayjs(message?.createdAt).format('HH:mm')}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                      <Avatar
-                        alt={''}
-                        src={user?.image}
-                        sx={{ width: 40, height: 40 }}
-                      />
-                    </Stack>
-                  ) : (
-                    <Stack
-                      direction="row"
-                      spacing={1.25}
-                      alignItems="flext-start"
-                    >
-                      <Avatar
-                        alt={''}
-                        src={otherUser?.image}
-                        sx={{ width: 40, height: 40 }}
-                      />
-
-                      <Grid container>
-                        <Grid item xs={12} sm={7}>
-                          <Card
-                            sx={{
-                              display: 'inline-block',
-                              float: 'left',
-                              bgcolor:
-                                theme.palette.mode === 'dark'
-                                  ? 'background.background'
-                                  : 'grey.0',
-                              boxShadow: 'none',
-                            }}
-                          >
-                            <CardContent sx={{ p: 1, pb: '8px !important' }}>
-                              <Grid container spacing={1}>
-                                <Grid item xs={12}>
-                                  <Typography
-                                    variant="h6"
-                                    color="textPrimary"
-                                    sx={{
-                                      overflowWrap: 'anywhere',
-                                      textAlign: 'left',
-                                    }}
-                                  >
-                                    {message?.content}
-                                  </Typography>
-                                </Grid>
-                              </Grid>
-                            </CardContent>
-                          </Card>
-                        </Grid>
-                        <Grid item xs={12} sx={{ mt: 1 }}>
-                          <Typography
-                            align="left"
-                            variant="subtitle2"
-                            color="textSecondary"
-                          >
-                            {dayjs(message?.createdAt).format('HH:mm')}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Stack>
-                  )}
-                </Grid>
-              );
-            })}
-
-          <div ref={endRef} />
+          <div ref={endRef} style={{ pt: 5 }} />
+          {RenderChatMemo}
+          {isLoadingMore && isHasMore && <CircularProgress />}
         </div>
-        <Stack spacing={1} direction={'row'} container alignItems="center">
+        <Stack
+          spacing={1}
+          direction={'row'}
+          container
+          alignItems="center"
+          sx={{ pt: 2 }}
+        >
           <IconButton>
             <ImageIcon />
           </IconButton>
@@ -405,35 +380,10 @@ function ChatScreen({ user, chatId, otherUser }) {
               anchorEl={anchorElEmoji}
               disablePortal
               placement={'top'}
-              // popperOptions={{
-              //   modifiers: [
-              //     {
-              //       name: 'offset',
-              //       options: {
-              //         offset: [-20, 20],
-              //       },
-              //     },
-              //   ],
-              // }}
             >
               <ClickAwayListener onClickAway={handleCloseEmoji}>
-                {/* <>
-                  {emojiOpen && (
-                    <MainCard elevation={8} content={false}>
-                      <Picker
-                        onEmojiClick={onEmojiClick}
-                        // skinTone={SKIN_TONE_MEDIUM_DARK}
-                        disableAutoFocus
-                      />
-                    </MainCard>
-                  )}
-                </> */}
                 <Box>
-                  <Picker
-                    onEmojiClick={onEmojiClick}
-                    // skinTone={SKIN_TONE_MEDIUM_DARK}
-                    disableAutoFocus
-                  />
+                  <Picker onEmojiClick={onEmojiClick} disableAutoFocus />
                 </Box>
               </ClickAwayListener>
             </Popper>
