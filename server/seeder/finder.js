@@ -93,7 +93,7 @@ const finders = [
     email: 'luong123@gmail.com',
     phoneNumber: '0123456789',
     gender: 'Male',
-    image: '',
+    image: 'http://res.cloudinary.com/dxohnl1zt/image/upload/v1692462958/userAvatar/ivixgqoc1y22c5omvbff.jpg',
     password: bcrypt.hashSync('123456789', 10),
     city: mongoose.Types.ObjectId.createFromHexString(
       '64a12b2fde768d62c2605820'
