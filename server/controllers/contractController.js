@@ -16,7 +16,7 @@ exports.createContract = catchAsync(async (req, res, next) => {
     expireAt,
     paymentType,
     paymentPlan,
-    price
+    price,
   } = req.body;
 
   const tasker = await Tasker.findById(taskerId);
@@ -52,10 +52,10 @@ exports.createContract = catchAsync(async (req, res, next) => {
     description,
     expireAt: expireAt,
     paymentType,
-    paymentPlan
+    paymentPlan,
   });
-  
-  const populatedContract = await Contract.populate(contract ,{
+
+  const populatedContract = await Contract.populate(contract, {
     path: 'finder tasker taskTag workLocation',
   });
 
@@ -74,7 +74,11 @@ exports.getContracts = catchAsync(async (req, res, next) => {
   };
 
   if (status) {
-    query.status = status;
+    if (['discuss', 'start', 'end'].includes(status)) {
+      query.status = { $in: ['discuss', 'start', 'end'] };
+    } else {
+      query.status = status;
+    }
   }
 
   const contracts = await Contract.find(query).populate({
@@ -91,15 +95,19 @@ exports.getContractById = catchAsync(async (req, res, next) => {
   const { contractId } = req.params;
   const { _id, role } = req.user;
   const { status } = req.query;
-  
+
   const query = {
     _id: contractId,
     [role.toLowerCase()]: _id,
   };
-  
+
   if (status) {
-    query.status = status;
-  };
+    if (['discuss', 'start', 'end'].includes(status)) {
+      query.status = { $in: ['discuss', 'start', 'end'] };
+    } else {
+      query.status = status;
+    }
+  }
 
   const contract = await Contract.findOne(query).populate({
     path: 'finder tasker taskTag workLocation review',
@@ -124,9 +132,9 @@ exports.deleteContract = catchAsync(async (req, res, next) => {
   });
 
   await Chat.findOneAndDelete({
-    _id: contract.chat
-  })
-
+    _id: contract.chat,
+  });
+  // TODO delete unavailable time in tasker
   return res.status(200).json({
     status: 'success',
     data: contract,
@@ -149,7 +157,7 @@ exports.updateContract = catchAsync(async (req, res, next) => {
   if (req.body.workLocationId) {
     const workLocation = await District.findById(req.body.workLocationId);
     if (!workLocation) {
-      return next(new AppError("Work location not found"))
+      return next(new AppError('Work location not found'));
     }
     contract.workLocation = workLocation._id || contract.workLocation;
   }
@@ -171,7 +179,9 @@ exports.updateContract = catchAsync(async (req, res, next) => {
   contract.startTime = req.body.startTime || contract.startTime;
   contract.endTime = req.body.endTime || contract.endTime;
   contract.workTime = req.body.workTime || contract.workTime;
-  contract.expireAt = req.body.updateExpires ? req.body.expireAt : contract.expireAt;
+  contract.expireAt = req.body.updateExpires
+    ? req.body.expireAt
+    : contract.expireAt;
   contract.description = req.body.description || contract.description;
   contract.otherProps = req.body.otherProps || contract.otherProps;
   contract.paymentType = req.body.paymentType || contract.paymentType;
@@ -179,7 +189,7 @@ exports.updateContract = catchAsync(async (req, res, next) => {
 
   const updatedContract = await contract.save();
 
-  const populatedContract = await Contract.populate(updatedContract ,{
+  const populatedContract = await Contract.populate(updatedContract, {
     path: 'finder tasker taskTag workLocation review',
   });
   return res.status(200).json({
