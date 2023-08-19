@@ -201,7 +201,7 @@ function NavBar({ isLogin = true }) {
               )
             )}
           </Box>
-          {isLogin && (
+          {/* {isLogin && (
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -212,7 +212,7 @@ function NavBar({ isLogin = true }) {
             >
               <MessageIcon />
             </IconButton>
-          )}
+          )} */}
           {!isLogin && (
             <Button
               variant="contained"
@@ -222,18 +222,37 @@ function NavBar({ isLogin = true }) {
               {t('th_key_navbar_becometasker')}
             </Button>
           )}
+          {/* {isLogin && (
+            <Typography>
+             
+            </Typography>
+          )} */}
           {isLogin && (
             <div>
-              <IconButton
+              {/* <IconButton
                 size="large"
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={handleMenu}
-                // color="success"
               >
                 <AccountCircle />
-              </IconButton>
+              </IconButton> */}
+              <Button
+                variant="text"
+                color="secondary"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                endIcon={
+                  <Avatar sizes="40px" src={logincontext?.currentUser?.image} />
+                }
+              >
+                {' '}
+                Xin chào {logincontext?.currentUser?.firstName}{' '}
+                {logincontext?.currentUser?.lastName} !
+              </Button>
               <Menu
                 id="menu-appbar"
                 anchorEl={anchorEl}
@@ -252,7 +271,12 @@ function NavBar({ isLogin = true }) {
                 <MenuItem onClick={() => navigate('/profile/personal')}>
                   {t('th_key_person_information')}
                 </MenuItem>
-                {/* <MenuItem onClick={handleClose}>Quản lý công việc</MenuItem> */}
+                <MenuItem>
+                  <LanguageSwitch />
+                </MenuItem>
+                <MenuItem>
+                  <ThemeModeSwitch />
+                </MenuItem>
                 <MenuItem onClick={handleLogout}>
                   <Typography color={'error'} sx={{ mr: 1 }}>
                     {t('th_key_logout')}
@@ -262,8 +286,9 @@ function NavBar({ isLogin = true }) {
               </Menu>
             </div>
           )}
-          <LanguageSwitch />
-          <ThemeModeSwitch />
+
+          {/* <LanguageSwitch />
+          <ThemeModeSwitch /> */}
         </Toolbar>
       </Container>
     </AppBar>

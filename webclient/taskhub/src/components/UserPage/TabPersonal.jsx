@@ -34,10 +34,12 @@ import { Formik } from 'formik';
 import MainCard from '../../base/component/MainCard';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LoginContext } from '../../provider/LoginContext';
+import { useTranslation } from 'react-i18next';
 
 // ==============================|| TAB - PERSONAL ||============================== //
 
 const TabPersonal = () => {
+  const { t } = useTranslation();
   const maxDate = new Date();
   maxDate.setFullYear(maxDate.getFullYear() - 18);
   const { currentUser } = useContext(LoginContext);
@@ -67,31 +69,31 @@ const TabPersonal = () => {
   return (
     <MainCard
       content={false}
-      title="Personal Information"
+      title={t('th_key_person_information')}
       sx={{ '& .MuiInputLabel-root': { fontSize: '0.875rem' } }}
     >
       {userData && (
         <Formik
           initialValues={{
-            firstname: userData?.firstName,
-            lastname: userData?.lastName,
+            firstName: userData?.firstName,
+            lastName: userData?.lastName,
             email: userData?.email,
-            dob: dayjs(userData?.dateOfBirth),
+            dateOfBirth: dayjs(userData?.dateOfBirth),
             phoneNumber: userData?.phoneNumber,
             city: userData?.city,
             gender: userData?.gender,
             submit: null,
           }}
           validationSchema={Yup.object().shape({
-            firstname: Yup.string()
+            firstName: Yup.string()
               .max(255)
               .required('First Name is required.'),
-            lastname: Yup.string().max(255).required('Last Name is required.'),
+            lastName: Yup.string().max(255).required('Last Name is required.'),
             email: Yup.string()
               .email('Invalid email address.')
               .max(255)
               .required('Email is required.'),
-            dob: Yup.date()
+            dateOfBirth: Yup.date()
               .max(maxDate, 'Age should be 18+ years.')
               .required('Date of birth is requird.'),
             phoneNumber: Yup.number()
@@ -122,8 +124,8 @@ const TabPersonal = () => {
               //     close: false,
               //   })
               // );
-              setStatus({ success: false });
-              setSubmitting(false);
+              // setStatus({ success: false });
+              // setSubmitting(false);
             } catch (err) {
               setStatus({ success: false });
               setErrors({ submit: err.message });
@@ -156,18 +158,18 @@ const TabPersonal = () => {
                         </InputLabel>
                         <TextField
                           fullWidth
-                          id="personal-first-name"
-                          value={values.firstname}
-                          name="firstname"
+                          id="firstName"
+                          value={values.firstName}
+                          name="firstName"
                           onBlur={handleBlur}
                           onChange={handleChange}
                           placeholder="First Name"
                           // autoFocus
                           // inputRef={inputRef}
                         />
-                        {touched.firstname && errors.firstname && (
+                        {touched.firstName && errors.firstName && (
                           <FormHelperText error id="personal-first-name-helper">
-                            {errors.firstname}
+                            {errors.firstName}
                           </FormHelperText>
                         )}
                       </Stack>
@@ -176,22 +178,22 @@ const TabPersonal = () => {
                       <Stack spacing={1.25}>
                         <InputLabel
                           sx={{ textAlign: 'start' }}
-                          htmlFor="personal-last-name"
+                          htmlFor="lastName"
                         >
                           Last Name
                         </InputLabel>
                         <TextField
                           fullWidth
-                          id="personal-last-name"
-                          value={values.lastname}
-                          name="lastname"
+                          id="lastName"
+                          value={values.lastName}
+                          name="lastName"
                           onBlur={handleBlur}
                           onChange={handleChange}
                           placeholder="Last Name"
                         />
-                        {touched.lastname && errors.lastname && (
-                          <FormHelperText error id="personal-last-name-helper">
-                            {errors.lastname}
+                        {touched.lastName && errors.lastName && (
+                          <FormHelperText error id="lastName-helper">
+                            {errors.lastName}
                           </FormHelperText>
                         )}
                       </Stack>
@@ -225,12 +227,14 @@ const TabPersonal = () => {
                       <Stack spacing={1.25}>
                         <InputLabel
                           sx={{ textAlign: 'start' }}
-                          htmlFor="personal-date"
+                          htmlFor="dateOfBirth"
                         >
                           Date of Birth
                         </InputLabel>
                         <DatePicker
-                          value={values?.dob}
+                          id="dateOfBirth"
+                          name="dateOfBirth"
+                          value={values?.dateOfBirth}
                           onBlur={handleBlur}
                           onChange={handleChange}
                         />
@@ -240,7 +244,7 @@ const TabPersonal = () => {
                       <Stack spacing={1.25}>
                         <InputLabel
                           sx={{ textAlign: 'start' }}
-                          htmlFor="personal-phone"
+                          htmlFor="phoneNumber"
                         >
                           Phone Number
                         </InputLabel>
@@ -252,12 +256,12 @@ const TabPersonal = () => {
                         >
                           <TextField
                             fullWidth
-                            id="personal-phoneNumber"
+                            id="phoneNumber"
                             value={values?.phoneNumber}
                             name="phoneNumber"
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            placeholder="phoneNumber Number"
+                            placeholder="Phone Number"
                           />
                         </Stack>
                         {touched.phoneNumber && errors.phoneNumber && (
@@ -274,13 +278,13 @@ const TabPersonal = () => {
                       <Stack spacing={1.25}>
                         <InputLabel
                           sx={{ textAlign: 'start' }}
-                          htmlFor="personal-designation"
+                          htmlFor="gender"
                         >
                           Gender
                         </InputLabel>
                         {/* <TextField
                           fullWidth
-                          id="personal-designation"
+                          id="gender"
                           value={values?.designation}
                           name="designation"
                           onBlur={handleBlur}
@@ -288,7 +292,8 @@ const TabPersonal = () => {
                           placeholder="Designation"
                         /> */}
                         <Select
-                          id="personal-designation"
+                          id="gender"
+                          name="gender"
                           value={values?.gender}
                           onBlur={handleBlur}
                           onChange={handleChange}

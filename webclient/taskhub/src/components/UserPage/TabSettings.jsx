@@ -16,11 +16,13 @@ import {
 import MainCard from '../../base/component/MainCard';
 
 import Brightness4OutlinedIcon from '@mui/icons-material/Brightness4Outlined';
+import { useTranslation } from 'react-i18next';
 
 // ==============================|| TAB - SETTINGS ||============================== //
 
 const TabSettings = () => {
   const [checked, setChecked] = useState(['oc', 'usn', 'lc']);
+  const { t } = useTranslation();
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -36,7 +38,7 @@ const TabSettings = () => {
   };
 
   return (
-    <MainCard title="Settings">
+    <MainCard title={t('th_key_setting')}>
       <List sx={{ '& .MuiListItem-root': { p: 2 } }}>
         {/* <ListItem divider> */}
         {/* <ListItemIcon

@@ -17,6 +17,10 @@ const resources = {
       th_key_signin: 'Sign In',
       th_key_logout: 'Log out',
       th_key_person_information: 'Personal',
+      th_key_change_password: 'Change password',
+      th_key_person_wallet: 'My Wallet',
+      th_key_setting: 'Settings',
+      th_key_post: 'Post',
       //
       th_key_navbar_becometasker: 'Become a Tasker',
       th_key_navbar_signup_login: 'Sign up / Log in',
@@ -59,6 +63,7 @@ const resources = {
       th_key_payment_perhour: 'Hourly Wage',
       th_key_payment_onetime: 'Salary',
       //
+      th_key_nodata: 'No record(s) found',
       th_key_task: 'Task',
       th_key_worklocation: 'Work Location',
       th_key_address: 'Address',
@@ -81,7 +86,11 @@ const resources = {
       th_key_signup: 'Đăng ký',
       th_key_signin: 'Đăng nhập',
       th_key_logout: 'Đăng xuất',
+      th_key_change_password: 'Đổi mật khẩu',
       th_key_person_information: 'Thông tin cá nhân',
+      th_key_person_wallet: 'Ví của tôi',
+      th_key_setting: 'Cài đặt',
+      th_key_post: 'Bài đăng',
       //
       th_key_navbar_becometasker: 'Nhận việc',
       th_key_navbar_signup_login: 'Đăng ký / Đăng nhập',
@@ -123,6 +132,7 @@ const resources = {
       th_key_payment_perhour: 'Theo giờ',
       th_key_payment_onetime: 'Một lần',
       //
+      th_key_nodata: 'Không có dữ liệu',
       th_key_task: 'Công việc',
       th_key_worklocation: 'Khu vực',
       th_key_address: 'Địa chỉ',

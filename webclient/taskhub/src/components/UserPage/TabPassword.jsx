@@ -40,6 +40,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import HorizontalRuleOutlinedIcon from '@mui/icons-material/HorizontalRuleOutlined';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
+import { useTranslation } from 'react-i18next';
 
 // ==============================|| TAB - PASSWORD CHANGE ||============================== //
 
@@ -49,6 +50,7 @@ const TabPassword = () => {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { t } = useTranslation();
 
   const handleClickShowOldPassword = () => {
     setShowOldPassword(!showOldPassword);
@@ -65,7 +67,7 @@ const TabPassword = () => {
   };
 
   return (
-    <MainCard title="Change Password">
+    <MainCard title={t('th_key_change_password')}>
       <Formik
         initialValues={{
           old: '',

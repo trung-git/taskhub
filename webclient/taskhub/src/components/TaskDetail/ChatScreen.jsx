@@ -28,6 +28,7 @@ import ImageIcon from '@mui/icons-material/Image';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import Picker, { IEmojiData, SKIN_TONE_MEDIUM_DARK } from 'emoji-picker-react';
 import { toast } from 'react-toastify';
+import useToastify from '../../hooks/useToastify';
 
 function ChatScreen({ user, chatId, otherUser }) {
   const [messages, setMessages] = useState([]);
@@ -46,6 +47,7 @@ function ChatScreen({ user, chatId, otherUser }) {
   const endRef = useRef(null);
   const theme = useTheme();
   const [isScrollBottom, setIsScrollBottom] = useState(false);
+  const { toastError } = useToastify();
 
   useEffect(() => {
     if (isScrollBottom) {
@@ -158,16 +160,7 @@ function ChatScreen({ user, chatId, otherUser }) {
 
   const handleOnSend = () => {
     if (message.trim() === '') {
-      toast.error(`Can't send null message`, {
-        position: 'top-right',
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
-      });
+      toastError(`Can't send null message`);
     } else {
       const newMessage = {
         content: message,
@@ -204,7 +197,7 @@ function ChatScreen({ user, chatId, otherUser }) {
       messages?.length > 0 &&
       messages?.map((_message, index) => {
         return (
-          <Grid item xs={12} key={_message?._id}>
+          <Grid item xs={12} key={index}>
             {_message.sender === user._id ? (
               <Stack spacing={1.25} direction="row">
                 <Grid container spacing={1} justifyContent="flex-end">

@@ -14,6 +14,7 @@ import PaymentsIcon from '@mui/icons-material/Payments';
 import PersonIcon from '@mui/icons-material/Person';
 import LockIcon from '@mui/icons-material/Lock';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { useTranslation } from 'react-i18next';
 
 function getPathIndex(pathname) {
   let selectedTab = 0;
@@ -38,6 +39,7 @@ function getPathIndex(pathname) {
 
 const ProfileTab = () => {
   const theme = useTheme();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
@@ -69,7 +71,7 @@ const ProfileTab = () => {
         <ListItemIcon>
           <PersonIcon />
         </ListItemIcon>
-        <ListItemText primary="Personal Information" />
+        <ListItemText primary={t('th_key_person_information')} />
       </ListItemButton>
       <ListItemButton
         selected={selectedIndex === 1}
@@ -78,7 +80,7 @@ const ProfileTab = () => {
         <ListItemIcon>
           <PaymentsIcon />
         </ListItemIcon>
-        <ListItemText primary="Payment" />
+        <ListItemText primary={t('th_key_person_wallet')} />
       </ListItemButton>
       <ListItemButton
         selected={selectedIndex === 2}
@@ -87,7 +89,7 @@ const ProfileTab = () => {
         <ListItemIcon>
           <LockIcon />
         </ListItemIcon>
-        <ListItemText primary="Change Password" />
+        <ListItemText primary={t('th_key_change_password')} />
       </ListItemButton>
       <ListItemButton
         selected={selectedIndex === 3}
@@ -96,7 +98,7 @@ const ProfileTab = () => {
         <ListItemIcon>
           <SettingsIcon />
         </ListItemIcon>
-        <ListItemText primary="Settings" />
+        <ListItemText primary={t('th_key_setting')} />
       </ListItemButton>
     </List>
   );

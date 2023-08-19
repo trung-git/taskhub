@@ -28,14 +28,16 @@ import { Formik } from 'formik';
 // import { openSnackbar } from 'store/reducers/snackbar';
 // import IconButton from 'components/@extended/IconButton';
 import MainCard from '../../base/component/MainCard';
+import { useTranslation } from 'react-i18next';
 
 // assets
 
 // ==============================|| TAB - PAYMENT ||============================== //
 
 const TabPayment = () => {
+  const { t } = useTranslation();
   return (
-    <MainCard title="Payment">
+    <MainCard title={t('th_key_person_wallet')}>
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Stack

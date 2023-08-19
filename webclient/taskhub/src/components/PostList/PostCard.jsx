@@ -37,7 +37,7 @@ const PostCard = ({ post }) => {
     workLocation,
     workTime,
     taskTag,
-    description,
+    text,
     createdAt,
     price,
     _id: id,
@@ -49,7 +49,7 @@ const PostCard = ({ post }) => {
 
   const handleClickOpen = () => {
     // setOpen(true);
-    navigate(`/tasklist/${id}`);
+    navigate(`/postlist/${id}`);
   };
 
   console.log('postCard', post);
@@ -143,15 +143,14 @@ const PostCard = ({ post }) => {
           <Typography
             sx={{
               textAlign: 'start',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              //   whiteSpace: 'nowrap',
-              display: '-webkit-box',
-              WebkitLineClamp: '2',
-              WebkitBoxOrient: 'vertical',
+              // overflow: 'hidden',
+              // textOverflow: 'ellipsis',
+              // display: '-webkit-box',
+              // WebkitLineClamp: '2',
+              // WebkitBoxOrient: 'vertical',
             }}
           >
-            {description}
+            {text}
           </Typography>
         </Grid>
         <Grid item xs={12}>
