@@ -181,11 +181,13 @@ exports.getMe = catchAsync(async (req, res, next) => {
   if (!user) {
     return next(new AppError('User not found', 400));
   }
+  const contractCount = await Contract.countDocuments({$or: [{finder: user._id}, {tasker: user._id}]});
+  const postCount = await Post.countDocuments({user: user._id});
 
   res.status(200).json({
     status: 'success',
     data: {
-      user,
+      user: {...user._doc, contractCount, postCount},
     },
   });
 });

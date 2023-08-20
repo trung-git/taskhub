@@ -9,11 +9,13 @@ const AppError = require('../utils/appError');
 const TaskTag = require('../models/taskTagModel');
 const District = require('../models/districtModel');
 const City = require('../models/cityModel');
+const Wallet = require('../models/walletModel');
+const Contract = require('../models/contractModel');
 
 const { getObjectModel } = require('../utils');
 const { ROLE } = require('../utils/constantVariables');
 const Email = require('../utils/email');
-const Wallet = require('../models/walletModel');
+const Post = require('../models/postModel');
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -21,7 +23,7 @@ const signToken = (id) => {
   });
 };
 
-const createAndSendToken = (user, statusCode, req, res, rememberMe = true) => {
+const createAndSendToken = (user, statusCode, req, res, rememberMe = true, additionalFields = {} ) => {
   const token = signToken(user._id);
   if (rememberMe) {
     const cookieOptions = {
@@ -40,7 +42,7 @@ const createAndSendToken = (user, statusCode, req, res, rememberMe = true) => {
     status: 'success',
     token,
     data: {
-      user,
+      user: {...user._doc, ...additionalFields},
     },
   });
 };
@@ -171,8 +173,11 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Incorrect username or password', 401));
   }
 
+  const contractCount = await Contract.countDocuments({$or: [{finder: user._id}, {tasker: user._id}]});
+  const postCount = await Post.countDocuments({user: user._id});
+
   // 3) If everything ok, send token to client
-  createAndSendToken(user, 200, req, res, rememberMe);
+  createAndSendToken(user, 200, req, res, rememberMe, {contractCount, postCount});
 });
 
 exports.resetLogin = catchAsync(async (req, res, next) => {
