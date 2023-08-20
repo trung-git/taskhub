@@ -12,6 +12,10 @@ const resources = {
       th_key_main_switch_lang: 'English',
       //
       th_task_errands: 'Errands',
+      th_task_cleaning: 'Cleaning',
+      th_task_electricalhelp: 'Electrical help',
+      th_task_helpmoving: 'Help moving',
+      th_task_generalmounting: 'General mounting',
       //
       th_key_signup: 'Sign Up',
       th_key_signin: 'Sign In',
@@ -21,6 +25,17 @@ const resources = {
       th_key_person_wallet: 'My Wallet',
       th_key_setting: 'Settings',
       th_key_post: 'Post',
+      //
+      th_key_btn_save: 'Save',
+      th_key_btn_cancel: 'Cancel',
+      th_key_firstname: 'First name',
+      th_key_lastname: 'Last name',
+      th_key_email: 'Email address',
+      th_key_dateofbirth: 'Date of birth',
+      th_key_phonenumber: 'Phone number',
+      th_key_gender: 'Gender',
+      th_key_gender_male: 'Male',
+      th_key_gender_female: 'Female',
       //
       th_key_navbar_becometasker: 'Become a Tasker',
       th_key_navbar_signup_login: 'Sign up / Log in',
@@ -38,8 +53,8 @@ const resources = {
       th_key_finding_step_taskerlist: 'Browse Taskers & prices',
       th_key_finding_step_choosingdate: 'Choose date & time',
       th_key_finding_step_booking: 'Booking',
-      th_key_city: '',
-      th_key_capital: '',
+      th_key_city: 'City',
+      th_key_capital: 'Capital',
       th_key_select_city: 'Select City',
       th_key_select_district: 'Select District',
       th_key_district_type1: 'District',
@@ -74,6 +89,9 @@ const resources = {
       th_key_paymentplan: 'Payment plan',
       th_key_desc: 'Description',
       th_key_predict_amount: 'Predict the amount of money to be paid',
+      //
+      th_post_btn_view_candidate: 'List of candidate',
+      th_post_candidate_list: 'List of candidate',
     },
   },
   vi: {
@@ -82,6 +100,10 @@ const resources = {
       th_key_main_switch_lang: 'Tiếng Việt',
       //
       th_task_errands: 'Việc vặt',
+      th_task_cleaning: 'Dọn dẹp',
+      th_task_electricalhelp: 'Sửa điện',
+      th_task_helpmoving: 'Hỗ trợ vận chuyển',
+      th_task_generalmounting: 'Lắp đặt',
       //
       th_key_signup: 'Đăng ký',
       th_key_signin: 'Đăng nhập',
@@ -91,6 +113,17 @@ const resources = {
       th_key_person_wallet: 'Ví của tôi',
       th_key_setting: 'Cài đặt',
       th_key_post: 'Bài đăng',
+      //
+      th_key_btn_save: 'Lưu',
+      th_key_btn_cancel: 'Hủy',
+      th_key_firstname: 'Tên',
+      th_key_lastname: 'Họ',
+      th_key_email: 'Email',
+      th_key_dateofbirth: 'Ngày sinh',
+      th_key_phonenumber: 'Số điện thoại',
+      th_key_gender: 'Giới tính',
+      th_key_gender_male: 'Nam',
+      th_key_gender_female: 'Nữ',
       //
       th_key_navbar_becometasker: 'Nhận việc',
       th_key_navbar_signup_login: 'Đăng ký / Đăng nhập',
@@ -143,6 +176,9 @@ const resources = {
       th_key_paymentplan: 'Phương thức thanh toán',
       th_key_desc: 'Mô tả',
       th_key_predict_amount: 'Ước tính giá cho công việc này',
+      //
+      th_post_btn_view_candidate: 'Xem danh sách ứng viên',
+      th_post_candidate_list: 'Danh sách ứng viên',
     },
   },
 };

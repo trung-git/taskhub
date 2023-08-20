@@ -191,12 +191,14 @@ const ProfileTabs = () => {
             alignItems="center"
           >
             <Stack spacing={0.5} alignItems="center">
-              <Typography variant="h5">86</Typography>
+              <Typography variant="h5">
+                {userData?.contractCount || '0'}
+              </Typography>
               <Typography color="green">{t('th_key_task')}</Typography>
             </Stack>
             <Divider orientation="vertical" flexItem />
             <Stack spacing={0.5} alignItems="center">
-              <Typography variant="h5">40</Typography>
+              <Typography variant="h5">{userData?.postCount || '0'}</Typography>
               <Typography color="green">{t('th_key_post')}</Typography>
             </Stack>
             <Divider orientation="vertical" flexItem />

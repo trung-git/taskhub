@@ -101,29 +101,6 @@ const TaskCard = ({ task }) => {
               />
             </ListItem>
           </List>
-          {/* <Menu
-            id="fade-menu"
-            MenuListProps={{
-              'aria-labelledby': 'fade-button',
-            }}
-            anchorEl={anchorEl}
-            open={openMenu}
-            onClose={handleMenuClose}
-            TransitionComponent={Fade}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right',
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-          >
-            <MenuItem onClick={handleClickOpen}>Preview</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Share</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Edit</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Delete</MenuItem>
-          </Menu> */}
         </Grid>
         <Grid item xs={12}>
           <Divider />

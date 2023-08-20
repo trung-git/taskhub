@@ -21,6 +21,7 @@ const Nodata = ({ langKey = 'th_key_nodata', height = 300 }) => {
       alignItems={'center'}
       justifyContent={'center'}
       direction={'column'}
+      spacing={2}
     >
       <InsertDriveFileOutlinedIcon sx={{ fontSize: '50px' }} />
       <Typography>{t(langKey)}</Typography>

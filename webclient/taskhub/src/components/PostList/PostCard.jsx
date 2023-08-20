@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Chip,
+  Dialog,
   Divider,
   Fade,
   Grid,
@@ -17,20 +18,25 @@ import {
   MenuItem,
   Stack,
   Typography,
+  useTheme,
 } from '@mui/material';
 import MainCard from '../../base/component/MainCard';
 import { useState } from 'react';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import AccessAlarmOutlinedIcon from '@mui/icons-material/AccessAlarmOutlined';
 import RoomOutlinedIcon from '@mui/icons-material/RoomOutlined';
-import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
+// import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined';
+import TaskIcon from '@mui/icons-material/Task';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router';
 import { MoreOutlined } from '@mui/icons-material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import CandidateModal from './CandidateModal';
 
-const PostCard = ({ post }) => {
+const PostCard = ({ post, onSelect }) => {
   const {
     user,
     address,
@@ -39,24 +45,20 @@ const PostCard = ({ post }) => {
     taskTag,
     text,
     createdAt,
-    price,
     _id: id,
-    expireAt,
+    updatedAt,
+    candidate,
   } = post;
   const { t } = useTranslation();
-  // const [open, setOpen] = useState(false);
+  const theme = useTheme();
+  const [openCandidateModal, setOpenCandidateModal] = useState(false);
   const navigate = useNavigate();
 
   const handleClickOpen = () => {
-    // setOpen(true);
-    navigate(`/postlist/${id}`);
+    setOpenCandidateModal(true);
   };
 
-  console.log('postCard', post);
-
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
+  console.log('postCard', candidate);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const openMenu = Boolean(anchorEl);
@@ -66,177 +68,229 @@ const PostCard = ({ post }) => {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
+
+  const handleOnEdit = () => {
+    onSelect && onSelect(id);
+  };
+
+  const handleOnDelete = () => {};
+
   return (
-    <MainCard
-      sx={{
-        height: 1,
-        '& .MuiCardContent-root': {
+    <div>
+      <MainCard
+        sx={{
           height: 1,
-          display: 'flex',
-          flexDirection: 'column',
-        },
-      }}
-    >
-      <Grid container spacing={2.25}>
-        <Grid item xs={12}>
-          <List sx={{ width: 1, p: 0 }}>
-            <ListItem
-              disablePadding
-              secondaryAction={
-                <IconButton
-                  edge="end"
-                  aria-label="comments"
-                  color="secondary"
-                  onClick={handleMenuClick}
-                >
-                  <MoreVertIcon style={{ fontSize: '1.15rem' }} />
-                </IconButton>
-              }
-            >
-              <ListItemAvatar>
-                <Avatar
-                  sx={{ width: 50, height: 50 }}
-                  alt={user?.firstName}
-                  src={user?.image}
+          '& .MuiCardContent-root': {
+            height: 1,
+            display: 'flex',
+            flexDirection: 'column',
+          },
+        }}
+      >
+        <Grid container spacing={2.25}>
+          <Grid item xs={12}>
+            <List sx={{ width: 1, p: 0 }}>
+              <ListItem
+                disablePadding
+                secondaryAction={
+                  <IconButton
+                    edge="end"
+                    aria-label="comments"
+                    color="secondary"
+                    onClick={handleMenuClick}
+                  >
+                    <MoreVertIcon style={{ fontSize: '1.15rem' }} />
+                  </IconButton>
+                }
+              >
+                <ListItemAvatar>
+                  <Avatar
+                    sx={{ width: 50, height: 50 }}
+                    alt={user?.firstName}
+                    src={user?.image}
+                  />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={
+                    <Typography variant="subtitle1">
+                      {`${user?.firstName} ${user?.lastName}`}
+                    </Typography>
+                  }
+                  secondary={
+                    <Typography variant="caption" color="secondary">
+                      {dayjs(createdAt).format('HH:mm DD/MM/YYYY')}
+                    </Typography>
+                  }
                 />
-              </ListItemAvatar>
-              <ListItemText
-                primary={
-                  <Typography variant="subtitle1">
-                    {`${user?.firstName} ${user?.lastName}`}
-                  </Typography>
-                }
-                secondary={
-                  <Typography variant="caption" color="secondary">
-                    {t(taskTag?.langKey || '')}
-                  </Typography>
-                }
-              />
-            </ListItem>
-          </List>
-          <Menu
-            id="fade-menu"
-            MenuListProps={{
-              'aria-labelledby': 'fade-button',
-            }}
-            anchorEl={anchorEl}
-            open={openMenu}
-            onClose={handleMenuClose}
-            TransitionComponent={Fade}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right',
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-          >
-            <MenuItem onClick={handleMenuClose}>Edit</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Delete</MenuItem>
-          </Menu>
-        </Grid>
-        <Grid item xs={12}>
-          <Divider />
-        </Grid>
-        <Grid item xs={12}>
-          <Typography
-            sx={{
-              textAlign: 'start',
-              // overflow: 'hidden',
-              // textOverflow: 'ellipsis',
-              // display: '-webkit-box',
-              // WebkitLineClamp: '2',
-              // WebkitBoxOrient: 'vertical',
-            }}
-          >
-            {text}
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Grid container spacing={1}>
-            <Grid item xs={6}>
-              <List
-                sx={{
-                  p: 0,
-                  overflow: 'hidden',
-                  '& .MuiListItem-root': { px: 0, py: 0.5 },
-                }}
+              </ListItem>
+            </List>
+            <Menu
+              id="fade-menu"
+              MenuListProps={{
+                'aria-labelledby': 'fade-button',
+              }}
+              anchorEl={anchorEl}
+              open={openMenu}
+              onClose={handleMenuClose}
+              TransitionComponent={Fade}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+            >
+              <MenuItem
+                onClick={handleOnEdit}
+                sx={{ color: theme.palette.primary.main }}
               >
-                <ListItem>
-                  <ListItemIcon>
-                    <AttachMoneyOutlinedIcon color="primary" />
-                  </ListItemIcon>
-                  <ListItemText primary={price?.toString()} />
-                </ListItem>
-                <ListItem>
-                  <ListItemIcon>
-                    <CalendarMonthOutlinedIcon color="primary" />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={`${dayjs(workTime?.from).format('DD-MM-YYYY')}`}
-                  />
-                </ListItem>
-              </List>
-            </Grid>
-            <Grid item xs={6}>
-              <List
-                sx={{
-                  p: 0,
-                  overflow: 'hidden',
-                  '& .MuiListItem-root': { px: 0, py: 0.5 },
-                }}
+                <ListItemIcon>
+                  <EditIcon sx={{ color: theme.palette.primary.main }} />
+                </ListItemIcon>
+                <ListItemText primary="Edit" />
+              </MenuItem>
+              <MenuItem
+                onClick={handleMenuClose}
+                sx={{ color: theme.palette.error.main }}
               >
-                <ListItem>
-                  <ListItemIcon>
-                    <RoomOutlinedIcon color="primary" />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={`${t(workLocation?.prefix)} ${workLocation?.name}`}
+                <ListItemIcon>
+                  <DeleteOutlineOutlinedIcon
+                    sx={{ color: theme.palette.error.main }}
                   />
-                </ListItem>
-                <ListItem>
-                  <ListItemIcon>
-                    <AccessAlarmOutlinedIcon color="primary" />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={`${dayjs(workTime?.from).format(
-                      'HH:mm'
-                    )} - ${dayjs(workTime?.to).format('HH:mm')}`}
-                  />
-                </ListItem>
-              </List>
+                </ListItemIcon>
+                <ListItemText primary="Delete" />
+              </MenuItem>
+            </Menu>
+          </Grid>
+          <Grid item xs={12}>
+            <Divider />
+          </Grid>
+          <Grid item xs={12}>
+            <Typography
+              sx={{
+                textAlign: 'start',
+                // overflow: 'hidden',
+                // textOverflow: 'ellipsis',
+                // display: '-webkit-box',
+                // WebkitLineClamp: '2',
+                // WebkitBoxOrient: 'vertical',
+              }}
+            >
+              {text}
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container spacing={1}>
+              <Grid item xs={4}>
+                <List
+                  sx={{
+                    p: 0,
+                    overflow: 'hidden',
+                    '& .MuiListItem-root': { px: 0, py: 0.5 },
+                  }}
+                >
+                  <ListItem>
+                    <ListItemIcon>
+                      <TaskIcon color="primary" />
+                    </ListItemIcon>
+                    <ListItemText primary={t(taskTag?.langKey || '')} />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon>
+                      <CalendarMonthOutlinedIcon color="primary" />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={`${dayjs(workTime?.from).format('DD-MM-YYYY')}`}
+                    />
+                  </ListItem>
+                </List>
+              </Grid>
+              <Grid item xs={8}>
+                <List
+                  sx={{
+                    p: 0,
+                    overflow: 'hidden',
+                    '& .MuiListItem-root': { px: 0, py: 0.5 },
+                  }}
+                >
+                  <ListItem>
+                    <ListItemIcon>
+                      <RoomOutlinedIcon color="primary" />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={`${address?.toString()}, ${t(
+                        workLocation?.prefix
+                      )} ${workLocation?.name}, ${t(
+                        workLocation?.city?.prefix
+                      )} ${workLocation?.city?.name}`}
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon>
+                      <AccessAlarmOutlinedIcon color="primary" />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={`${dayjs(workTime?.from).format(
+                        'HH:mm'
+                      )} - ${dayjs(workTime?.to).format('HH:mm')}`}
+                    />
+                  </ListItem>
+                </List>
+              </Grid>
             </Grid>
           </Grid>
+          <Grid item xs={12}>
+            <Divider />
+          </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <Divider />
-        </Grid>
-      </Grid>
-      <Stack
-        direction="row"
-        alignItems="center"
-        spacing={1}
-        justifyContent="space-between"
-        sx={{ mt: 'auto', mb: 0, pt: 2.25 }}
-      >
-        <Stack direction={'column'} sx={{ alignItems: 'flex-start' }}>
-          <Typography variant="caption" color="secondary">
-            Ngày tạo {dayjs(createdAt).format('DD/MM/YYYY HH:mm')}
-          </Typography>
-          {expireAt && (
+        <Stack
+          direction="row"
+          alignItems="center"
+          spacing={1}
+          justifyContent="space-between"
+          sx={{ mt: 'auto', mb: 0, pt: 2.25 }}
+        >
+          <Stack direction={'column'} sx={{ alignItems: 'flex-start' }}>
+            <Typography variant="caption" color="secondary">
+              Cập nhật lần cuối {dayjs(updatedAt).format('DD/MM/YYYY HH:mm')}
+            </Typography>
+            {/* {expireAt && (
             <Typography variant="caption" color="secondary">
               {`${t('Thời hạn phản hồi')} : ${dayjs(expireAt).format(
                 'DD/MM/YYYY HH:mm'
               )}`}
             </Typography>
-          )}
+          )} */}
+          </Stack>
+          <Button
+            variant="outlined"
+            size="small"
+            disabled={candidate?.length === 0}
+            onClick={handleClickOpen}
+          >
+            {candidate?.length === 0
+              ? t('th_post_btn_view_candidate')
+              : `${t('th_post_btn_view_candidate')} (${candidate?.length})`}
+          </Button>
         </Stack>
-        <Button variant="outlined" size="small" onClick={handleClickOpen}>
-          {t('th_key_tasklist_btn_view_detail')}
-        </Button>
-      </Stack>
-    </MainCard>
+      </MainCard>
+      <Dialog
+        maxWidth="sm"
+        fullWidth
+        onClose={() => setOpenCandidateModal(false)}
+        open={openCandidateModal}
+        sx={{ '& .MuiDialog-paper': { p: 0 } }}
+      >
+        {openCandidateModal && (
+          <CandidateModal
+            candidateList={candidate}
+            onClose={() => setOpenCandidateModal(false)}
+          />
+        )}
+      </Dialog>
+    </div>
   );
 };
 

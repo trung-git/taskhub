@@ -96,20 +96,7 @@ const TabPersonal = () => {
             dateOfBirth: Yup.date()
               .max(maxDate, 'Age should be 18+ years.')
               .required('Date of birth is requird.'),
-            phoneNumber: Yup.number()
-              .test(
-                'len',
-                'phoneNumber should be exactly 10 digit',
-                (val) => val?.toString().length === 10
-              )
-              .required('Phone number is required'),
-            designation: Yup.string().required('Designation is required'),
-            address: Yup.string()
-              .min(50, 'Address to short.')
-              .required('Address is required'),
-            country: Yup.string().required('Country is required'),
-            state: Yup.string().required('State is required'),
-            note: Yup.string().min(150, 'Not shoulde be more then 150 char.'),
+            phoneNumber: Yup.number(),
           })}
           onSubmit={(values, { setErrors, setStatus, setSubmitting }) => {
             try {
@@ -154,7 +141,7 @@ const TabPersonal = () => {
                           sx={{ textAlign: 'start' }}
                           htmlFor="personal-first-name"
                         >
-                          First Name
+                          {t('th_key_firstname')}
                         </InputLabel>
                         <TextField
                           fullWidth
@@ -163,7 +150,7 @@ const TabPersonal = () => {
                           name="firstName"
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          placeholder="First Name"
+                          placeholder={t('th_key_firstname')}
                           // autoFocus
                           // inputRef={inputRef}
                         />
@@ -180,7 +167,7 @@ const TabPersonal = () => {
                           sx={{ textAlign: 'start' }}
                           htmlFor="lastName"
                         >
-                          Last Name
+                          {t('th_key_lastname')}
                         </InputLabel>
                         <TextField
                           fullWidth
@@ -189,7 +176,7 @@ const TabPersonal = () => {
                           name="lastName"
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          placeholder="Last Name"
+                          placeholder={t('th_key_lastname')}
                         />
                         {touched.lastName && errors.lastName && (
                           <FormHelperText error id="lastName-helper">
@@ -204,7 +191,7 @@ const TabPersonal = () => {
                           sx={{ textAlign: 'start' }}
                           htmlFor="personal-email"
                         >
-                          Email Address
+                          {t('th_key_email')}
                         </InputLabel>
                         <TextField
                           type="email"
@@ -214,7 +201,7 @@ const TabPersonal = () => {
                           onBlur={handleBlur}
                           onChange={handleChange}
                           id="personal-email"
-                          placeholder="Email Address"
+                          placeholder={t('th_key_email')}
                         />
                         {touched.email && errors.email && (
                           <FormHelperText error id="personal-email-helper">
@@ -229,7 +216,7 @@ const TabPersonal = () => {
                           sx={{ textAlign: 'start' }}
                           htmlFor="dateOfBirth"
                         >
-                          Date of Birth
+                          {t('th_key_dateofbirth')}
                         </InputLabel>
                         <DatePicker
                           id="dateOfBirth"
@@ -246,7 +233,7 @@ const TabPersonal = () => {
                           sx={{ textAlign: 'start' }}
                           htmlFor="phoneNumber"
                         >
-                          Phone Number
+                          {t('th_key_phonenumber')}
                         </InputLabel>
                         <Stack
                           direction="row"
@@ -261,7 +248,7 @@ const TabPersonal = () => {
                             name="phoneNumber"
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            placeholder="Phone Number"
+                            placeholder={t('th_key_phonenumber')}
                           />
                         </Stack>
                         {touched.phoneNumber && errors.phoneNumber && (
@@ -280,17 +267,8 @@ const TabPersonal = () => {
                           sx={{ textAlign: 'start' }}
                           htmlFor="gender"
                         >
-                          Gender
+                          {t('th_key_gender')}
                         </InputLabel>
-                        {/* <TextField
-                          fullWidth
-                          id="gender"
-                          value={values?.designation}
-                          name="designation"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          placeholder="Designation"
-                        /> */}
                         <Select
                           id="gender"
                           name="gender"
@@ -298,17 +276,21 @@ const TabPersonal = () => {
                           onBlur={handleBlur}
                           onChange={handleChange}
                         >
-                          <MenuItem value={'Male'}>Male</MenuItem>
-                          <MenuItem value={'Female'}>Female</MenuItem>
+                          <MenuItem value={'Male'}>
+                            {t('th_key_gender_male')}
+                          </MenuItem>
+                          <MenuItem value={'Female'}>
+                            {t('th_key_gender_female')}
+                          </MenuItem>
                         </Select>
-                        {touched.gender && errors.gender && (
+                        {/* {touched.gender && errors.gender && (
                           <FormHelperText
                             error
                             id="personal-designation-helper"
                           >
                             {errors.gender}
                           </FormHelperText>
-                        )}
+                        )} */}
                       </Stack>
                     </Grid>
                   </Grid>
@@ -322,7 +304,7 @@ const TabPersonal = () => {
                     spacing={2}
                   >
                     <Button variant="outlined" color="secondary">
-                      Cancel
+                      {t('th_key_btn_cancel')}
                     </Button>
                     <Button
                       disabled={
@@ -331,7 +313,7 @@ const TabPersonal = () => {
                       type="submit"
                       variant="contained"
                     >
-                      Save
+                      {t('th_key_btn_save')}
                     </Button>
                   </Stack>
                 </Box>

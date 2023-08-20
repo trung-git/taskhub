@@ -12,6 +12,7 @@ import { API_URL } from '../../base/config';
 import { useCookies } from 'react-cookie';
 import useLogin from '../../hooks/useLogin';
 import FeedbackIcon from '@mui/icons-material/Feedback';
+import Nodata from '../../base/component/Nodata';
 
 const TaskListByType = ({ type }) => {
   const [taskList, setTaskList] = useState([]);
@@ -59,25 +60,7 @@ const TaskListByType = ({ type }) => {
       <CircularProgress color="success" />
     </Stack>
   ) : taskList?.length === 0 ? (
-    <Stack
-      sx={{
-        height: 300,
-        border: '1px solid',
-        borderRadius: 1,
-        borderColor:
-          theme.palette.mode === 'dark' ? theme.palette.divider : '#e6ebf1',
-        boxShadow: theme.customShadows.z1,
-        ':hover': {
-          boxShadow: theme.customShadows.z1,
-        },
-      }}
-      alignItems={'center'}
-      justifyContent={'center'}
-      direction={'column'}
-    >
-      <FeedbackIcon sx={{ fontSize: '50px' }} />
-      <Typography>Không có công việc nào</Typography>
-    </Stack>
+    <Nodata langKey="Không có công việc nào" />
   ) : (
     <Grid container spacing={3}>
       {taskList?.map((task) => {

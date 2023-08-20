@@ -1,8 +1,11 @@
 import {
   Box,
+  Button,
   CircularProgress,
   Container,
+  Dialog,
   Grid,
+  Pagination,
   Stack,
   Typography,
   useTheme,
@@ -16,12 +19,18 @@ import { API_URL } from '../../base/config';
 import axios from 'axios';
 import PostCard from './PostCard';
 import FeedbackIcon from '@mui/icons-material/Feedback';
+import Nodata from '../../base/component/Nodata';
+import PostModal from './PostModal';
 
 const PostList = () => {
   const { t } = useTranslation();
   const theme = useTheme();
   const [postList, setPostList] = useState([]);
   const { isLogin } = useContext(LoginContext);
+  const [pageNum, setPageNum] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [openPostModal, setOpenPostModal] = useState(false);
 
   const { getUserToken } = useLogin();
   const token = getUserToken();
@@ -42,6 +51,7 @@ const PostList = () => {
       const responseData = response.data.data;
       setPostList(responseData);
       setIsFetchingPostList(false);
+      setTotalPage(response.data.totalPage);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -51,10 +61,28 @@ const PostList = () => {
     fetchPostListData();
   }, []);
 
+  const handlePageChange = (event, value) => {
+    setPageNum(value);
+  };
+
   return (
     <Box sx={{ width: '100%' }}>
       <NavBar isLogin={isLogin} />
-      <Container maxWidth="sm" sx={{ mt: 3 }}>
+      <Container maxWidth="sm" sx={{ my: 3 }}>
+        <Stack
+          direction={'row'}
+          justifyContent={'flex-end'}
+          alignItems={'center'}
+          sx={{ mb: 3 }}
+        >
+          <Button
+            variant="contained"
+            size="medium"
+            onClick={() => setOpenPostModal(true)}
+          >
+            {t('Tạo một bài đăng')}
+          </Button>
+        </Stack>
         {isFetchingPostList ? (
           <Stack
             sx={{ height: 300 }}
@@ -65,39 +93,49 @@ const PostList = () => {
             <CircularProgress color="success" />
           </Stack>
         ) : postList?.length === 0 ? (
-          <Stack
-            sx={{
-              height: 300,
-              border: '1px solid',
-              borderRadius: 1,
-              borderColor:
-                theme.palette.mode === 'dark'
-                  ? theme.palette.divider
-                  : '#e6ebf1',
-              boxShadow: theme.customShadows.z1,
-              ':hover': {
-                boxShadow: theme.customShadows.z1,
-              },
-            }}
-            alignItems={'center'}
-            justifyContent={'center'}
-            direction={'column'}
-          >
-            <FeedbackIcon sx={{ fontSize: '50px' }} />
-            <Typography>Không có công việc nào</Typography>
-          </Stack>
+          <Nodata langKey="Không có bài đăng tìm nào" />
         ) : (
           <Grid container spacing={3}>
             {postList?.map((post) => {
               return (
                 <Grid item xs={12} key={post?._id}>
-                  <PostCard post={post} />
+                  <PostCard
+                    post={post}
+                    onSelect={(post) => setSelectedPost(post)}
+                  />
                 </Grid>
               );
             })}
           </Grid>
         )}
+        <Stack
+          direction={'row'}
+          sx={{ mt: 2, width: '100%' }}
+          justifyContent={'center'}
+        >
+          <Pagination
+            count={totalPage}
+            page={pageNum}
+            onChange={handlePageChange}
+            // color="success"
+            size="large"
+          />
+        </Stack>
       </Container>
+      <Dialog
+        maxWidth="sm"
+        fullWidth
+        onClose={() => setOpenPostModal(false)}
+        open={openPostModal}
+        sx={{ '& .MuiDialog-paper': { p: 0 } }}
+      >
+        {openPostModal && (
+          <PostModal
+            value={selectedPost}
+            onClose={() => setOpenPostModal(false)}
+          />
+        )}
+      </Dialog>
     </Box>
   );
 };
