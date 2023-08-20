@@ -256,10 +256,17 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
   const updatedUser = await user.save();
 
+  const contractCount = await Contract.countDocuments({$or: [{finder: updatedUser._id}, {tasker: updatedUser._id}]});
+  const postCount = await Post.countDocuments({user: updatedUser._id});
+
   res.status(200).json({
     status: 'success',
     data: {
-      updatedUser,
+      updatedUser: {
+        ...updatedUser._doc,
+        contractCount,
+        postCount
+      },
     },
   });
 });
