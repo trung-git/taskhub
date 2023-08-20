@@ -36,10 +36,12 @@ import { API_URL } from '../../../base/config';
 import { LoginContext } from '../../../provider/LoginContext';
 import AnimateButton from '../../../base/component/AnimateButton';
 import useLogin from '../../../hooks/useLogin';
+import { SocketContext } from '../../../provider/SocketContext';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
 const AuthLogin = () => {
+  const { emitUserLogin } = useContext(SocketContext);
   const [checked, setChecked] = React.useState(false);
   const logincontext = useContext(LoginContext);
   const navigate = useNavigate();
@@ -74,6 +76,7 @@ const AuthLogin = () => {
         setStatus({ success: true });
         logincontext.setIsLogin(true);
         navigate('/');
+        response?.data?.data?.user._id && emitUserLogin(response?.data?.data?.user._id);
       })
       .catch((error) => {
         // Handle error

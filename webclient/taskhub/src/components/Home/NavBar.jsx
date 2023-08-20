@@ -25,10 +25,12 @@ import useLogin from '../../hooks/useLogin';
 import { LoginContext } from '../../provider/LoginContext';
 import { useContext } from 'react';
 import ThemeModeSwitch from '../../base/component/ThemeModeSwitch';
+import { SocketContext } from '../../provider/SocketContext';
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function NavBar({ isLogin = true }) {
+  const { emitUserLogin } = useContext(SocketContext);
   const { t } = useTranslation();
   const navigate = useNavigate();
   const theme = useTheme();
@@ -112,6 +114,7 @@ function NavBar({ isLogin = true }) {
     setAnchorEl(null);
     logincontext.setIsLogin(false);
     logOut();
+    emitUserLogin(logincontext.currentUser._id);
   };
 
   return (

@@ -7,15 +7,18 @@ import reportWebVitals from './reportWebVitals';
 
 import { LoginProvider } from './provider/LoginContext';
 import { ConfigProvider } from './contexts/ConfigContext';
+import { SocketProvider } from './provider/SocketContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ConfigProvider>
       <BrowserRouter>
-        <LoginProvider>
-          <App />
-        </LoginProvider>
+        <SocketProvider>
+          <LoginProvider>
+            <App />
+          </LoginProvider>
+        </SocketProvider>
       </BrowserRouter>
     </ConfigProvider>
   </React.StrictMode>

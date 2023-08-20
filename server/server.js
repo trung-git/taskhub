@@ -1,7 +1,11 @@
 const dotenv = require('dotenv');
-dotenv.config();
+const http = require('http');
 const app = require('./app.js');
 const connectDB = require('./config/db.js');
+const createSocketServer = require('./config/socket.io.js');
+const server = http.createServer(app);
+
+dotenv.config();
 
 process.on('uncaughtException', (err) => {
   console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
@@ -14,8 +18,9 @@ const PORT = process.env.PORT || 3000;
 
 //MongoDB connection
 connectDB();
+createSocketServer(server);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`App is running in: http://localhost:${PORT}/`);
 });
 
