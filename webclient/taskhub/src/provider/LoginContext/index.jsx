@@ -19,18 +19,17 @@ function LoginProvider({ children }) {
       setIsLogin(true);
       setCurrentUser(userData);
 
-      socket && socket.connect();
       emitUserLogin(userData._id);
     } else {
       setIsLogin(false);
     }
   }, []);
 
-  // useEffect(()=>{
-  //   socket.on("get-users-online", (data) => {
-  //     console.log("DATA nè :", data);
-  //   })
-  // }, [])
+  useEffect(()=>{
+    socket.on("get-users-online", (data) => {
+      console.log("DATA userOnline :", data);
+    })
+  }, [])
   const loginValue = {
     isLogin,
     setIsLogin,

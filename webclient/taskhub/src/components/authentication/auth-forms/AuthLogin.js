@@ -75,6 +75,7 @@ const AuthLogin = () => {
         setSubmitting(false);
         setStatus({ success: true });
         logincontext.setIsLogin(true);
+        logincontext.setCurrentUser(response?.data?.data?.user);
         navigate('/');
         response?.data?.data?.user._id && emitUserLogin(response?.data?.data?.user._id);
       })
