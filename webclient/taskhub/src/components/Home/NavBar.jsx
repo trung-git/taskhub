@@ -26,6 +26,7 @@ import { LoginContext } from '../../provider/LoginContext';
 import { useContext } from 'react';
 import ThemeModeSwitch from '../../base/component/ThemeModeSwitch';
 import { SocketContext } from '../../provider/SocketContext';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
@@ -35,7 +36,7 @@ function NavBar({ isLogin = true }) {
   const navigate = useNavigate();
   const theme = useTheme();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElSetting, setAnchorElSetting] = React.useState(null);
   const { logOut } = useLogin();
   const logincontext = useContext(LoginContext);
 
@@ -89,16 +90,16 @@ function NavBar({ isLogin = true }) {
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
+  const handleOpenSettingMenu = (event) => {
+    setAnchorElSetting(event.currentTarget);
+  };
+  const handleCloseSettingMenu = () => {
+    setAnchorElSetting(null);
   };
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -204,18 +205,6 @@ function NavBar({ isLogin = true }) {
               )
             )}
           </Box>
-          {/* {isLogin && (
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={() => navigate('/chat')}
-              // color="success"
-            >
-              <MessageIcon />
-            </IconButton>
-          )} */}
           {!isLogin && (
             <Button
               variant="contained"
@@ -225,11 +214,6 @@ function NavBar({ isLogin = true }) {
               {t('th_key_navbar_becometasker')}
             </Button>
           )}
-          {/* {isLogin && (
-            <Typography>
-             
-            </Typography>
-          )} */}
           {isLogin && (
             <div>
               {/* <IconButton
@@ -274,12 +258,6 @@ function NavBar({ isLogin = true }) {
                 <MenuItem onClick={() => navigate('/profile/personal')}>
                   {t('th_key_person_information')}
                 </MenuItem>
-                <MenuItem>
-                  <LanguageSwitch />
-                </MenuItem>
-                <MenuItem>
-                  <ThemeModeSwitch />
-                </MenuItem>
                 <MenuItem onClick={handleLogout}>
                   <Typography color={'error'} sx={{ mr: 1 }}>
                     {t('th_key_logout')}
@@ -289,9 +267,38 @@ function NavBar({ isLogin = true }) {
               </Menu>
             </div>
           )}
-
-          {/* <LanguageSwitch />
-          <ThemeModeSwitch /> */}
+          <IconButton
+            variant="outlined"
+            color="secondary"
+            aria-label="account of current user"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            onClick={handleOpenSettingMenu}
+          >
+            <SettingsOutlinedIcon />
+          </IconButton>
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorElSetting}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={Boolean(anchorElSetting)}
+            onClose={handleCloseSettingMenu}
+          >
+            <MenuItem>
+              <LanguageSwitch />
+            </MenuItem>
+            <MenuItem sx={{ justifyContent: 'center' }}>
+              <ThemeModeSwitch />
+            </MenuItem>
+          </Menu>
         </Toolbar>
       </Container>
     </AppBar>

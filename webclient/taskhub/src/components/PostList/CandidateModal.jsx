@@ -19,6 +19,7 @@ import {
 import MainCard from '../../base/component/MainCard';
 import { useTranslation } from 'react-i18next';
 import TaskerCard from '../Finding/TaskerCard';
+import ImagesList from '../../base/component/ImagesList';
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -59,7 +60,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 const CandidateModal = ({ candidateList, onClose }) => {
   const { t } = useTranslation();
   const theme = useTheme();
-  const [expanded, setExpanded] = useState(0);
+  const [expanded, setExpanded] = useState();
 
   console.log('candidateList', candidateList);
 
@@ -117,7 +118,7 @@ const CandidateModal = ({ candidateList, onClose }) => {
                   <Grid container spacing={1}>
                     <Grid item xs={3}>
                       <Typography fontWeight={'bold'}>
-                        {t('Giá đề xuất')}:
+                        {t('th_post_suggest_price')}:
                       </Typography>
                     </Grid>
                     <Grid item xs={9}>
@@ -127,13 +128,25 @@ const CandidateModal = ({ candidateList, onClose }) => {
                   <Grid container spacing={1} sx={{ mt: 1, mb: 2 }}>
                     <Grid item xs={3}>
                       <Typography fontWeight={'bold'}>
-                        {t('Tôi có thể giúp gì')}:
+                        {t('th_post_intro_seft_to_post')}:
                       </Typography>
                     </Grid>
                     <Grid item xs={9}>
                       <Typography>{_candidate.text}</Typography>
                     </Grid>
                   </Grid>
+                  <Stack
+                    sx={{ my: 2, justifyContent: 'flex-end', width: '100%' }}
+                  >
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => null}
+                      sx={{ width: 'fit-content' }}
+                    >
+                      {t('th_key_btn_send_invitation')}
+                    </Button>
+                  </Stack>
                   {/* <TaskerCard taskerData={_candidate?.user} /> */}
                   <Box
                     sx={{
@@ -169,10 +182,20 @@ const CandidateModal = ({ candidateList, onClose }) => {
                             {`${_candidate?.user?.firstName} ${_candidate?.user?.lastName}`}
                           </Typography>
                         </Stack>
-                        <Stack direction={'row'} marginTop={1}>
-                          <Typography
-                            sx={{ mr: 0.5 }}
-                          >{`(${_candidate?.user?.averageRating})`}</Typography>
+                        <Stack
+                          direction={'row'}
+                          marginTop={1}
+                          alignItems={'center'}
+                        >
+                          {_candidate?.user?.averageRating ? (
+                            <Typography
+                              sx={{ mr: 0.5 }}
+                            >{`(${_candidate?.user?.averageRating})`}</Typography>
+                          ) : (
+                            <Typography sx={{ mr: 0.5 }}>{`(${t(
+                              'th_key_not_reated_yet'
+                            )})`}</Typography>
+                          )}
                           <Rating
                             name="tasker-rating"
                             value={_candidate?.user?.averageRating}
@@ -211,20 +234,17 @@ const CandidateModal = ({ candidateList, onClose }) => {
                       </Typography>
                     </Box>
                     {_candidate?.user?.photos?.length > 0 && (
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          mt: 1,
-                          alignItems: 'flex-start',
-                          width: '100%',
-                        }}
-                      >
-                        <Typography fontSize={18} fontWeight={600}>
-                          {t('Work photos')}:
+                      <>
+                        <Typography
+                          fontSize={18}
+                          fontWeight={600}
+                          mt={1}
+                          mb={1}
+                        >
+                          {t('th_key_workphotos')}:
                         </Typography>
-                        {/* <ImagesSlider images={taskerData?.photos} /> */}
-                      </Box>
+                        <ImagesList imagesList={_candidate?.user?.photos} />
+                      </>
                     )}
                   </Box>
                 </AccordionDetails>
@@ -239,7 +259,7 @@ const CandidateModal = ({ candidateList, onClose }) => {
             onClose && onClose();
           }}
         >
-          Close
+          {t('th_key_btn_close')}
         </Button>
       </DialogActions>
     </MainCard>

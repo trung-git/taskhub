@@ -42,10 +42,10 @@ const PostList = () => {
     headers: { Authorization: `Bearer ${token}` },
   };
 
-  const fetchPostListData = async () => {
+  const fetchPostListData = async (page) => {
     try {
       const response = await axios.get(
-        `${API_URL}api/v1/post?pageNum=1`,
+        `${API_URL}api/v1/post?pageNum=${page}`,
         config
       );
       const responseData = response.data.data;
@@ -58,8 +58,16 @@ const PostList = () => {
   };
 
   useEffect(() => {
-    fetchPostListData();
+    setIsFetchingPostList(true);
+    fetchPostListData(1);
   }, []);
+
+  useEffect(() => {
+    if (pageNum) {
+      setIsFetchingPostList(true);
+      fetchPostListData(pageNum);
+    }
+  }, [pageNum]);
 
   const handlePageChange = (event, value) => {
     setPageNum(value);
@@ -119,6 +127,8 @@ const PostList = () => {
             onChange={handlePageChange}
             // color="success"
             size="large"
+            color="primary"
+            variant="combined"
           />
         </Stack>
       </Container>

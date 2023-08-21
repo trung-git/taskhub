@@ -31,6 +31,7 @@ import {
 import _ from 'lodash';
 import * as Yup from 'yup';
 import { useFormik, Form, FormikProvider, FormikValues } from 'formik';
+import { useTranslation } from 'react-i18next';
 
 const getInitialValues = (customer) => {
   const newCustomer = {
@@ -51,6 +52,7 @@ const getInitialValues = (customer) => {
 
 const PostModal = ({ type, value, open, onClose }) => {
   const theme = useTheme();
+  const { t } = useTranslation();
   const isCreating = !value;
 
   const CustomerSchema = Yup.object().shape({
@@ -95,7 +97,9 @@ const PostModal = ({ type, value, open, onClose }) => {
   return (
     <FormikProvider value={formik}>
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-        <DialogTitle>{value ? 'Edit Customer' : 'New Customer'}</DialogTitle>
+        <DialogTitle>
+          {value ? t('th_post_edit_post') : t('th_post_add_new_post')}
+        </DialogTitle>
         <Divider />
         <DialogContent sx={{ p: 2.5 }}>
           <Grid container spacing={3}>
@@ -194,26 +198,17 @@ const PostModal = ({ type, value, open, onClose }) => {
         <Divider />
         <DialogActions sx={{ p: 2.5 }}>
           <Grid container justifyContent="flex-end" alignItems="center">
-            {/* <Grid item>
-            {!isCreating && (
-              <Tooltip title="Delete Customer" placement="top">
-                <IconButton onClick={deleteHandler} size="large" color="error">
-                  <DeleteFilled />
-                </IconButton>
-              </Tooltip>
-            )}
-          </Grid> */}
             <Grid item>
               <Stack direction="row" spacing={2} alignItems="center">
                 <Button color="error" onClick={onClose}>
-                  Cancel
+                  {t('th_key_btn_cancel')}
                 </Button>
                 <Button
                   type="submit"
                   variant="contained"
                   disabled={isSubmitting}
                 >
-                  {value ? 'Edit' : 'Add'}
+                  {value ? t('th_key_btn_update') : t('th_key_btn_post')}
                 </Button>
               </Stack>
             </Grid>

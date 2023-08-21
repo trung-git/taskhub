@@ -155,7 +155,7 @@ const DateBookingModal = ({
           transform: 'translate(-50%, -50%)',
           width: 750,
           bgcolor: 'background.paper',
-          border: '2px solid #f0f0f0',
+          border: '1px solid #f0f0f0',
           borderRadius: 4,
           boxShadow: 24,
           p: 4,

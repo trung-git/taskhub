@@ -4,8 +4,6 @@ import {
   Box,
   Button,
   Grid,
-  ImageList,
-  ImageListItem,
   Modal,
   Rating,
   Stack,
@@ -14,8 +12,6 @@ import {
 } from '@mui/material';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { useTranslation } from 'react-i18next';
-import { green } from '@mui/material/colors';
-import ImagesSlider from '../../base/component/ImagesSlider';
 
 const TaskerCard = ({ taskerData, onSelect }) => {
   const [isOpenUserModal, setIsOpenUserModal] = useState(false);
