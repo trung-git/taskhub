@@ -5,6 +5,8 @@ const AppError = require('../utils/appError');
 const { getObjectModel } = require('../utils');
 const imageValidate = require('../utils/imageValidation');
 const cloudinary = require('../utils/cloudinary');
+const Contract = require('../models/contractModel');
+const Post = require('../models/postModel');
 
 exports.getTaskers = catchAsync(async (req, res, next) => {
   const taskTagId = req.query.taskTagId;
