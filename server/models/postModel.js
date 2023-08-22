@@ -49,6 +49,10 @@ const postSchema = new mongoose.Schema(
       },
       required: [true, 'work Time can not empty!'],
     },
+    officialContract: {
+      type: mongoose.Types.ObjectId,
+      ref: "Contract"
+    }
   },
   { timestamps: true }
 );
