@@ -36,7 +36,7 @@ const contractModel = new mongoose.Schema(
     status: {
       type: String,
       enum: {
-        values: ["invitation", "discuss", "start", "end", "finish"]
+        values: ["invitation", "discuss", "official", "cancel", "finish"]
       },
       default: "invitation"
     },
@@ -83,6 +83,19 @@ const contractModel = new mongoose.Schema(
         values: ["per-hour", "one-time"]
       },
       default: "per-hour"
+    },
+    fromPost: {
+      type: mongoose.Types.ObjectId,
+      ref: 'Post'
+    },
+    isRequireTaskProgress: {
+      type: Boolean,
+      default: false
+    },
+    taskProgress: {
+      type: Number,
+      min: [0, 'Progress must be between 0 and 100'], 
+      max: [100, 'Progress must be between 0 and 100'],
     }
   },
   { timestamps: true }

@@ -1,6 +1,7 @@
 const Chat = require('../models/chatModel');
 const Contract = require('../models/contractModel');
 const District = require('../models/districtModel');
+const Post = require('../models/postModel');
 const Tasker = require('../models/taskerModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
@@ -65,6 +66,54 @@ exports.createContract = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.createContractByPost = catchAsync(async (req, res, next) => {
+  const { postId, candidateId, expireAt } = req.body;
+  const post = await Post.findById(postId);
+
+  if (!post) {
+    return next(new AppError('Post not found', 400));
+  }
+
+  if (post.officialContract) {
+    return next(new AppError('Post already have official contract', 400));
+  }
+
+  const candidate = post.candidate.find(v => {
+    return String(v.user) === candidateId;
+  })
+
+  if (!candidate) {
+    return next(new AppError('Invalid candidate', 400));
+  }
+
+  const chat = await Chat.create({
+    users: [{ user: post.user._id }, { user: candidateId }],
+  });
+
+  const contract = await Contract.create({
+    finder: post.user,
+    tasker: candidateId,
+    chat: chat._id,
+    address: post.address,
+    workLocation: post.workLocation,
+    taskTag: post.taskTag,
+    price: candidate.price,
+    workTime: post.workTime,
+    description: post.text,
+    expireAt: expireAt,
+    fromPost: post._id
+  });
+
+  const populatedContract = await Contract.populate(contract, {
+    path: 'finder tasker taskTag workLocation',
+  });
+
+  return res.status(200).json({
+    status: 'success',
+    data: populatedContract,
+  });
+})
+
 exports.getContracts = catchAsync(async (req, res, next) => {
   const { _id, role } = req.user;
   const { status } = req.query;
@@ -74,15 +123,11 @@ exports.getContracts = catchAsync(async (req, res, next) => {
   };
 
   if (status) {
-    if (['discuss', 'start', 'end'].includes(status)) {
-      query.status = { $in: ['discuss', 'start', 'end'] };
-    } else {
-      query.status = status;
-    }
+    query.status = status;
   }
 
   const contracts = await Contract.find(query).populate({
-    path: 'finder tasker taskTag workLocation review',
+    path: 'finder tasker taskTag workLocation review fromPost',
   });
 
   return res.status(200).json({
@@ -102,15 +147,11 @@ exports.getContractById = catchAsync(async (req, res, next) => {
   };
 
   if (status) {
-    if (['discuss', 'start', 'end'].includes(status)) {
-      query.status = { $in: ['discuss', 'start', 'end'] };
-    } else {
-      query.status = status;
-    }
+    query.status = status;
   }
 
   const contract = await Contract.findOne(query).populate({
-    path: 'finder tasker taskTag workLocation review',
+    path: 'finder tasker taskTag workLocation review fromPost',
   });
 
   if (!contract) {
@@ -186,12 +227,15 @@ exports.updateContract = catchAsync(async (req, res, next) => {
   contract.otherProps = req.body.otherProps || contract.otherProps;
   contract.paymentType = req.body.paymentType || contract.paymentType;
   contract.paymentPlan = req.body.paymentPlan || contract.paymentPlan;
+  contract.isRequireTaskProgress = req.body.isRequireTaskProgress || contract.isRequireTaskProgress;
+  contract.taskProgress = req.body.taskProgress || contract.taskProgress;
 
   const updatedContract = await contract.save();
 
   const populatedContract = await Contract.populate(updatedContract, {
     path: 'finder tasker taskTag workLocation review',
   });
+  
   return res.status(200).json({
     status: 'success',
     data: populatedContract,
