@@ -1,36 +1,227 @@
+const mongoose = require('mongoose');
 const Post = require('../models/postModel');
 const TaskTag = require('../models/taskTagModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const cloudinary = require('../utils/cloudinary');
+
+const moment = require('moment');
 const imageValidate = require('../utils/imageValidation');
 
 const getPosts = catchAsync(async (req, res, next) => {
   const pageNum = Number(req.query.pageNum) || 1;
   const recordsPerPage = Number(process.env.RECORDS_PER_PAGE);
+  const sortOption = Number(req.query.sortOption) || undefined;
+  // Filter params
+  const taskTagIds = req.query.taskTagIds ? req.query.taskTagIds.split(',') : undefined;
+  const districtIds = req.query.districtIds ? req.query.districtIds.split(',') : undefined;
+  const cityIds = req.query.cityIds ? req.query.cityIds.split(',') : undefined;
+  const workDay = req.query.workDay;
+  // Aggregation pipeline
+  const aggregatePipeline = [
+    {
+      $lookup: {
+        from: 'task tags',
+        localField: 'taskTag',
+        foreignField: '_id',
+        as: 'taskInfo',
+      },
+    },
+    {
+      $addFields: {
+        taskTag: { $arrayElemAt: ['$taskInfo', 0] },
+      },
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'user',
+        foreignField: '_id',
+        as: 'userInfo',
+      },
+    },
+    {
+      $addFields: {
+        user: { $arrayElemAt: ['$userInfo', 0] },
+      },
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'candidate.user',
+        foreignField: '_id',
+        as: 'candidateInfo',
+      },
+    },
+    {
+      $lookup: {
+        from: 'districts',
+        localField: 'workLocation',
+        foreignField: '_id',
+        as: 'workLocationInfo',
+      },
+    },
+    {
+      $addFields: {
+        workLocation: { $arrayElemAt: ['$workLocationInfo', 0] },
+      },
+    },
+    {
+      $lookup: {
+        from: 'cities',
+        localField: 'workLocation.city',
+        foreignField: '_id',
+        as: 'cityInfo',
+      },
+    },
+    {
+      $addFields: {
+        cityInfo: { $arrayElemAt: ['$cityInfo', 0] },
+      },
+    },
+    {
+      $addFields: {
+        candidateCount: { $size: '$candidate' },
+      }
+    },
+    {
+      $project: {
+        taskInfo: 0,
+        userInfo: 0,
+        'user.password': 0,
+        'candidateInfo.password': 0,
+        workLocationInfo: 0
+      }
+    },
+    {
+      $match: {
+        'user._id': req.user._id,
+      }
+    }
+  ];
+  const countPipeline = [
+    {
+      $group: {
+        _id: null,
+        totalRecord: { $sum: 1 },
+      },
+    },
+    {
+      $project: {
+        totalRecord: 1,
+      },
+    },
+  ];
+  const paginationPipeline = [
+    {
+      $skip: recordsPerPage * (pageNum - 1),
+    },
+    {
+      $limit: recordsPerPage,
+    },
+  ];
+  // Filter
+  if (taskTagIds) {
+    aggregatePipeline.push({
+      $match: {
+        'taskTag._id': {
+          
+            $in: taskTagIds.map((v) =>
+              mongoose.Types.ObjectId.createFromHexString(v)
+            ),
+          
+        },
+      },
+    });
+  }
+  if (districtIds) {
+    aggregatePipeline.push({
+      $match: {
+        'workLocation._id': {
+            $in: districtIds.map((v) =>
+              mongoose.Types.ObjectId.createFromHexString(v)
+            ),
+        },
+      },
+    });
+  }
+  if (cityIds) {
+    aggregatePipeline.push({
+      $match: {
+        'cityInfo._id': {
+            $in: cityIds.map((v) =>
+              mongoose.Types.ObjectId.createFromHexString(v)
+            ),
+        },
+      },
+    });
+  }
+  if (workDay) {
+    aggregatePipeline.push({
+      $match: {
+        'workTime.from': {
+          $gte: moment(workDay).startOf('day').toDate(),
+          $lt: moment(workDay).endOf('day').toDate(),
+        },
+      },
+    });
+  }
+  // Sort by price, average rating, tasks complete
+  // 1 createAt ASC
+  // 2 createAt DESC
+  // 3 updateAt ASC
+  // 4 updateAt DESC
+  // 5 wordDay ASC
+  // 6 wordDay DESC
+  // 7 candidate count ASC
+  // 8 candidate count DESC
+  switch (sortOption) {
+    case 1:
+      aggregatePipeline.push({ $sort: { createdAt: 1 } });
+      break;
+    case 2:
+      aggregatePipeline.push({ $sort: { createdAt: -1 } });
+      break;
+    case 3:
+      aggregatePipeline.push({ $sort: { updatedAt: -1 } });
+      break;
+    case 4:
+      aggregatePipeline.push({ $sort: { updatedAt: -1 } });
+      break;
+    case 5:
+      aggregatePipeline.push({ $sort: { 'workTime.from': 1 } });
+      break;
+    case 6:
+      aggregatePipeline.push({ $sort: { 'workTime.from': -1 } });
+      break;
+    case 7:
+      aggregatePipeline.push({ $sort: { candidateCount: 1 } });
+      break;
+    case 8:
+      aggregatePipeline.push({ $sort: { candidateCount: -1 } });
+      break;
+    default:
+      break;
+  }
 
-  let findCondition =
-    req.user.role === 'Finder'
-      ? { user: req.user._id }
-      : {
-          taskTag: {
-            $in: req.user.taskTag.map((v) => {
-              return v.taskInfo;
-            }),
-          },
-        };
+  const posts = await Post.aggregate([
+    ...aggregatePipeline,
+    ...paginationPipeline,
+  ]);
+  const count = await Post.aggregate([
+    ...aggregatePipeline,
+    ...countPipeline,
+  ]);
+  const totalPage =
+    count.length === 0 ? 1 : Math.ceil(count[0].totalRecord / recordsPerPage);
 
-  const posts = await Post.find(findCondition)
-    .skip(recordsPerPage * (pageNum - 1))
-    .limit(recordsPerPage);
-  const count = await Post.countDocuments(findCondition);
   return res.status(200).json({
     status: 'success',
     data: posts,
     recordsPerPage,
-    totalPage: Math.ceil(count / recordsPerPage),
     pageNum,
-    totalRecords: count
+    totalPage,
+    totalRecords: count[0]?.totalRecord || 0
   });
 });
 const getPostById = catchAsync(async (req, res, next) => {
