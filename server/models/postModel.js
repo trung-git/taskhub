@@ -52,6 +52,9 @@ const postSchema = new mongoose.Schema(
     officialContract: {
       type: mongoose.Types.ObjectId,
       ref: "Contract"
+    },
+    closeRegisterAt: {
+      type: Date,
     }
   },
   { timestamps: true }

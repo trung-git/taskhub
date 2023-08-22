@@ -47,7 +47,7 @@ const getPostById = catchAsync(async (req, res, next) => {
 });
 const createPost = catchAsync(async (req, res, next) => {
   const user = req.user._id;
-  const { text, address, workLocationId, workTime } = req.body;
+  const { text, address, workLocationId, workTime, closeRegisterAt } = req.body;
 
   const taskTag = await TaskTag.findById(req.body.taskTag);
   if (!taskTag) {
@@ -89,6 +89,7 @@ const createPost = catchAsync(async (req, res, next) => {
     address,
     workLocation: workLocation._id,
     workTime,
+    closeRegisterAt
   });
 
   return res.status(200).json({
@@ -204,7 +205,8 @@ const updatePost = catchAsync(async (req, res, next) => {
   post.taskTag = req.body.taskTagId || post.taskTag;
   post.workLocation = req.body.workLocationId || post.workLocation;
   post.workTime = req.body.workTime || post.workTime;
-
+  post.closeRegisterAt = req.body.closeRegisterAt || post.closeRegisterAt;
+  
   const updatedPost = await post.save();
   return res.status(200).json({
     status: 'success',
