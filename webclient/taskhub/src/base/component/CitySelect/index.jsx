@@ -1,10 +1,17 @@
-import { Autocomplete, MenuItem, Select, TextField } from '@mui/material';
+import {
+  Autocomplete,
+  FormControl,
+  FormHelperText,
+  MenuItem,
+  Select,
+  TextField,
+} from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { API_URL } from '../../config';
 
-const CitySelect = ({ value, onChange }) => {
+const CitySelect = ({ value, onChange, helperText, error }) => {
   const [selectedValue, setSelectedValue] = useState('');
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
@@ -49,23 +56,31 @@ const CitySelect = ({ value, onChange }) => {
   };
 
   return (
-    <Select
-      labelId="demo-simple-select-label"
-      id="demo-simple-select"
-      value={selectedValue}
-      //   label="City"
-      onChange={handleValueChange}
-      fullWidth
-    >
-      {data?.length > 0 &&
-        data?.map((city) => {
-          return (
-            <MenuItem key={city._id} value={city._id}>
-              {t(city?.prefix)} {city?.name}
-            </MenuItem>
-          );
-        })}
-    </Select>
+    <FormControl fullWidth>
+      <Select
+        disabled={loading}
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        value={selectedValue}
+        //   label="City"
+        onChange={handleValueChange}
+        fullWidth
+        error={error}
+        multiple={false}
+      >
+        {data?.length > 0 &&
+          data?.map((city) => {
+            return (
+              <MenuItem key={city._id} value={city._id}>
+                {t(city?.prefix)} {city?.name}
+              </MenuItem>
+            );
+          })}
+      </Select>
+      {error && helperText && (
+        <FormHelperText error={error}>{helperText}</FormHelperText>
+      )}
+    </FormControl>
   );
 };
 

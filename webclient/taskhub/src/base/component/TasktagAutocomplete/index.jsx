@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { API_URL } from '../../config';
 
-const TasktagAutocomplete = ({ value, onChange }) => {
+const TasktagAutocomplete = ({ value, onChange, helperText, error }) => {
   const { t } = useTranslation();
   const [selectedValue, setSelectedValue] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -54,11 +54,20 @@ const TasktagAutocomplete = ({ value, onChange }) => {
         };
       })}
       value={selectedValue}
-      sx={{}}
+      sx={{
+        ...(error && {
+          color: 'error.main',
+          borderColor: 'error.light',
+          // bgcolor: 'error.lighter',
+        }),
+      }}
+      color={error ? 'error' : 'primary'}
       renderInput={(params) => (
         <TextField
           placeholder={t('th_key_home_help_search_place_holder')}
           {...params}
+          error={error}
+          helperText={error ? helperText : undefined}
         />
       )}
       // color="success"

@@ -1,10 +1,17 @@
-import { Autocomplete, MenuItem, Select, TextField } from '@mui/material';
+import {
+  Autocomplete,
+  FormControl,
+  FormHelperText,
+  MenuItem,
+  Select,
+  TextField,
+} from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { API_URL } from '../../config';
 
-const DistrictSelect = ({ cityId, onChange, value }) => {
+const DistrictSelect = ({ cityId, onChange, value, helperText, error }) => {
   const [selectedValue, setSelectedValue] = useState(value);
   const [loading, setLoading] = useState(false);
   const [district, setDistrict] = useState([]);
@@ -60,24 +67,34 @@ const DistrictSelect = ({ cityId, onChange, value }) => {
   };
 
   return (
-    <Select
-      labelId="demo-simple-select-label"
-      id="demo-simple-select"
-      value={selectedValue}
-      //   label="City"
-      onChange={handleValueChange}
-      fullWidth
-      disabled={loading}
-    >
-      {district?.length > 0 &&
-        district?.map((item) => {
-          return (
-            <MenuItem key={item._id} value={item._id}>
-              {t(item?.prefix)} {item?.name}
-            </MenuItem>
-          );
-        })}
-    </Select>
+    <FormControl fullWidth>
+      {district?.length > 0 ? (
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={selectedValue}
+          //   label="City"
+          onChange={handleValueChange}
+          fullWidth
+          disabled={loading}
+          error={error}
+        >
+          {district?.length > 0 &&
+            district?.map((item) => {
+              return (
+                <MenuItem key={item._id} value={item._id}>
+                  {t(item?.prefix)} {item?.name}
+                </MenuItem>
+              );
+            })}
+        </Select>
+      ) : (
+        <TextField disabled fullWidth></TextField>
+      )}
+      {error && helperText && (
+        <FormHelperText error={error}>{helperText}</FormHelperText>
+      )}
+    </FormControl>
   );
 };
 
