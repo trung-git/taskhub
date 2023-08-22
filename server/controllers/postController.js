@@ -166,7 +166,7 @@ const getPosts = catchAsync(async (req, res, next) => {
       },
     });
   }
-  // Sort by price, average rating, tasks complete
+  // Sort
   // 1 createAt ASC
   // 2 createAt DESC
   // 3 updateAt ASC
