@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Post = require('../models/postModel');
 const TaskTag = require('../models/taskTagModel');
+const District = require('../models/districtModel')
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const cloudinary = require('../utils/cloudinary');
@@ -11,7 +12,7 @@ const imageValidate = require('../utils/imageValidation');
 const getPosts = catchAsync(async (req, res, next) => {
   const pageNum = Number(req.query.pageNum) || 1;
   const recordsPerPage = Number(process.env.RECORDS_PER_PAGE);
-  const sortOption = Number(req.query.sortOption) || undefined;
+  const sortOption = Number(req.query.sortOption) || 2;
   // Filter params
   const taskTagIds = req.query.taskTagIds ? req.query.taskTagIds.split(',') : undefined;
   const districtIds = req.query.districtIds ? req.query.districtIds.split(',') : undefined;
@@ -238,7 +239,8 @@ const getPostById = catchAsync(async (req, res, next) => {
 });
 const createPost = catchAsync(async (req, res, next) => {
   const user = req.user._id;
-  const { text, address, workLocationId, workTime, closeRegisterAt } = req.body;
+  const { text, address, workLocationId, closeRegisterAt } = req.body;
+  const workTime = JSON.parse(req.body.workTime);
 
   const taskTag = await TaskTag.findById(req.body.taskTag);
   if (!taskTag) {
@@ -395,7 +397,7 @@ const updatePost = catchAsync(async (req, res, next) => {
   post.address = req.body.address || post.address;
   post.taskTag = req.body.taskTagId || post.taskTag;
   post.workLocation = req.body.workLocationId || post.workLocation;
-  post.workTime = req.body.workTime || post.workTime;
+  post.workTime = req.body.workTime ? JSON.parse(req.body.workTime)  : post.workTime;
   post.closeRegisterAt = req.body.closeRegisterAt || post.closeRegisterAt;
   
   const updatedPost = await post.save();
