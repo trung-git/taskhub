@@ -6,8 +6,8 @@ const imageValidate = (images) => {
     imagesTable.push(images);
   }
 
-  if (imagesTable.length > 5) {
-    return { error: 'Send only 5 images at once' };
+  if (imagesTable.length > 10) {
+    return { error: 'Send only 10 images at once' };
   }
   for (let image of imagesTable) {
     if (image.size > 1048576 * 3)
