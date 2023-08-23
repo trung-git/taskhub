@@ -102,6 +102,13 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
           const formData = new FormData();
           formData.append('text', values?.text);
           // formData.append('photos', values?.files || []);
+          values?.files?.map((file) => {
+            console.log('fileOnUpload', file, file?.type);
+            const blob = new Blob([file], { type: file?.type });
+            const fileName = file?.name;
+            const uploadFile = new File([blob], fileName);
+            formData.append('photos', file);
+          });
           formData.append('address', values?.address);
           formData.append('taskTag', values?.taskTag?.value);
           formData.append('workLocationId', values?.districtId);
@@ -112,8 +119,6 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
               to: dayjs(new Date()).toISOString(),
             })
           );
-          // formData.append('workTime.from', dayjs(new Date()).toISOString());
-          // formData.append('workTime.to', dayjs(new Date()).toISOString());
           formData.append(
             'closeRegisterAt',
             dayjs(values?.closeRegisterAt).toISOString()
