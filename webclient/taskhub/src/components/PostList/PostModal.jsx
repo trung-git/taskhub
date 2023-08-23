@@ -42,6 +42,7 @@ import DistrictSelect from '../../base/component/DistrictSelect';
 import axios from 'axios';
 import useLogin from '../../hooks/useLogin';
 import useToastify from '../../hooks/useToastify';
+import { API_URL } from '../../base/config';
 
 const getInitialValues = (post) => {
   const newPost = {
@@ -120,7 +121,7 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
           console.log('formDataOnsubmit', formData);
 
           axios
-            .post('https://taskhub-mhm7.onrender.com/api/v1/post', formData, {
+            .post(`${API_URL}api/v1/post`, formData, {
               headers: {
                 'Content-Type': 'multipart/form-data', // Đảm bảo đặt đúng header 'Content-Type' cho form data
                 Authorization: `Bearer ${token}`,
