@@ -35,6 +35,8 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import CandidateModal from './CandidateModal';
+import ImagesList from '../../base/component/ImagesList';
+import PostModal from './PostModal';
 
 const PostCard = ({ post, onSelect }) => {
   const {
@@ -48,14 +50,22 @@ const PostCard = ({ post, onSelect }) => {
     _id: id,
     updatedAt,
     candidate,
+    photos,
+    cityInfo,
+    candidateInfo,
   } = post;
   const { t } = useTranslation();
   const theme = useTheme();
   const [openCandidateModal, setOpenCandidateModal] = useState(false);
+  const [openPostModal, setOpenPostModal] = useState(false);
   const navigate = useNavigate();
 
   const handleClickOpen = () => {
     setOpenCandidateModal(true);
+  };
+
+  const handleClickEdit = () => {
+    setOpenPostModal(true);
   };
 
   console.log('postCard', candidate);
@@ -69,9 +79,9 @@ const PostCard = ({ post, onSelect }) => {
     setAnchorEl(null);
   };
 
-  const handleOnEdit = () => {
-    onSelect && onSelect(id);
-  };
+  // const handleOnEdit = () => {
+  //   onSelect && onSelect(id);
+  // };
 
   const handleOnDelete = () => {};
 
@@ -143,7 +153,7 @@ const PostCard = ({ post, onSelect }) => {
               }}
             >
               <MenuItem
-                onClick={handleOnEdit}
+                onClick={handleClickEdit}
                 sx={{ color: theme.palette.primary.main }}
               >
                 <ListItemIcon>
@@ -222,9 +232,9 @@ const PostCard = ({ post, onSelect }) => {
                     <ListItemText
                       primary={`${address?.toString()}, ${t(
                         workLocation?.prefix
-                      )} ${workLocation?.name}, ${t(
-                        workLocation?.city?.prefix
-                      )} ${workLocation?.city?.name}`}
+                      )} ${workLocation?.name}, ${t(cityInfo?.prefix)} ${
+                        cityInfo?.name
+                      }`}
                     />
                   </ListItem>
                   <ListItem>
@@ -240,6 +250,9 @@ const PostCard = ({ post, onSelect }) => {
                 </List>
               </Grid>
             </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <ImagesList imagesList={photos} />
           </Grid>
           <Grid item xs={12}>
             <Divider />
@@ -286,7 +299,29 @@ const PostCard = ({ post, onSelect }) => {
         {openCandidateModal && (
           <CandidateModal
             candidateList={candidate}
+            candidateInfo={candidateInfo}
             onClose={() => setOpenCandidateModal(false)}
+          />
+        )}
+      </Dialog>
+      <Dialog
+        maxWidth="sm"
+        fullWidth
+        onClose={() => {
+          setOpenPostModal(false);
+          handleMenuClose();
+        }}
+        open={openPostModal}
+        sx={{ '& .MuiDialog-paper': { p: 0 } }}
+      >
+        {openPostModal && (
+          <PostModal
+            type={'edit'}
+            value={post}
+            onClose={() => {
+              setOpenPostModal(false);
+              handleMenuClose();
+            }}
           />
         )}
       </Dialog>

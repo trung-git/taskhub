@@ -1,5 +1,6 @@
 import {
   Autocomplete,
+  CircularProgress,
   FormControl,
   FormHelperText,
   MenuItem,
@@ -68,7 +69,17 @@ const DistrictSelect = ({ cityId, onChange, value, helperText, error }) => {
 
   return (
     <FormControl fullWidth>
-      {district?.length > 0 ? (
+      {loading ? (
+        <TextField
+          disabled
+          fullWidth
+          InputProps={{
+            endAdornment: (
+              <>{loading && <CircularProgress color="inherit" size={20} />}</>
+            ),
+          }}
+        ></TextField>
+      ) : district?.length > 0 ? (
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"

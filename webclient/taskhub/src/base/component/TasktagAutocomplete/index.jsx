@@ -17,6 +17,7 @@ const TasktagAutocomplete = ({ value, onChange, helperText, error }) => {
 
   useEffect(() => {
     if (value) {
+      console.log('valueTasktagAutocomplete', value);
       setSelectedValue(value);
     }
   }, [value]);
@@ -72,6 +73,10 @@ const TasktagAutocomplete = ({ value, onChange, helperText, error }) => {
       )}
       // color="success"
       onChange={handleValueChange}
+      // getOptionLabel={(option) => {
+      //   console.log('option.label', option);
+      //   return t(option.langKey);
+      // }}
     />
   );
 };

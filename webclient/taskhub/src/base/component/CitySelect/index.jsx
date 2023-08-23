@@ -1,5 +1,6 @@
 import {
   Autocomplete,
+  CircularProgress,
   FormControl,
   FormHelperText,
   MenuItem,
@@ -57,26 +58,40 @@ const CitySelect = ({ value, onChange, helperText, error }) => {
 
   return (
     <FormControl fullWidth>
-      <Select
-        disabled={loading}
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
-        value={selectedValue}
-        //   label="City"
-        onChange={handleValueChange}
-        fullWidth
-        error={error}
-        multiple={false}
-      >
-        {data?.length > 0 &&
-          data?.map((city) => {
-            return (
-              <MenuItem key={city._id} value={city._id}>
-                {t(city?.prefix)} {city?.name}
-              </MenuItem>
-            );
-          })}
-      </Select>
+      {loading ? (
+        <TextField
+          disabled
+          fullWidth
+          InputProps={{
+            endAdornment: (
+              <>{loading && <CircularProgress color="inherit" size={20} />}</>
+            ),
+          }}
+        ></TextField>
+      ) : data?.length > 0 ? (
+        <Select
+          disabled={loading}
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={selectedValue}
+          //   label="City"
+          onChange={handleValueChange}
+          fullWidth
+          error={error}
+          multiple={false}
+        >
+          {data?.length > 0 &&
+            data?.map((city) => {
+              return (
+                <MenuItem key={city._id} value={city._id}>
+                  {t(city?.prefix)} {city?.name}
+                </MenuItem>
+              );
+            })}
+        </Select>
+      ) : (
+        <TextField disabled fullWidth></TextField>
+      )}
       {error && helperText && (
         <FormHelperText error={error}>{helperText}</FormHelperText>
       )}

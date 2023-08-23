@@ -98,8 +98,12 @@ const TabPersonal = () => {
               .required('Date of birth is requird.'),
             phoneNumber: Yup.number(),
           })}
-          onSubmit={(values, { setErrors, setStatus, setSubmitting }) => {
+          onSubmit={(
+            values,
+            { setErrors, setStatus, setSubmitting, resetForm }
+          ) => {
             try {
+              console.log('valuesOnUpdate', values);
               // dispatch(
               //   openSnackbar({
               //     open: true,
@@ -111,12 +115,13 @@ const TabPersonal = () => {
               //     close: false,
               //   })
               // );
-              // setStatus({ success: false });
-              // setSubmitting(false);
+              setStatus({ success: true });
+              setSubmitting(false);
             } catch (err) {
               setStatus({ success: false });
               setErrors({ submit: err.message });
               setSubmitting(false);
+              resetForm();
             }
           }}
         >
@@ -303,7 +308,11 @@ const TabPersonal = () => {
                     alignItems="center"
                     spacing={2}
                   >
-                    <Button variant="outlined" color="secondary">
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      disabled={isSubmitting}
+                    >
                       {t('th_key_btn_cancel')}
                     </Button>
                     <Button

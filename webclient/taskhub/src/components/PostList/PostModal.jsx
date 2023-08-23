@@ -44,20 +44,6 @@ import useLogin from '../../hooks/useLogin';
 import useToastify from '../../hooks/useToastify';
 import { API_URL } from '../../base/config';
 
-const getInitialValues = (post) => {
-  const newPost = {
-    taskTag: post?.taskTag?._id || '',
-    cityId: '',
-    districtId: '',
-    text: '',
-    address: '',
-    workDate: new Date(),
-    files: [],
-    closeRegisterAt: new Date(),
-  };
-  return newPost;
-};
-
 const PostModal = ({ type, value = {}, open, onClose }) => {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -65,6 +51,25 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
   const { getUserToken } = useLogin();
   const token = getUserToken();
   const { toastError, toastSuccess } = useToastify();
+
+  const getInitialValues = (post) => {
+    console.log('initValuePost', post);
+    const newPost = {
+      taskTag:
+        {
+          label: t(post?.taskTag?.langKey),
+          value: post?.taskTag?._id,
+        } || '',
+      cityId: post?.cityInfo?._id || '',
+      districtId: post?.workLocation?._id || '',
+      text: post?.text || '',
+      address: post?.address || '',
+      workDate: new Date(),
+      files: [],
+      closeRegisterAt: new Date(post?.closeRegisterAt) || new Date(),
+    };
+    return newPost;
+  };
 
   const CustomerSchema = Yup.object().shape({
     taskTag: Yup.object().required('Tag is required'),
@@ -95,7 +100,7 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
   const formik = useFormik({
     initialValues: getInitialValues(value),
     validationSchema: CustomerSchema,
-    onSubmit: (values, { setSubmitting }) => {
+    onSubmit: (values, { setSubmitting, resetForm }) => {
       console.log('valuessetSubmitting', values);
       try {
         if (values) {
@@ -135,6 +140,8 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
             .then((response) => {
               console.log('postValueSucces', response);
               toastSuccess('Create new post success');
+              //TODO reset close append new posr
+              resetForm();
             })
             .catch((error) => {
               console.error(error);

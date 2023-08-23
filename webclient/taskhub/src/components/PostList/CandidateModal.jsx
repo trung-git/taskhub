@@ -57,7 +57,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   borderTop: '1px solid rgba(0, 0, 0, .125)',
 }));
 
-const CandidateModal = ({ candidateList, onClose }) => {
+const CandidateModal = ({ candidateInfo, candidateList, onClose }) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const [expanded, setExpanded] = useState();
@@ -102,14 +102,14 @@ const CandidateModal = ({ candidateList, onClose }) => {
                 >
                   <Stack direction={'row'} alignItems={'center'} spacing={2}>
                     <Avatar
-                      alt={_candidate?.user?.username}
-                      src={_candidate?.user?.image}
+                      alt={candidateInfo[index]?.username}
+                      src={candidateInfo[index]?.image}
                       sx={{ width: 50, height: 50 }}
                     />
                     <Typography fontWeight={'bold'}>
                       {[
-                        _candidate?.user?.firstName,
-                        _candidate?.user?.lastName,
+                        candidateInfo[index]?.firstName,
+                        candidateInfo[index]?.lastName,
                       ].join(' ')}
                     </Typography>
                   </Stack>
@@ -160,8 +160,8 @@ const CandidateModal = ({ candidateList, onClose }) => {
                   >
                     <Stack direction={'row'}>
                       <Avatar
-                        alt={_candidate?.user?.username}
-                        src={_candidate?.user?.image}
+                        alt={candidateInfo[index]?.username}
+                        src={candidateInfo[index]?.image}
                         sx={{ width: 80, height: 80 }}
                       />
                       <Stack
@@ -179,7 +179,7 @@ const CandidateModal = ({ candidateList, onClose }) => {
                             fontWeight={600}
                             sx={{ color: '#4a4a4a' }}
                           >
-                            {`${_candidate?.user?.firstName} ${_candidate?.user?.lastName}`}
+                            {`${candidateInfo[index]?.firstName} ${candidateInfo[index]?.lastName}`}
                           </Typography>
                         </Stack>
                         <Stack
@@ -187,10 +187,10 @@ const CandidateModal = ({ candidateList, onClose }) => {
                           marginTop={1}
                           alignItems={'center'}
                         >
-                          {_candidate?.user?.averageRating ? (
+                          {candidateInfo[index]?.averageRating ? (
                             <Typography
                               sx={{ mr: 0.5 }}
-                            >{`(${_candidate?.user?.averageRating})`}</Typography>
+                            >{`(${candidateInfo[index]?.averageRating})`}</Typography>
                           ) : (
                             <Typography sx={{ mr: 0.5 }}>{`(${t(
                               'th_key_not_reated_yet'
@@ -198,7 +198,7 @@ const CandidateModal = ({ candidateList, onClose }) => {
                           )}
                           <Rating
                             name="tasker-rating"
-                            value={_candidate?.user?.averageRating}
+                            value={candidateInfo[index]?.averageRating}
                             readOnly
                             precision={0.1}
                             sx={{
@@ -223,17 +223,17 @@ const CandidateModal = ({ candidateList, onClose }) => {
                         {t('th_key_about_me')}:
                       </Typography>
                       <Typography fontSize={14} textAlign={'justify'}>
-                        {_candidate?.user?.aboutMe}
+                        {candidateInfo[index]?.aboutMe}
                       </Typography>
 
                       <Typography fontSize={18} fontWeight={600} mt={1}>
                         {t('th_key_how_i_can_help')}:
                       </Typography>
                       <Typography fontSize={14} textAlign={'justify'}>
-                        {_candidate?.user?.skillAndExperience}
+                        {candidateInfo[index]?.skillAndExperience}
                       </Typography>
                     </Box>
-                    {_candidate?.user?.photos?.length > 0 && (
+                    {candidateInfo[index]?.photos?.length > 0 && (
                       <>
                         <Typography
                           fontSize={18}
@@ -243,7 +243,7 @@ const CandidateModal = ({ candidateList, onClose }) => {
                         >
                           {t('th_key_workphotos')}:
                         </Typography>
-                        <ImagesList imagesList={_candidate?.user?.photos} />
+                        <ImagesList imagesList={candidateInfo[index]?.photos} />
                       </>
                     )}
                   </Box>
