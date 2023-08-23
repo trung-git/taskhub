@@ -260,8 +260,9 @@ const createPost = catchAsync(async (req, res, next) => {
     }
     try {
       const uploadedFiles = [];
-      for (let i = 0; i < req.files.photos.length; i++) {
-        const file = req.files.photos[i];
+      const photoArr = Array.isArray(req.files.photos) ? req.files.photos : [req.files.photos];
+      for (let i = 0; i < photoArr.length; i++) {
+        const file = photoArr[i];
         const result = await cloudinary.uploader.upload(file.tempFilePath, {
           folder: 'postImages',
         });
@@ -362,8 +363,10 @@ const updatePost = catchAsync(async (req, res, next) => {
     }
     try {
       const uploadedFiles = [];
-      for (let i = 0; i < req.files.photos.length; i++) {
-        const file = req.files.photos[i];
+      const photoArr = Array.isArray(req.files.photos) ? req.files.photos : [req.files.photos];
+
+      for (let i = 0; i < photoArr.length; i++) {
+        const file = photoArr[i];
         const result = await cloudinary.uploader.upload(file.tempFilePath, {
           folder: 'postImages',
         });
