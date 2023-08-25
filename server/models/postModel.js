@@ -55,7 +55,14 @@ const postSchema = new mongoose.Schema(
     },
     closeRegisterAt: {
       type: Date,
-    }
+    },
+    paymentPlan: {
+      type: String,
+      enum: {
+        values: ["per-hour", "one-time"]
+      },
+      default: "per-hour"
+    },
   },
   { timestamps: true }
 );

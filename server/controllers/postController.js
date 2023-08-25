@@ -239,7 +239,7 @@ const getPostById = catchAsync(async (req, res, next) => {
 });
 const createPost = catchAsync(async (req, res, next) => {
   const user = req.user._id;
-  const { text, address, workLocationId, closeRegisterAt } = req.body;
+  const { text, address, workLocationId, closeRegisterAt, paymentPlan } = req.body;
   const workTime = JSON.parse(req.body.workTime);
 
   const taskTag = await TaskTag.findById(req.body.taskTag);
@@ -283,7 +283,8 @@ const createPost = catchAsync(async (req, res, next) => {
     address,
     workLocation: workLocation._id,
     workTime,
-    closeRegisterAt
+    closeRegisterAt,
+    paymentPlan
   });
 
   return res.status(200).json({
@@ -402,6 +403,7 @@ const updatePost = catchAsync(async (req, res, next) => {
   post.workLocation = req.body.workLocationId || post.workLocation;
   post.workTime = req.body.workTime ? JSON.parse(req.body.workTime)  : post.workTime;
   post.closeRegisterAt = req.body.closeRegisterAt || post.closeRegisterAt;
+  post.paymentPlan = req.body.paymentPlan || post.paymentPlan;
   
   const updatedPost = await post.save();
   return res.status(200).json({
