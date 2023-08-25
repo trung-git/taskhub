@@ -389,6 +389,11 @@ function ChatScreen({ user, chatId, otherUser }) {
             style={{ flex: 1, marginRight: '10px' }}
             onKeyUp={handleEnter}
             autoComplete="off"
+            InputProps={{
+              style: {
+                borderRadius: 32,
+              },
+            }}
           />
           <IconButton onClick={handleOnSend}>
             <SendIcon />

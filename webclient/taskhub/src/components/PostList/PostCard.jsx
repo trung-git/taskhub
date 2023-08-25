@@ -304,7 +304,7 @@ const PostCard = ({ post, onSelect }) => {
           />
         )}
       </Dialog>
-      <Dialog
+      {/* <Dialog
         maxWidth="sm"
         fullWidth
         onClose={() => {
@@ -323,8 +323,17 @@ const PostCard = ({ post, onSelect }) => {
               handleMenuClose();
             }}
           />
-        )}
-      </Dialog>
+        )} */}
+      {openPostModal && (
+        <PostModal
+          open={openPostModal}
+          value={post}
+          onClose={() => {
+            setOpenPostModal(false);
+            handleMenuClose();
+          }}
+        />
+      )}
     </div>
   );
 };

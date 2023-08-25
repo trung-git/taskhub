@@ -132,20 +132,22 @@ const PostList = () => {
           />
         </Stack>
       </Container>
-      <Dialog
+      {/* <Dialog
         maxWidth="sm"
         fullWidth
         onClose={() => setOpenPostModal(false)}
-        open={openPostModal}
+        
         sx={{ '& .MuiDialog-paper': { p: 0 } }}
       >
-        {openPostModal && (
-          <PostModal
-            value={selectedPost}
-            onClose={() => setOpenPostModal(false)}
-          />
-        )}
-      </Dialog>
+        
+      </Dialog> */}
+      {openPostModal && (
+        <PostModal
+          open={openPostModal}
+          value={selectedPost}
+          onClose={() => setOpenPostModal(false)}
+        />
+      )}
     </Box>
   );
 };

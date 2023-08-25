@@ -13,7 +13,7 @@ export default function PlaceholderContent() {
       direction={{ xs: 'column', md: 'row' }}
       sx={{ width: 1, textAlign: { xs: 'center', md: 'left' } }}
     >
-      <CardMedia component="img" image={UploadCover} sx={{ width: 150 }} />
+      <CardMedia component="img" image={UploadCover} sx={{ width: 80 }} />
       <Stack sx={{ p: 3 }} spacing={1}>
         <Typography variant="h5">Drag & Drop or Select file</Typography>
 

@@ -5,32 +5,24 @@ import { useTheme } from '@mui/material/styles';
 import {
   Box,
   Button,
+  Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Divider,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
   Grid,
-  FormHelperText,
   InputLabel,
-  ListItemText,
   MenuItem,
-  OutlinedInput,
   Select,
-  SelectChangeEvent,
   Stack,
-  Switch,
   TextField,
-  Tooltip,
-  Typography,
 } from '@mui/material';
 
 // third-party
 import _ from 'lodash';
-import * as Yup from 'yup';
-import { useFormik, Form, FormikProvider, FormikValues } from 'formik';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import MultiFileDrop from '../../base/component/MultiFileDrop';
 import TasktagAutocomplete from '../../base/component/TasktagAutocomplete';
@@ -51,31 +43,41 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
   const { getUserToken } = useLogin();
   const token = getUserToken();
   const { toastError, toastSuccess } = useToastify();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const getInitialValues = (post) => {
-    console.log('initValuePost', post);
     const newPost = {
-      taskTag:
-        {
-          label: t(post?.taskTag?.langKey),
-          value: post?.taskTag?._id,
-        } || '',
+      taskTag: post?.taskTag
+        ? {
+            label: t(post?.taskTag?.langKey),
+            value: post?.taskTag?._id,
+          }
+        : '',
       cityId: post?.cityInfo?._id || '',
       districtId: post?.workLocation?._id || '',
       text: post?.text || '',
       address: post?.address || '',
-      workDate: new Date(),
+      workTime: post?.workTime
+        ? {
+            from: dayjs(post?.workTime?.from).format('HH:mm'),
+            to: dayjs(post?.workTime?.to).format('HH:mm'),
+          }
+        : { from: '07:00', to: '08:00' },
+      workDate: dayjs(post?.workTime?.from) || dayjs(new Date()),
       files: [],
-      closeRegisterAt: new Date(post?.closeRegisterAt) || new Date(),
+      paymentPlan: post?.paymentPlan || 'per-hour',
+      closeRegisterAt: post?.closeRegisterAt
+        ? new Date(post?.closeRegisterAt)
+        : new Date(),
     };
     return newPost;
   };
 
-  const CustomerSchema = Yup.object().shape({
-    taskTag: Yup.object().required('Tag is required'),
-    cityId: Yup.string().required('City is required'),
-    districtId: Yup.string().required('Distric is required'),
-    address: Yup.string().required('Address is required'),
+  const validationSchema = yup.object({
+    taskTag: yup.object().typeError('Tag is required'),
+    cityId: yup.string().required('City is required'),
+    districtId: yup.string().required('Distric is required'),
+    address: yup.string().required('Address is required'),
   });
 
   const today = new Date();
@@ -86,92 +88,93 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
   const maxDate = new Date(startOfCurrentWeek);
   maxDate.setDate(startOfCurrentWeek.getDate() + 20);
 
-  const deleteHandler = () => {
-    // onCancel();
-  };
-  const reader = new FileReader();
-  reader.onload = function (event) {
-    const binaryData = new Uint8Array(event.target.result);
-    // Now you can use the binary data as needed
-    // For example, you can convert it to Base64, if required
-    return binaryData;
-  };
-
-  const formik = useFormik({
-    initialValues: getInitialValues(value),
-    validationSchema: CustomerSchema,
-    onSubmit: (values, { setSubmitting, resetForm }) => {
-      console.log('valuessetSubmitting', values);
-      try {
-        if (values) {
-          const formData = new FormData();
-          formData.append('text', values?.text);
-          // formData.append('photos', values?.files || []);
-          values?.files?.map((file) => {
-            console.log('fileOnUpload', file, file?.type);
-            const blob = new Blob([file], { type: file?.type });
-            const fileName = file?.name;
-            const uploadFile = new File([blob], fileName);
-            formData.append('photos', file);
-          });
-          formData.append('address', values?.address);
-          formData.append('taskTag', values?.taskTag?.value);
-          formData.append('workLocationId', values?.districtId);
-          formData.append(
-            'workTime',
-            JSON.stringify({
-              from: dayjs(new Date()).toISOString(),
-              to: dayjs(new Date()).toISOString(),
-            })
-          );
-          formData.append(
-            'closeRegisterAt',
-            dayjs(values?.closeRegisterAt).toISOString()
-          );
-          console.log('formDataOnsubmit', formData);
-
-          axios
-            .post(`${API_URL}api/v1/post`, formData, {
-              headers: {
-                'Content-Type': 'multipart/form-data', // Đảm bảo đặt đúng header 'Content-Type' cho form data
-                Authorization: `Bearer ${token}`,
-              },
-            })
-            .then((response) => {
-              console.log('postValueSucces', response);
-              toastSuccess('Create new post success');
-              //TODO reset close append new posr
-              resetForm();
-            })
-            .catch((error) => {
-              console.error(error);
-              console.error('Error:', Object.keys(error), error.message);
-              console.error(error?.config);
-              console.error(error?.request);
-              console.error(error?.response);
-              toastError(`Update error, ${error.message}`);
-            });
-        } else {
-          setSubmitting(false);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    },
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    getValues,
+    watch,
+    formState: { errors, isDirty, isValid },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+    defaultValues: getInitialValues(value),
   });
 
-  const {
-    errors,
-    touched,
-    handleSubmit,
-    isSubmitting,
-    getFieldProps,
-    setFieldValue,
-  } = formik;
+  const cityIdValue = watch('cityId');
+
+  const onSubmitHandler = (data) => {
+    // onSubmit && onSubmit(data);
+    // try {
+
+    // } catch (error) {
+    //   console.error(error);
+    // }
+    if (data) {
+      const from = dayjs(
+        `${dayjs(data?.workDate).format('YYYY-MM-DD')} ${data?.workTime?.from}`
+      ).unix();
+      const to = dayjs(
+        `${dayjs(data?.workDate).format('YYYY-MM-DD')} ${data?.workTime?.to}`
+      ).unix();
+      console.log('checkDateTime', from, to);
+      const formData = new FormData();
+      formData.append('text', data?.text);
+      data?.files?.map((file) => {
+        formData.append('photos', file);
+      });
+      formData.append('address', data?.address);
+      formData.append('taskTag', data?.taskTag?.value);
+      formData.append('workLocationId', data?.districtId);
+      formData.append(
+        'workTime',
+        JSON.stringify({
+          from: dayjs(new Date(from * 1000)).toISOString(),
+          to: dayjs(new Date(to * 1000)).toISOString(),
+        })
+      );
+      formData.append(
+        'closeRegisterAt',
+        dayjs(data?.closeRegisterAt).toISOString()
+      );
+      console.log('formDataOnsubmit', formData);
+
+      axios
+        .post(`${API_URL}api/v1/post`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data', // Đảm bảo đặt đúng header 'Content-Type' cho form data
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          console.log('postValueSucces', response);
+          toastSuccess('Create new post success');
+          //TODO reset close append new posr
+          // resetForm();
+        })
+        .catch((error) => {
+          console.error(error);
+          console.error('Error:', Object.keys(error), error.message);
+          console.error(error?.config);
+          console.error(error?.request);
+          console.error(error?.response);
+          toastError(`Update error, ${error.message}`);
+        });
+    } else {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
-    <FormikProvider value={formik}>
-      <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+    // <FormikProvider value={formik}>
+    //   <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="sm"
+      fullWidth
+      sx={{ '& .MuiDialog-paper': { p: 0 } }}
+    >
+      <form onSubmit={handleSubmit(onSubmitHandler)}>
         <DialogTitle>
           {value ? t('th_post_edit_post') : t('th_post_add_new_post')}
         </DialogTitle>
@@ -183,60 +186,66 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
                 <Grid item xs={12}>
                   <Stack spacing={1.25}>
                     <InputLabel htmlFor="customer-name">Công việc</InputLabel>
-                    <TasktagAutocomplete
-                      id={'taskTag'}
-                      value={getFieldProps('taskTag').value}
-                      onChange={(tagId) => setFieldValue('taskTag', tagId)}
-                      error={Boolean(touched.taskTag && errors.taskTag)}
-                      helperText={touched.taskTag && errors.taskTag}
+                    <Controller
+                      name="taskTag"
+                      control={control}
+                      render={({ field }) => (
+                        <TasktagAutocomplete
+                          id={'taskTag'}
+                          // value={getValues('taskTag')}
+                          value={field?.value}
+                          onChange={(tagId) => setValue('taskTag', tagId)}
+                          error={Boolean(errors.taskTag)}
+                          helperText={errors.taskTag && errors.taskTag.message}
+                        />
+                      )}
                     />
                   </Stack>
                 </Grid>
                 <Grid item xs={6}>
                   <Stack spacing={1.25}>
                     <InputLabel htmlFor="customer-name">Thành phố</InputLabel>
-                    {/* <TextField
-                      fullWidth
-                      id="customer-email"
-                      placeholder="Enter Customer Email"
-                      {...getFieldProps('email')}
-                      error={Boolean(touched.email && errors.email)}
-                      helperText={touched.email && errors.email}
-                    /> */}
-                    <CitySelect
-                      id={'cityId'}
-                      value={getFieldProps('cityId').value}
-                      onChange={(value) => {
-                        console.log('setDistrictSelected', value);
-                        setFieldValue('cityId', value?._id);
-                      }}
-                      // {...getFieldProps('cityId')}
-                      error={Boolean(touched.cityId && errors.cityId)}
-                      helperText={touched.cityId && errors.cityId}
+                    <Controller
+                      name="cityId"
+                      control={control}
+                      render={({ field }) => (
+                        <CitySelect
+                          id={'cityId'}
+                          // value={getValues('cityId')}
+                          value={field?.value}
+                          onChange={(value) => {
+                            console.log('setDistrictSelected', value);
+                            setValue('cityId', value?._id);
+                          }}
+                          error={Boolean(errors.cityId)}
+                          helperText={errors.cityId && errors.cityId.message}
+                        />
+                      )}
                     />
                   </Stack>
                 </Grid>
                 <Grid item xs={6}>
                   <Stack spacing={1.25}>
                     <InputLabel htmlFor="customer-name">Quận, Huyện</InputLabel>
-                    {/* <TextField
-                      fullWidth
-                      id="customer-email"
-                      placeholder="Enter Customer Email"
-                      {...getFieldProps('email')}
-                      error={Boolean(touched.email && errors.email)}
-                      helperText={touched.email && errors.email}
-                    /> */}
-                    <DistrictSelect
-                      id={'districtId'}
-                      cityId={getFieldProps('cityId').value}
-                      value={getFieldProps('districtId').value}
-                      onChange={(value) => {
-                        console.log('districtId', value);
-                        setFieldValue('districtId', value?._id);
-                      }}
-                      error={Boolean(touched.districtId && errors.districtId)}
-                      helperText={touched.districtId && errors.districtId}
+                    <Controller
+                      name="districtId"
+                      control={control}
+                      render={({ field }) => (
+                        <DistrictSelect
+                          id={'districtId'}
+                          cityId={cityIdValue}
+                          // value={getValues('districtId')}
+                          value={field?.value}
+                          onChange={(value) => {
+                            console.log('districtId', value);
+                            setValue('districtId', value?._id);
+                          }}
+                          error={Boolean(errors.districtId)}
+                          helperText={
+                            errors.districtId && errors.districtId.message
+                          }
+                        />
+                      )}
                     />
                   </Stack>
                 </Grid>
@@ -245,13 +254,19 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
                     <InputLabel htmlFor="customer-name">
                       Địa chỉ cụ thể
                     </InputLabel>
-                    <TextField
-                      fullWidth
-                      id="address"
-                      placeholder="Nhập địa chỉ cụ thể"
-                      {...getFieldProps('address')}
-                      error={Boolean(touched.address && errors.address)}
-                      helperText={touched.address && errors.address}
+                    <Controller
+                      name="address"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          fullWidth
+                          id="address"
+                          placeholder="Nhập địa chỉ cụ thể"
+                          {...field}
+                          error={Boolean(errors.address)}
+                          helperText={errors.address && errors.address.message}
+                        />
+                      )}
                     />
                   </Stack>
                 </Grid>
@@ -260,25 +275,76 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
                     <InputLabel htmlFor="customer-name">
                       Ngày làm việc
                     </InputLabel>
-                    <DatePicker
-                      value={dayjs(getFieldProps('workDate').value)}
+                    <Controller
+                      name="workDate"
+                      control={control}
+                      render={({ field }) => (
+                        //     <TimeRangeUnit
+                        // value={field.value}
+                        // onChange={(val) => setValue('workTime', val)}
+                        // />
+                        <DatePicker
+                          value={field.value}
+                          // onChange={(date) => console.log('date', date)}
+                          onChange={(date) => setValue('workDate', date)}
+                          disableHighlightToday
+                          minDate={dayjs(startOfCurrentWeek)}
+                          maxDate={dayjs(maxDate)}
+                          disablePast
+                        />
+                      )}
+                    />
+                    {/* <DatePicker
+                      value={dayjs(getValues('workDate'))}
                       onChange={(date) => console.log('date', date)}
                       disableHighlightToday
                       minDate={dayjs(startOfCurrentWeek)}
                       maxDate={dayjs(maxDate)}
                       disablePast
-                    />
+                    /> */}
                   </Stack>
                 </Grid>
                 <Grid item xs={6}>
                   <Stack spacing={1.25}>
                     <InputLabel htmlFor="customer-name">Thời gian</InputLabel>
-                    <TimeRangeUnit
-                    // id="customer-email"
-                    // placeholder="Enter Customer Email"
-                    // {...getFieldProps('email')}
-                    // error={Boolean(touched.email && errors.email)}
-                    // helperText={touched.email && errors.email}
+                    <Controller
+                      name="workTime"
+                      control={control}
+                      render={({ field }) => (
+                        <TimeRangeUnit
+                          value={field.value}
+                          onChange={(val) => setValue('workTime', val)}
+                        />
+                      )}
+                    />
+                  </Stack>
+                </Grid>
+                <Grid item xs={12}>
+                  <Stack spacing={1}>
+                    <InputLabel
+                      htmlFor="paymentPlan"
+                      sx={{ textAlign: 'start' }}
+                    >
+                      {t('th_key_payrollmethod')}
+                    </InputLabel>
+                    <Controller
+                      name="paymentPlan"
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          labelId="paymentPlan"
+                          id="paymentPlan"
+                          name="paymentPlan"
+                          {...field}
+                        >
+                          <MenuItem value={'per-hour'}>
+                            {t('th_key_payment_perhour')}
+                          </MenuItem>
+                          <MenuItem value={'one-time'}>
+                            {t('th_key_payment_onetime')}
+                          </MenuItem>
+                        </Select>
+                      )}
                     />
                   </Stack>
                 </Grid>
@@ -287,15 +353,28 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
                     <InputLabel htmlFor="text">
                       Mô tả công việc cụ thể
                     </InputLabel>
-                    <TextField
-                      fullWidth
-                      id="text"
-                      multiline
-                      rows={2}
-                      placeholder="Mô tả các yêu cầu của công việc..."
-                      {...getFieldProps('text')}
-                      error={Boolean(touched.text && errors.text)}
-                      helperText={touched.text && errors.text}
+                    <Controller
+                      name="text"
+                      control={control}
+                      render={({ field }) => (
+                        <TextField
+                          fullWidth
+                          id="text"
+                          multiline
+                          // rows={4}
+                          minRows={2}
+                          maxRows={6}
+                          // sx={{
+                          //   textarea: {
+                          //     resize: 'vertical',
+                          //   },
+                          // }}
+                          placeholder="Mô tả các yêu cầu của công việc..."
+                          {...field}
+                          error={Boolean(errors.text)}
+                          helperText={errors.text && errors.text.message}
+                        />
+                      )}
                     />
                   </Stack>
                 </Grid>
@@ -304,14 +383,20 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
                     <InputLabel htmlFor="customer-location">
                       Hình ảnh mô tả
                     </InputLabel>
-                    <MultiFileDrop
-                      showList={true}
-                      {...getFieldProps('files')}
-                      setFieldValue={(val) => {
-                        setFieldValue('files', val);
-                      }}
-                      files={getFieldProps('files').value}
-                      error={Boolean(touched.files && !!errors.files)}
+                    <Controller
+                      name="files"
+                      control={control}
+                      render={({ field }) => (
+                        <MultiFileDrop
+                          showList={true}
+                          setFieldValue={(val) => {
+                            setValue('files', val);
+                          }}
+                          // files={getValues('files')}
+                          files={field.value}
+                          error={Boolean(errors.files)}
+                        />
+                      )}
                     />
                   </Stack>
                 </Grid>
@@ -338,8 +423,10 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
             </Grid>
           </Grid>
         </DialogActions>
-      </Form>
-    </FormikProvider>
+      </form>
+    </Dialog>
+    //   </Form>
+    // </FormikProvider>
   );
 };
 

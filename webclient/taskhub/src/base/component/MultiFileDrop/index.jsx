@@ -81,6 +81,7 @@ const MultiFileDrop = ({
             borderColor: 'error.light',
             bgcolor: 'error.lighter',
           }),
+          p: 2,
         }}
       >
         <input {...getInputProps()} />

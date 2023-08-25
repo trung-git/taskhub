@@ -136,7 +136,7 @@ exports.getTaskers = catchAsync(async (req, res, next) => {
   switch (sortOption) {
     case 1:
       aggregatePipeline.push({
-        $sort: { 'taskInfo.price': 1, averageRating: -1 },
+        $sort: { averageRating: -1, 'taskInfo.price': 1 },
       });
       break;
     case 2:

@@ -42,7 +42,7 @@ export default function Chip(theme) {
     MuiChip: {
       styleOverrides: {
         root: {
-          borderRadius: 4,
+          borderRadius: 32,
           '&:active': {
             boxShadow: 'none',
           },
