@@ -89,31 +89,18 @@ exports.signup = catchAsync(async (req, res, next) => {
   }
   
   const newUser = await Object.create(user);
-
-  const emailToken = newUser.createVerifyEmailToken();
-  const finalUser = await newUser.save();
-
   try {
-    const URL = `${req.protocol}://${req.get(
-      'host'
-    )}/api/v1/user/verify-email/${emailToken}`;
-
-    await new Email(finalUser, URL).sendWelcome();
+    await new Email(newUser).sendWelcome();
   } catch (error) {
-    finalUser.verifyEmailToken = undefined;
-    finalUser.verifyEmailExpired = undefined;
-    await finalUser.save();
-    return next(new AppError('Send email fail! Please try again.', 500));
+    console.log(error);
+    // return next(new AppError('Send email fail! Please try again.', 500));
   }
   createAndSendToken(finalUser, 201, req, res, false);
 });
 
 exports.verifyEmail = catchAsync(async (req, res, next) => {
   //Get token
-  const hashToken = crypto
-    .createHash('sha256')
-    .update(req.params.token)
-    .digest('hex');
+  const hashToken = req.body.code;
 
   const user = await User.findOne({
     verifyEmailToken: hashToken,
@@ -134,15 +121,11 @@ exports.verifyEmail = catchAsync(async (req, res, next) => {
 
 exports.generateVerifyEmailToken = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user._id);
-  const emailToken = user.createVerifyEmailToken();
+  const code = User.createVerifyEmailToken();
   await user.save();
 
   try {
-    const URL = `${req.protocol}://${req.get(
-      'host'
-    )}/api/v1/user/verify-email/${emailToken}`;
-
-    await new Email(user, URL).sendWelcome();
+    await new Email(user).sendVerifyEmailCode(code);
   } catch (error) {
     user.verifyEmailToken = undefined;
     user.verifyEmailExpired = undefined;

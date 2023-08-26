@@ -22,7 +22,7 @@ module.exports = class Email {
     });
   }
 
-  async send(template, subject) {
+  async send(template, subject, code = undefined) {
     const html = await ejs.renderFile(
       `${__dirname}/../views/emails/index.ejs`,
       {
@@ -30,6 +30,7 @@ module.exports = class Email {
         firstname: this.firstname,
         url: this.url,
         subject,
+        code
       }
     );
 
@@ -53,5 +54,9 @@ module.exports = class Email {
       'passwordReset',
       'Reset your password {valid only 10 minutes}'
     );
+  }
+
+  async sendVerifyEmailCode(code) {
+    await this.send('sendVerifyEmailCode', 'Verify your Email {valid only 10 minutes}', code);
   }
 };
