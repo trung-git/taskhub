@@ -31,6 +31,10 @@ const postSchema = new mongoose.Schema(
           type: Number,
           required: [true, 'Price can not empty!'],
         },
+        isSendInvitation: {
+          type: Boolean,
+          default: false
+        }
       },
     ],
     address: {
