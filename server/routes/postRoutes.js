@@ -7,6 +7,7 @@ const {
   unRegisterPostCandidate,
   updatePost,
   deletePost,
+  getAppliedPosts,
 } = require('../controllers/postController');
 const { protect, restrictTo } = require('../controllers/authController');
 
@@ -14,6 +15,7 @@ const router = express.Router();
 router.use(protect);
 
 router.route('/').get(getPosts).post(restrictTo('Finder'), createPost);
+router.get('/get-applied-post', restrictTo('Tasker'), getAppliedPosts);
 router.get('/:id', getPostById);
 router.patch('/:id', restrictTo('Finder'), updatePost);
 router.delete('/:id', restrictTo('Finder'), deletePost);

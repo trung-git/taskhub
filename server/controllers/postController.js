@@ -225,6 +225,25 @@ const getPosts = catchAsync(async (req, res, next) => {
     totalRecords: count[0]?.totalRecord || 0
   });
 });
+const getAppliedPosts = catchAsync(async (req, res, next) => {
+  const pageNum = Number(req.query.pageNum) || 1;
+  const recordsPerPage = Number(process.env.RECORDS_PER_PAGE);
+
+  const findCondition = { $elemMatch: { 'candidate.user._id': req.user._id }};
+  const posts = await Post.find( findCondition )
+    .skip(recordsPerPage * (pageNum - 1))
+    .limit(recordsPerPage);
+  const count = await Post.countDocuments(findCondition);
+
+  return res.status(200).json({
+    status: 'success',
+    data: posts,
+    recordsPerPage,
+    totalPage: Math.ceil(count / recordsPerPage),
+    pageNum,
+    totalRecords: count
+  });
+})
 const getPostById = catchAsync(async (req, res, next) => {
   const post = await Post.findById(req.params.id);
 
@@ -433,4 +452,5 @@ module.exports = {
   deletePost,
   registerPostCandidate,
   unRegisterPostCandidate,
+  getAppliedPosts
 };
