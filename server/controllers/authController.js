@@ -16,6 +16,7 @@ const { getObjectModel } = require('../utils');
 const { ROLE } = require('../utils/constantVariables');
 const Email = require('../utils/email');
 const Post = require('../models/postModel');
+const { urlConstant } = require('../config/constants.js');
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -277,9 +278,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   await user.save();
 
   try {
-    const resetURL = `${req.protocol}://${req.get(
-      'host'
-    )}/api/v1/user/reset-password/${resetToken}`;
+    const resetURL = `${urlConstant.webClient}/reset-password/${resetToken}`;
 
     await new Email(user, resetURL).sendPasswordReset();
 
