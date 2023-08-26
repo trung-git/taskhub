@@ -85,6 +85,8 @@ exports.createContractByPost = catchAsync(async (req, res, next) => {
   if (!candidate) {
     return next(new AppError('Invalid candidate', 400));
   }
+  
+  candidate.isSendInvitation = true;
 
   const chat = await Chat.create({
     users: [{ user: post.user._id }, { user: candidateId }],
