@@ -18,9 +18,6 @@ const finders = [
     city: mongoose.Types.ObjectId.createFromHexString(
       '64a12b2fde768d62c2605820'
     ),
-    wallet:  mongoose.Types.ObjectId.createFromHexString(
-      '64dd9416a4aaa12c3147b52a'
-    ),
   },
   {
     _id: mongoose.Types.ObjectId.createFromHexString(
@@ -37,9 +34,6 @@ const finders = [
     password: bcrypt.hashSync('123456789', 10),
     city: mongoose.Types.ObjectId.createFromHexString(
       '64a12b2fde768d62c2605820'
-    ),
-    wallet:  mongoose.Types.ObjectId.createFromHexString(
-      '64dd94311775c6aab1daee28'
     ),
   },
   {
@@ -58,9 +52,6 @@ const finders = [
     city: mongoose.Types.ObjectId.createFromHexString(
       '64a12b2fde768d62c2605820'
     ),
-    wallet:  mongoose.Types.ObjectId.createFromHexString(
-      '64dd944e79de971cb85f97ed'
-    ),
   },
   {
     _id: mongoose.Types.ObjectId.createFromHexString(
@@ -78,9 +69,6 @@ const finders = [
     city: mongoose.Types.ObjectId.createFromHexString(
       '64a12b2fde768d62c2605820'
     ),
-    wallet:  mongoose.Types.ObjectId.createFromHexString(
-      '64dd9460dbd8f65dfcd52d95'
-    ),
   },
   {
     _id: mongoose.Types.ObjectId.createFromHexString(
@@ -97,9 +85,6 @@ const finders = [
     password: bcrypt.hashSync('123456789', 10),
     city: mongoose.Types.ObjectId.createFromHexString(
       '64a12b2fde768d62c2605820'
-    ),
-    wallet:  mongoose.Types.ObjectId.createFromHexString(
-      '64dd9473a8c4192ffdde6824'
     ),
   },
 ];
