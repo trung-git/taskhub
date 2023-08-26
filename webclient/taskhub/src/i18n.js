@@ -46,6 +46,7 @@ const resources = {
       th_key_navbar_signup_login: 'Sign up / Log in',
       th_key_navbar_services: 'Task List',
       th_key_navbar_task_feed: 'Task Feed',
+      th_key_navbar_home_page: 'Home Page',
       //
       th_key_home_help_search_title: 'What do you need help with ?',
       th_key_home_help_search_place_holder:
@@ -109,6 +110,9 @@ const resources = {
       th_key_not_reated_yet: 'Not reated yet',
       th_post_add_new_post: 'Create new post',
       th_post_edit_post: 'Update post',
+      //
+      th_key_tooltip_explain_pricing:
+        'The cost of the task is the price calculated by multiplying the proposed price with the working time for hourly wage payment method or the proposed price for one-time payment cases.',
     },
   },
   vi: {
@@ -151,6 +155,7 @@ const resources = {
       th_key_navbar_signup_login: 'Đăng ký / Đăng nhập',
       th_key_navbar_services: 'Quản lý việc',
       th_key_navbar_task_feed: 'Bảng tin việc',
+      th_key_navbar_home_page: 'Trang chủ',
       //
       th_key_home_help_search_title: 'Bạn cần giúp đỡ gì ?',
       th_key_home_help_search_place_holder: 'Chọn công việc bạn cần giúp đỡ...',
@@ -214,6 +219,9 @@ const resources = {
       th_key_not_reated_yet: 'Chưa có đánh giá',
       th_post_add_new_post: 'Tạo bài đăng',
       th_post_edit_post: 'Chỉnh sửa bài đăng',
+      //
+      th_key_tooltip_explain_pricing:
+        'Chi phí công việc là giá được tính bằng giá đề xuất nhân với thời gian làm việc đối với hình thức trã lương theo giờ hoặc là giá đề xuất đối với trường hợp trã lương một lần',
     },
   },
 };

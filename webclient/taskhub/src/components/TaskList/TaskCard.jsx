@@ -23,7 +23,7 @@ import { useState } from 'react';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import AccessAlarmOutlinedIcon from '@mui/icons-material/AccessAlarmOutlined';
 import RoomOutlinedIcon from '@mui/icons-material/RoomOutlined';
-import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
+import WalletIcon from '@mui/icons-material/Wallet';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router';
@@ -132,7 +132,7 @@ const TaskCard = ({ task }) => {
               >
                 <ListItem>
                   <ListItemIcon>
-                    <AttachMoneyOutlinedIcon color="primary" />
+                    <WalletIcon color="primary" />
                   </ListItemIcon>
                   <ListItemText primary={price.toString()} />
                 </ListItem>

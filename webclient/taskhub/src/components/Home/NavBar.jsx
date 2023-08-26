@@ -42,48 +42,83 @@ function NavBar({ isLogin = true }) {
 
   const pages = [
     {
+      languageKey: 'th_key_navbar_home_page',
+      onClick: () => {
+        navigate('/');
+      },
+      auth: false,
+    },
+    {
+      languageKey: 'th_key_navbar_home_page',
+      onClick: () => {
+        navigate('/');
+      },
+      auth: true,
+    },
+    {
       languageKey: 'th_key_navbar_task_feed',
       onClick: () => {
         navigate('/post');
       },
+      auth: true,
     },
     {
       languageKey: 'th_key_navbar_services',
       onClick: () => {
         navigate('/tasklist');
       },
+      auth: true,
     },
     {
       languageKey: 'th_key_navbar_signup_login',
       onClick: () => {
         navigate('/login');
       },
+      auth: false,
     },
   ];
   const pagesSmall = [
     {
+      languageKey: 'th_key_navbar_home_page',
+      onClick: () => {
+        navigate('/');
+      },
+      auth: false,
+    },
+    {
+      languageKey: 'th_key_navbar_home_page',
+      onClick: () => {
+        navigate('/');
+      },
+      auth: true,
+    },
+    {
       languageKey: 'th_key_navbar_task_feed',
       onClick: () => {
         navigate('/post');
       },
+      auth: true,
     },
     {
       languageKey: 'th_key_navbar_services',
       onClick: () => {
         navigate('/tasklist');
       },
+      auth: true,
     },
     {
       languageKey: 'th_key_navbar_signup_login',
       onClick: () => {
         navigate('/login');
       },
+      auth: false,
     },
     {
       languageKey: 'th_key_navbar_becometasker',
       onClick: () => {
-        navigate('/login');
+        navigate('/becometasker');
       },
+      auth: false,
     },
   ];
 
@@ -166,17 +201,38 @@ function NavBar({ isLogin = true }) {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pagesSmall.map((page, index) => (
-                <MenuItem key={index} onClick={page.onClick}>
-                  <Typography
-                    color={'green'}
-                    textAlign="center"
-                    textTransform={'none'}
-                  >
-                    {t(page.languageKey)}
-                  </Typography>
-                </MenuItem>
-              ))}
+              {pagesSmall
+                .filter((item) => item?.auth === isLogin)
+                .map((page, index) => (
+                  <MenuItem key={index} onClick={page.onClick}>
+                    <Typography
+                      color={'green'}
+                      textAlign="center"
+                      textTransform={'none'}
+                    >
+                      {t(page.languageKey)}
+                    </Typography>
+                  </MenuItem>
+                ))}
+              <MenuItem>
+                <LanguageSwitch />
+              </MenuItem>
+              <MenuItem sx={{ justifyContent: 'center' }}>
+                <ThemeModeSwitch />
+              </MenuItem>
+
+              {/* {isLogin &&
+                pagesSmall.map((page, index) => (
+                  <MenuItem key={index} onClick={page.onClick}>
+                    <Typography
+                      color={'green'}
+                      textAlign="center"
+                      textTransform={'none'}
+                    >
+                      {t(page.languageKey)}
+                    </Typography>
+                  </MenuItem>
+                ))} */}
             </Menu>
           </Box>
 
@@ -187,30 +243,28 @@ function NavBar({ isLogin = true }) {
               justifyContent: 'flex-end',
             }}
           >
-            {pages.map((page, index) =>
-              isLogin &&
-              page.languageKey === 'th_key_navbar_signup_login' ? null : (
-                <Button
-                  key={index}
-                  onClick={page.onClick}
-                  sx={{
-                    my: 2,
-                    color: 'green',
-                    display: 'block',
-                    textTransform: 'none',
-                  }}
-                >
-                  {t(page.languageKey)}
-                </Button>
-              )
-            )}
+            {pages
+              .filter((item) => item?.auth === isLogin)
+              .map((page, index) =>
+                isLogin &&
+                page.languageKey === 'th_key_navbar_signup_login' ? null : (
+                  <Button
+                    key={index}
+                    onClick={page.onClick}
+                    sx={{
+                      my: 2,
+                      color: 'green',
+                      display: 'block',
+                      textTransform: 'none',
+                    }}
+                  >
+                    {t(page.languageKey)}
+                  </Button>
+                )
+              )}
           </Box>
           {!isLogin && (
-            <Button
-              variant="contained"
-              // color="success"
-              sx={{ display: { xs: 'none', md: 'block' } }}
-            >
+            <Button sx={{ display: { xs: 'none', md: 'block' } }}>
               {t('th_key_navbar_becometasker')}
             </Button>
           )}
@@ -274,6 +328,9 @@ function NavBar({ isLogin = true }) {
             aria-controls="menu-appbar"
             aria-haspopup="true"
             onClick={handleOpenSettingMenu}
+            sx={{
+              display: { xs: 'none', md: 'flex' },
+            }}
           >
             <SettingsOutlinedIcon />
           </IconButton>

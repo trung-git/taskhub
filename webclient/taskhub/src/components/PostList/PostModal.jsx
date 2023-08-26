@@ -103,12 +103,6 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
   const cityIdValue = watch('cityId');
 
   const onSubmitHandler = (data) => {
-    // onSubmit && onSubmit(data);
-    // try {
-
-    // } catch (error) {
-    //   console.error(error);
-    // }
     if (data) {
       const from = dayjs(
         `${dayjs(data?.workDate).format('YYYY-MM-DD')} ${data?.workTime?.from}`

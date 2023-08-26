@@ -12,6 +12,8 @@ import {
 } from '@mui/material';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { useTranslation } from 'react-i18next';
+import logo from '../../assets/img/logo/logo.png';
+import ImagesList from '../../base/component/ImagesList';
 
 const TaskerCard = ({ taskerData, onSelect }) => {
   const [isOpenUserModal, setIsOpenUserModal] = useState(false);
@@ -47,7 +49,7 @@ const TaskerCard = ({ taskerData, onSelect }) => {
           borderRadius: 2,
         }}
       >
-        <Grid item xs={4}>
+        <Grid item xs={4} sx={{ pr: 2 }}>
           <Stack
             direction={'column'}
             alignItems={'center'}
@@ -55,8 +57,8 @@ const TaskerCard = ({ taskerData, onSelect }) => {
           >
             <Avatar
               alt={taskerData?.username}
-              src={taskerData?.image}
-              sx={{ width: 200, height: 200 }}
+              src={taskerData?.image || logo}
+              sx={{ width: '100%', height: 'auto' }}
             />
             <Button
               variant="text"
@@ -259,7 +261,7 @@ const TaskerCard = ({ taskerData, onSelect }) => {
               <Typography fontSize={18} fontWeight={600}>
                 {t('Work photos')}:
               </Typography>
-              {/* <ImagesSlider images={taskerData?.photos} /> */}
+              <ImagesList images={taskerData?.photos} />
             </Box>
           )}
           <Stack

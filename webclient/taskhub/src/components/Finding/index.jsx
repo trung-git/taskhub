@@ -38,6 +38,7 @@ import AuthLogin from '../authentication/auth-forms/AuthLogin';
 import DateBookingModal from './DateBookingModal';
 import InvationDetail from './InvationDetail';
 import { LoadingButton } from '@mui/lab';
+import Nodata from '../../base/component/Nodata';
 
 const Finding = (props) => {
   const params = useParams();
@@ -203,7 +204,7 @@ const Finding = (props) => {
                 <Box
                   sx={{ display: 'flex', justifyContent: 'flex-start', my: 2 }}
                 >
-                  <Typography variant="h5">{taskData?.title}</Typography>
+                  <Typography variant="h5">{t(taskData?.langKey)}</Typography>
                 </Box>
                 <Box
                   sx={{
@@ -323,6 +324,19 @@ const Finding = (props) => {
                           })}
                       </Stack>
                     )}
+                    {/* <Stack
+                      direction={'row'}
+                      sx={{ mt: 2, width: '100%' }}
+                      justifyContent={'center'}
+                    >
+                      <Pagination
+                        count={totalPage}
+                        page={pageNum}
+                        onChange={handlePageChange}
+                        // color="success"
+                        size="large"
+                      />
+                    </Stack> */}
                     <Stack
                       direction={'row'}
                       sx={{ mt: 2, width: '100%' }}
@@ -334,6 +348,8 @@ const Finding = (props) => {
                         onChange={handlePageChange}
                         // color="success"
                         size="large"
+                        color="primary"
+                        variant="combined"
                       />
                     </Stack>
                   </Grid>
@@ -349,7 +365,10 @@ const Finding = (props) => {
                         height: 'auto',
                       }}
                     >
-                      <Typography>{t('Không tìm thấy người dùng')}</Typography>
+                      {/* <Typography>{t('Không tìm thấy người dùng')}</Typography> */}
+                      <Grid item xs={12}>
+                        <Nodata />
+                      </Grid>
                       <Stack
                         direction={'row'}
                         sx={{ mt: 2, width: '100%' }}
@@ -361,6 +380,8 @@ const Finding = (props) => {
                           onChange={handlePageChange}
                           // color="success"
                           size="large"
+                          color="primary"
+                          variant="combined"
                         />
                       </Stack>
                     </Grid>

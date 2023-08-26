@@ -16,6 +16,7 @@ import useLogin from '../../hooks/useLogin';
 import ChatScreen from './ChatScreen';
 import useToastify from '../../hooks/useToastify';
 import TaskViewDetail from './TaskViewDetail';
+import diffProperties from '../../utils/diffProperties';
 
 const TaskDetail = () => {
   const { isLogin, currentUser } = useContext(LoginContext);
@@ -81,6 +82,7 @@ const TaskDetail = () => {
       );
       const responseData = response.data.data;
       console.log('User updated successfully:', response);
+      console.log('testProps', diffProperties(taskData, responseData));
       setTaskData(responseData);
       toastSuccess('Update task success');
       setIsSubmitting(false);

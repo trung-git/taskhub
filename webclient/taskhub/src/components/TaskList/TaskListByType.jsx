@@ -65,7 +65,7 @@ const TaskListByType = ({ type }) => {
     <Grid container spacing={3}>
       {taskList?.map((task) => {
         return (
-          <Grid item xs={4} key={task?._id}>
+          <Grid item xs={12} md={6} lg={4} key={task?._id}>
             <TaskCard task={task} />
           </Grid>
         );
