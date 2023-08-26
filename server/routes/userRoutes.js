@@ -17,7 +17,7 @@ router.use(authController.protect);
 router.get('/me', userController.getMe);
 router.post('/update-profile', userController.updateMe);
 router.post('/update-password', authController.updatePassword);
-router.post('/verify-email/:token', authController.verifyEmail);
+router.post('/verify-email/', authController.verifyEmail);
 router.post(
   '/generate-verify-email-token',
   authController.generateVerifyEmailToken

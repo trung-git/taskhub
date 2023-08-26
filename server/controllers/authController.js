@@ -121,7 +121,7 @@ exports.verifyEmail = catchAsync(async (req, res, next) => {
 
 exports.generateVerifyEmailToken = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user._id);
-  const code = User.createVerifyEmailToken();
+  const code = user.createVerifyEmailToken();
   await user.save();
 
   try {
