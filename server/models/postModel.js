@@ -4,7 +4,7 @@ const postSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
-      required: [true, 'Candidate can not empty!'],
+      required: [true, 'User can not empty!'],
     },
     text: {
       type: String,
