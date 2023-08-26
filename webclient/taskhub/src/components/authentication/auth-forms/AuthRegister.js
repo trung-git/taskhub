@@ -19,18 +19,12 @@ import {
   Typography,
   Select,
   MenuItem,
+  TextField,
 } from '@mui/material';
-
-// third party
-import * as Yup from 'yup';
-import { Formik } from 'formik';
-
-// project import
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import FirebaseSocial from './FirebaseSocial';
-// import AnimateButton from 'components/@extended/AnimateButton';
-// import { strengthColor, strengthIndicator } from 'utils/password-strength';
-
-// assets
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { LoadingButton } from '@mui/lab';
@@ -40,13 +34,34 @@ import CitySelect from '../../../base/component/CitySelect';
 import AnimateButton from '../../../base/component/AnimateButton';
 import axios from 'axios';
 import { API_URL } from '../../../base/config';
+import useToastify from '../../../hooks/useToastify';
 
-// ============================|| FIREBASE - REGISTER ||============================ //
+const validationSchema = yup.object({
+  firstname: yup.string().max(255).required('First Name is required'),
+  username: yup.string().max(255).required('Username is required'),
+  lastname: yup.string().max(255).required('Last Name is required'),
+  city: yup.string().required('City is required'),
+  email: yup
+    .string()
+    .email('Must be a valid email')
+    .max(255)
+    .required('Email is required'),
+  password: yup
+    .string()
+    .required('Password is required')
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      'Password must meet the requirements'
+    ),
+});
 
 const SignUp = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toastError, toastSuccess } = useToastify();
+
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -55,256 +70,212 @@ const SignUp = () => {
     event.preventDefault();
   };
 
-  // const changePassword = (value) => {
-  //   const temp = strengthIndicator(value);
-  //   setLevel(strengthColor(temp));
-  // };
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    getValues,
+    watch,
+    formState: { errors, isValid },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+    defaultValues: {
+      firstname: '',
+      lastname: '',
+      email: '',
+      password: '',
+      username: '',
+      dateOfBirth: new Date('2000-01-01'),
+      gender: 'Male',
+      city: '',
+    },
+  });
 
-  // useEffect(() => {
-  //   changePassword('');
-  // }, []);
+  console.log('formDataSignUp', watch());
 
-  function handleSubmitSignUp(values, { setErrors, setStatus, setSubmitting }) {
+  const onSubmitHandler = (data) => {
+    setIsSubmitting(true);
     const requestData = {
-      username: values.username,
-      firstName: values.firstname,
-      lastName: values.lastname,
-      dateOfBirth: values.dateOfBirth,
-      email: values.email,
-      gender: values.gender,
+      username: data.username,
+      firstName: data.firstname,
+      lastName: data.lastname,
+      dateOfBirth: dayjs(data.dateOfBirth).toISOString(),
+      email: data.email,
+      gender: data.gender,
       role: 'Finder',
-      password: values.password,
-      city: values.city,
+      password: data.password,
+      city: data.city,
     };
     axios
       .post(`${API_URL}api/v1/user/signup`, requestData)
       .then((response) => {
-        // Handle successful signup
         console.log('userData', response);
-        setSubmitting(false);
-        setStatus({ success: true });
+        setIsSubmitting(false);
+        toastSuccess('Sign up success');
         navigate('/login');
       })
       .catch((error) => {
-        // Handle error
         console.log('userDataerror', error);
-        if (error?.response?.data?.message) {
-          // setErrors(error?.response?.data?.message);
-          setErrors({ submit: error?.response?.data?.message });
-        }
-        setStatus({ success: false });
-        setSubmitting(false);
+        toastError(`Sign up error, ${error.message}`);
+        setIsSubmitting(false);
       });
-  }
+  };
 
   return (
-    <>
-      <Formik
-        initialValues={{
-          firstname: '',
-          lastname: '',
-          email: '',
-          password: '',
-          username: '',
-          dateOfBirth: '2000-01-01',
-          gender: 'Male',
-          city: '',
-          submit: null,
-        }}
-        validationSchema={Yup.object().shape({
-          firstname: Yup.string().max(255).required('First Name is required'),
-          username: Yup.string().max(255).required('Username is required'),
-          lastname: Yup.string().max(255).required('Last Name is required'),
-          city: Yup.string().max(255).required('City is required'),
-          email: Yup.string()
-            .email('Must be a valid email')
-            .max(255)
-            .required('Email is required'),
-          password: Yup.string().max(255).required('Password is required'),
-        })}
-        onSubmit={handleSubmitSignUp}
-      >
-        {({
-          errors,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-          isSubmitting,
-          touched,
-          values,
-          setFieldValue,
-        }) => (
-          <form noValidate onSubmit={handleSubmit}>
-            <Grid container spacing={3}>
-              {/* First Name */}
-              <Grid item xs={12} md={6}>
-                <Stack spacing={1} alignItems={'flex-start'}>
-                  <InputLabel htmlFor="firstname-signup">
-                    First Name*
-                  </InputLabel>
+    <form noValidate onSubmit={handleSubmit(onSubmitHandler)}>
+      <Grid container spacing={3}>
+        {/* First Name */}
+        <Grid item xs={12} md={6}>
+          <Stack spacing={1} alignItems={'flex-start'}>
+            <InputLabel htmlFor="firstname-signup">
+              First Name <span style={{ color: 'red' }}>*</span>
+            </InputLabel>
+            <Controller
+              name="firstname"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  fullWidth
+                  id="firstname"
+                  placeholder="Your first name"
+                  {...field}
+                  error={Boolean(errors.firstname)}
+                  helperText={errors.firstname && errors.firstname.message}
+                />
+              )}
+            />
+          </Stack>
+        </Grid>
+        {/* Last Name */}
+        <Grid item xs={12} md={6}>
+          <Stack spacing={1} alignItems={'flex-start'}>
+            <InputLabel htmlFor="lastname-signup">Last Name*</InputLabel>
+            <Controller
+              name="lastname"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  fullWidth
+                  id="lastname"
+                  placeholder="Your last name"
+                  {...field}
+                  error={Boolean(errors.lastname)}
+                  helperText={errors.lastname && errors.lastname.message}
+                />
+              )}
+            />
+          </Stack>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Stack spacing={1} alignItems={'flex-start'}>
+            <InputLabel htmlFor="firstname-signup">Gender*</InputLabel>
+            <Controller
+              name="gender"
+              control={control}
+              render={({ field }) => (
+                <FormControl fullWidth>
+                  <Select labelId="gender" id="gender" name="gender" {...field}>
+                    <MenuItem value={'Male'}>Male</MenuItem>
+                    <MenuItem value={'Female'}>Female</MenuItem>
+                  </Select>
+                </FormControl>
+              )}
+            />
+          </Stack>
+        </Grid>
+        {/*  DOB */}
+        <Grid item xs={12} md={6}>
+          <Stack spacing={1} alignItems={'flex-start'}>
+            <InputLabel htmlFor="lastname-signup">Date Of Birth*</InputLabel>
+            <Controller
+              name="dateOfBirth"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  name="dateOfBirth"
+                  views={['year', 'month', 'day']}
+                  value={dayjs(field.value)}
+                  onChange={(newValue) =>
+                    setValue('dateOfBirth', newValue.toISOString())
+                  }
+                />
+              )}
+            />
+          </Stack>
+        </Grid>
+        <Grid item xs={12}>
+          <Stack spacing={1} alignItems={'flex-start'}>
+            <InputLabel htmlFor="company-signup">City</InputLabel>
+            <Controller
+              name="city"
+              control={control}
+              render={({ field }) => (
+                <CitySelect
+                  id={'city'}
+                  value={field?.value}
+                  onChange={(value) => {
+                    console.log('setDistrictSelected', value);
+                    setValue('city', value._id);
+                  }}
+                  error={Boolean(errors.city)}
+                  helperText={errors.city && errors.city.message}
+                />
+              )}
+            />
+          </Stack>
+        </Grid>
+        <Grid item xs={12}>
+          <Stack spacing={1} alignItems={'flex-start'}>
+            <InputLabel htmlFor="email">Email Address*</InputLabel>
+            <Controller
+              name="email"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  fullWidth
+                  id="email"
+                  placeholder="Nhập địa chỉ email"
+                  {...field}
+                  error={Boolean(errors.email)}
+                  helperText={errors.email && errors.email.message}
+                />
+              )}
+            />
+          </Stack>
+        </Grid>
+        <Grid item xs={12}>
+          <Stack spacing={1} alignItems={'flex-start'}>
+            <InputLabel htmlFor="username">Username*</InputLabel>
+            <Controller
+              name="username"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  fullWidth
+                  id="username"
+                  placeholder="username"
+                  {...field}
+                  error={Boolean(errors.username)}
+                  helperText={errors.username && errors.username.message}
+                />
+              )}
+            />
+          </Stack>
+        </Grid>
+        <Grid item xs={12}>
+          <Stack spacing={1} alignItems={'flex-start'}>
+            <InputLabel htmlFor="password-signup">Password*</InputLabel>
+            <Controller
+              name="password"
+              control={control}
+              render={({ field }) => (
+                <FormControl variant="outlined" fullWidth>
                   <OutlinedInput
-                    id="firstname-login"
-                    type="firstname"
-                    value={values.firstname}
-                    name="firstname"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    placeholder="John"
-                    fullWidth
-                    error={Boolean(touched.firstname && errors.firstname)}
-                  />
-                  {touched.firstname && errors.firstname && (
-                    <FormHelperText error id="helper-text-firstname-signup">
-                      {errors.firstname}
-                    </FormHelperText>
-                  )}
-                </Stack>
-              </Grid>
-              {/* Last Name */}
-              <Grid item xs={12} md={6}>
-                <Stack spacing={1} alignItems={'flex-start'}>
-                  <InputLabel htmlFor="lastname-signup">Last Name*</InputLabel>
-                  <OutlinedInput
-                    fullWidth
-                    error={Boolean(touched.lastname && errors.lastname)}
-                    id="lastname-signup"
-                    type="lastname"
-                    value={values.lastname}
-                    name="lastname"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    placeholder="Doe"
-                    inputProps={{}}
-                  />
-                  {touched.lastname && errors.lastname && (
-                    <FormHelperText error id="helper-text-lastname-signup">
-                      {errors.lastname}
-                    </FormHelperText>
-                  )}
-                </Stack>
-              </Grid>
-              {/*  Gender */}
-              <Grid item xs={12} md={6}>
-                <Stack spacing={1} alignItems={'flex-start'}>
-                  <InputLabel htmlFor="firstname-signup">Gender*</InputLabel>
-                  <FormControl fullWidth>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      name="gender"
-                      value={values.gender}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={Boolean(touched.gender && errors.gender)}
-                    >
-                      <MenuItem value={'Male'}>Male</MenuItem>
-                      <MenuItem value={'Female'}>Female</MenuItem>
-                    </Select>
-                  </FormControl>
-                  {touched.firstname && errors.firstname && (
-                    <FormHelperText error id="helper-text-firstname-signup">
-                      {errors.firstname}
-                    </FormHelperText>
-                  )}
-                </Stack>
-              </Grid>
-              {/*  DOB */}
-              <Grid item xs={12} md={6}>
-                <Stack spacing={1} alignItems={'flex-start'}>
-                  <InputLabel htmlFor="lastname-signup">
-                    Date Of Birth*
-                  </InputLabel>
-                  <DatePicker
-                    name="dateOfBirth"
-                    views={['year', 'month', 'day']}
-                    value={dayjs(values.dateOfBirth)}
-                    onChange={(newValue) =>
-                      handleChange(newValue.format('YYYY-MM-DD'))
-                    }
-                  />
-                  {touched.lastname && errors.lastname && (
-                    <FormHelperText error id="helper-text-lastname-signup">
-                      {errors.lastname}
-                    </FormHelperText>
-                  )}
-                </Stack>
-              </Grid>
-              <Grid item xs={12}>
-                <Stack spacing={1} alignItems={'flex-start'}>
-                  <InputLabel htmlFor="company-signup">City</InputLabel>
-                  <CitySelect
-                    value={values.city}
-                    name="city"
-                    onChange={(value) => {
-                      console.log('valueCitySelect', value);
-                      setFieldValue('city', value, true);
-                    }}
-                  />
-                  {touched.company && errors.company && (
-                    <FormHelperText error id="helper-text-company-signup">
-                      {errors.company}
-                    </FormHelperText>
-                  )}
-                </Stack>
-              </Grid>
-              <Grid item xs={12}>
-                <Stack spacing={1} alignItems={'flex-start'}>
-                  <InputLabel htmlFor="email-signup">Email Address*</InputLabel>
-                  <OutlinedInput
-                    fullWidth
-                    error={Boolean(touched.email && errors.email)}
-                    id="email-login"
-                    type="email"
-                    value={values.email}
-                    name="email"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    placeholder="email@taskhub.com"
-                    inputProps={{}}
-                  />
-                  {touched.email && errors.email && (
-                    <FormHelperText error id="helper-text-email-signup">
-                      {errors.email}
-                    </FormHelperText>
-                  )}
-                </Stack>
-              </Grid>
-              <Grid item xs={12}>
-                <Stack spacing={1} alignItems={'flex-start'}>
-                  <InputLabel htmlFor="username">Username*</InputLabel>
-                  <OutlinedInput
-                    fullWidth
-                    error={Boolean(touched.username && errors.username)}
-                    id="username"
-                    value={values.username}
-                    name="username"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    placeholder="username"
-                    inputProps={{}}
-                  />
-                  {touched.username && errors.username && (
-                    <FormHelperText error id="helper-text-username">
-                      {errors.username}
-                    </FormHelperText>
-                  )}
-                </Stack>
-              </Grid>
-              <Grid item xs={12}>
-                <Stack spacing={1} alignItems={'flex-start'}>
-                  <InputLabel htmlFor="password-signup">Password*</InputLabel>
-                  <OutlinedInput
-                    fullWidth
-                    error={Boolean(touched.password && errors.password)}
-                    id="password-signup"
+                    {...field}
+                    error={Boolean(errors.password)}
+                    id="password"
                     type={showPassword ? 'text' : 'password'}
-                    value={values.password}
                     name="password"
-                    onBlur={handleBlur}
-                    onChange={(e) => {
-                      handleChange(e);
-                      // changePassword(e.target.value);
-                    }}
                     endAdornment={
                       <InputAdornment position="end">
                         <IconButton
@@ -325,100 +296,53 @@ const SignUp = () => {
                     placeholder="******"
                     inputProps={{}}
                   />
-                  {touched.password && errors.password && (
-                    <FormHelperText error id="helper-text-password-signup">
-                      {errors.password}
+                  {errors.password && (
+                    <FormHelperText error id="password-error">
+                      {errors.password.message}
                     </FormHelperText>
                   )}
-                </Stack>
-                {/* <FormControl fullWidth sx={{ mt: 2 }}>
-                  <Grid container spacing={2} alignItems="center">
-                    <Grid item>
-                      <Box
-                        sx={{
-                          bgcolor: level?.color,
-                          width: 85,
-                          height: 8,
-                          borderRadius: '7px',
-                        }}
-                      />
-                    </Grid>
-                    <Grid item>
-                      <Typography variant="subtitle1" fontSize="0.75rem">
-                        {level?.label}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </FormControl> */}
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant="body2">
-                  By Signing up, you agree to our &nbsp;
-                  <Link variant="subtitle2" component={RouterLink} to="#">
-                    Terms of Service
-                  </Link>
-                  &nbsp; and &nbsp;
-                  <Link variant="subtitle2" component={RouterLink} to="#">
-                    Privacy Policy
-                  </Link>
-                </Typography>
-              </Grid>
-              {errors.submit && (
-                <Grid item xs={12}>
-                  <FormHelperText error>{errors.submit}</FormHelperText>
-                </Grid>
+                </FormControl>
               )}
-              <Grid item xs={12}>
-                {/* <AnimateButton>
-                  <Button
-                    disableElevation
-                    disabled={isSubmitting}
-                    fullWidth
-                    size="large"
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                  >
-                    Create Account
-                  </Button>
-                </AnimateButton> */}
-                <AnimateButton>
-                  <LoadingButton
-                    type="submit"
-                    fullWidth
-                    loading={isSubmitting}
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-                    color="success"
-                  >
-                    {t('th_key_signup')}
-                  </LoadingButton>
-                </AnimateButton>
-                {/* <LoadingButton
-                  // type="submit"
-                  onClick={handleSubmit}
-                  fullWidth
-                  loading={isSubmitting}
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                  color="success"
-                >
-                  {t('th_key_signin')}
-                </LoadingButton> */}
-              </Grid>
-              <Grid item xs={12}>
-                <Divider>
-                  <Typography variant="caption">Sign up with</Typography>
-                </Divider>
-              </Grid>
-              <Grid item xs={12}>
-                <FirebaseSocial />
-              </Grid>
-            </Grid>
-          </form>
-        )}
-      </Formik>
-    </>
+            />
+          </Stack>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="body2">
+            By Signing up, you agree to our &nbsp;
+            <Link variant="subtitle2" component={RouterLink} to="#">
+              Terms of Service
+            </Link>
+            &nbsp; and &nbsp;
+            <Link variant="subtitle2" component={RouterLink} to="#">
+              Privacy Policy
+            </Link>
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <AnimateButton>
+            <LoadingButton
+              type="submit"
+              fullWidth
+              loading={isSubmitting}
+              disabled={!isValid}
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              color="success"
+            >
+              {t('th_key_signup')}
+            </LoadingButton>
+          </AnimateButton>
+        </Grid>
+        <Grid item xs={12}>
+          <Divider>
+            <Typography variant="caption">Sign up with</Typography>
+          </Divider>
+        </Grid>
+        <Grid item xs={12}>
+          <FirebaseSocial />
+        </Grid>
+      </Grid>
+    </form>
   );
 };
 

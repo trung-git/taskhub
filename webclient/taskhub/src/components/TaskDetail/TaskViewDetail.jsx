@@ -13,6 +13,7 @@ import {
   Select,
   Stack,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import MainCard from '../../base/component/MainCard';
@@ -341,39 +342,51 @@ function TaskViewDetail({ task, onSubmit, isSubmitting }) {
                       <Controller
                         name="workTimeTo"
                         control={control}
-                        render={({ field }) => (
-                          <TimePicker
-                            id="workTimeTo"
-                            name="workTimeTo"
-                            value={dayjs(field.value)}
-                            minTime={dayjs(getValues('workTimeFrom')).add(
-                              1,
-                              'hour'
-                            )}
-                            maxTime={dayjs(getValues('workTimeFrom')).add(
-                              8,
-                              'hour'
-                            )}
-                            disablePast={dayjs(new Date()).isSame(
-                              dayjs(field.value),
-                              'day'
-                            )}
-                            onChange={(val) => {
-                              console.log(
-                                'valTimePickeChange',
-                                val.toISOString()
-                              );
-                              setValue('workTimeTo', val.toISOString());
-                            }}
-                            ampm={false}
-                            timeSteps={{ hours: 1, minutes: 30 }}
-                            sx={{
-                              '& .MuiOutlinedInput-input': {
-                                padding: '8px 16px',
-                              },
-                            }}
-                          />
-                        )}
+                        render={({ field }) => {
+                          console.log(
+                            'fieldworkTimeTo',
+                            field,
+                            dayjs(new Date()).isSame(dayjs(field.value), 'day')
+                          );
+                          return (
+                            <TimePicker
+                              id="workTimeTo"
+                              name="workTimeTo"
+                              value={dayjs(new Date(field.value))}
+                              minTime={dayjs(getValues('workTimeFrom')).add(
+                                1,
+                                'hour'
+                              )}
+                              maxTime={
+                                dayjs(getValues('workTimeFrom')).hour() < 16
+                                  ? dayjs(getValues('workTimeFrom')).add(
+                                      8,
+                                      'hour'
+                                    )
+                                  : undefined
+                              }
+                              disablePast={dayjs(new Date()).isSame(
+                                dayjs(field.value),
+                                'day'
+                              )}
+                              onChange={(val) => {
+                                console.log(
+                                  'valTimePickeChange',
+                                  val.toISOString()
+                                );
+                                setValue('workTimeTo', val.toISOString());
+                              }}
+                              ampm={false}
+                              timeSteps={{ hours: 1, minutes: 30 }}
+                              sx={{
+                                '& .MuiOutlinedInput-input': {
+                                  padding: '8px 16px',
+                                },
+                              }}
+                              error={false}
+                            />
+                          );
+                        }}
                       />
                     </Stack>
                   </Stack>
@@ -494,10 +507,16 @@ function TaskViewDetail({ task, onSubmit, isSubmitting }) {
 
                 <Grid item xs={12} sx={{ mb: 3 }}>
                   <Stack spacing={1}>
-                    <InputLabel htmlFor="email" sx={{ textAlign: 'start' }}>
-                      {t('th_key_predict_amount')}:{' '}
-                      {formatVietnameseCurrency(predictAmount)}
-                    </InputLabel>
+                    <Tooltip
+                      title={t('th_key_tooltip_explain_pricing')}
+                      placement="top"
+                      arrow
+                    >
+                      <InputLabel htmlFor="email" sx={{ textAlign: 'start' }}>
+                        {`(*)`} {t('th_key_predict_amount')}:{' '}
+                        {formatVietnameseCurrency(predictAmount)}
+                      </InputLabel>
+                    </Tooltip>
                   </Stack>
                 </Grid>
               </Grid>

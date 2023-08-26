@@ -1,6 +1,7 @@
 import {
   CircularProgress,
   Grid,
+  Pagination,
   Stack,
   Typography,
   useTheme,
@@ -20,6 +21,8 @@ const TaskListByType = ({ type }) => {
   const token = getUserToken();
 
   const [isFetchingTaskList, setIsFetchingTaskList] = useState(false);
+  const [pageNum, setPageNum] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
   const theme = useTheme();
   const boxShadow = true;
 
@@ -50,6 +53,17 @@ const TaskListByType = ({ type }) => {
     }
   }, [type]);
 
+  // useEffect(() => {
+  //   if (pageNum) {
+  //     setIsFetchingPostList(true);
+  //     fetchPostListData(pageNum);
+  //   }
+  // }, [pageNum]);
+
+  const handlePageChange = (event, value) => {
+    setPageNum(value);
+  };
+
   return isFetchingTaskList ? (
     <Stack
       sx={{ height: 300 }}
@@ -70,6 +84,23 @@ const TaskListByType = ({ type }) => {
           </Grid>
         );
       })}
+      <Grid item xs={12}>
+        <Stack
+          direction={'row'}
+          sx={{ mt: 2, width: '100%' }}
+          justifyContent={'center'}
+        >
+          <Pagination
+            count={totalPage}
+            page={pageNum}
+            onChange={handlePageChange}
+            // color="success"
+            size="large"
+            color="primary"
+            variant="combined"
+          />
+        </Stack>
+      </Grid>
     </Grid>
   );
 };

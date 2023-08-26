@@ -133,6 +133,7 @@ const DateBookingModal = ({
       from: selectedTimeFrom.format('HH:mm'),
       to: selectedTimeFrom.add(estimateTime, 'hours').format('HH:mm'),
     };
+    console.log('bookingDataOnInvat', bookingData);
     onInvation && onInvation(bookingData);
   }, [userData, selectedDate, selectedTimeFrom, estimateTime]);
 

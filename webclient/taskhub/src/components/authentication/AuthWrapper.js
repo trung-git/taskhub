@@ -17,17 +17,19 @@ import AuthBackground from '../../assets/img/auth/AuthBackground';
 const AuthWrapper = ({ children }) => (
   <Box sx={{ minHeight: '100vh' }}>
     <AuthBackground />
+    <Box sx={{ height: 0, position: 'relative' }}>
+      <Box sx={{ position: 'absolute', left: 0 }}>
+        <TaskHubLogo type="vertical" size={{ width: 100, height: 100 }} />
+      </Box>
+    </Box>
     <Grid
       container
       direction="column"
       justifyContent="flex-end"
       sx={{
-        minHeight: '100vh',
+        height: '100%',
       }}
     >
-      <Grid item xs={12} sx={{ ml: 3, mt: 3 }}>
-        <TaskHubLogo type="vertical" size={{ width: 100, height: 100 }} />
-      </Grid>
       <Grid item xs={12}>
         <Grid
           item

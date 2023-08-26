@@ -1,11 +1,11 @@
 import { lazy } from 'react';
 
-// import SignInSide from './components/SignIn';
-// import SignUp from './components/SignUp';
 import Home from '../components/Home';
 import Chat from '../components/Chat';
 import AuthLogin from '../components/authentication/Login';
 import AuthRegister from '../components/authentication/Register';
+import AuthForgotPassword from '../components/authentication/ForgotPassword';
+import AuthResetPassword from '../components/authentication/ResetPassword';
 
 // project import
 import Loadable from '../base/component/Loadable';
@@ -14,8 +14,6 @@ import UserPage from '../components/UserPage';
 import TaskList from '../components/TaskList';
 import TaskDetail from '../components/TaskDetail';
 import PostList from '../components/PostList';
-
-// const Finding = Loadable(lazy(() => import('../components/Finding')));
 
 const UserTabPersonal = Loadable(
   lazy(() => import('../components/UserPage/TabPersonal'))
@@ -44,6 +42,14 @@ const MainRoutes = {
     {
       path: 'register',
       element: <AuthRegister />,
+    },
+    {
+      path: 'forgotpassword',
+      element: <AuthForgotPassword />,
+    },
+    {
+      path: '/reset-password/:token',
+      element: <AuthResetPassword />,
     },
     {
       path: 'chat',

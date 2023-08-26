@@ -42,7 +42,7 @@ const validationSchema = yup.object({
 
 const renderVietnamdate = (date) => {
   console.log('VietnameseDateComponent', date);
-  const vietnameseDate = dayjs(date.date, {
+  const vietnameseDate = dayjs(date, {
     customParseFormat: 'YYYY-MM-DD',
   });
   dayjs.locale('vi');
@@ -59,7 +59,11 @@ const InvationDetail = ({ bookingData, isOpen, handleCloseBookingForm }) => {
   const { getUserToken } = useLogin();
   const token = getUserToken();
 
-  console.log('bookingData', bookingData);
+  console.log(
+    'bookingData',
+    bookingData,
+    renderVietnamdate(bookingData?.workTime?.date.format('YYYY-MM-DD'))
+  );
 
   const {
     handleSubmit,
@@ -447,7 +451,7 @@ const InvationDetail = ({ bookingData, isOpen, handleCloseBookingForm }) => {
                           timeSteps={{ hours: 1, minutes: 1 }}
                           firstDayOfWeek={0}
                           maxDate={dayjs(bookingData.workTime.date)}
-                          minTime={dayjs(new Date()).add(1, 'hour')}
+                          minTime={dayjs(new Date()).add(50, 'minute')}
                           renderInput={(params) => (
                             <TextField
                               sx={{ width: '100%' }}

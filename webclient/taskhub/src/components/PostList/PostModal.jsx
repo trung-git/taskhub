@@ -205,7 +205,6 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
                       render={({ field }) => (
                         <CitySelect
                           id={'cityId'}
-                          // value={getValues('cityId')}
                           value={field?.value}
                           onChange={(value) => {
                             console.log('setDistrictSelected', value);

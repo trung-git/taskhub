@@ -77,7 +77,8 @@ const AuthLogin = () => {
         logincontext.setIsLogin(true);
         logincontext.setCurrentUser(response?.data?.data?.user);
         navigate('/');
-        response?.data?.data?.user._id && emitUserLogin(response?.data?.data?.user._id);
+        response?.data?.data?.user._id &&
+          emitUserLogin(response?.data?.data?.user._id);
       })
       .catch((error) => {
         // Handle error
@@ -202,7 +203,7 @@ const AuthLogin = () => {
                   <Link
                     variant="subtitle1"
                     component={RouterLink}
-                    to=""
+                    to="/forgotpassword"
                     color="text.primary"
                   >
                     Forgot Password?

@@ -27,6 +27,7 @@ import WalletIcon from '@mui/icons-material/Wallet';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router';
+import formatVietnameseCurrency from '../../utils/formatVietnameseCurrency';
 
 const TaskCard = ({ task }) => {
   const {
@@ -134,7 +135,9 @@ const TaskCard = ({ task }) => {
                   <ListItemIcon>
                     <WalletIcon color="primary" />
                   </ListItemIcon>
-                  <ListItemText primary={price.toString()} />
+                  <ListItemText
+                    primary={formatVietnameseCurrency(price.toString())}
+                  />
                 </ListItem>
                 <ListItem>
                   <ListItemIcon>

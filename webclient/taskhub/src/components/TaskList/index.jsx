@@ -10,7 +10,7 @@ import MainCard from '../../base/component/MainCard';
 const TaskList = () => {
   const { t } = useTranslation();
   const theme = useTheme();
-  const [value, setValue] = useState('discuss');
+  const [value, setValue] = useState('official');
   const { isLogin } = useContext(LoginContext);
 
   const handleChange = (event, newValue) => {
@@ -44,26 +44,25 @@ const TaskList = () => {
                   },
                 }}
               >
-                <Tab label={t('th_key_tasklist_tab_current')} value="discuss" />
                 <Tab
                   label={t('th_key_tasklist_tab_invation')}
                   value="invitation"
                 />
+                <Tab label={t('th_key_tasklist_tab_discuss')} value="discuss" />
+                <Tab
+                  label={t('th_key_tasklist_tab_current')}
+                  value="official"
+                />
+
                 <Tab label={t('th_key_tasklist_tab_finish')} value="finish" />
+                <Tab label={t('th_key_tasklist_tab_cancel')} value="cancel" />
               </TabList>
             </Box>
-            <TabPanel value="discuss">
-              {/* <TaskListByType type={'discuss'} /> */}
-              {renderTabMemo}
-            </TabPanel>
-            <TabPanel value="invitation">
-              {/* <TaskListByType type={'invitation'} /> */}
-              {renderTabMemo}
-            </TabPanel>
-            <TabPanel value="finish">
-              {/* <TaskListByType type={'finish'} /> */}
-              {renderTabMemo}
-            </TabPanel>
+            <TabPanel value="invitation">{renderTabMemo}</TabPanel>
+            <TabPanel value="discuss">{renderTabMemo}</TabPanel>
+            <TabPanel value="official">{renderTabMemo}</TabPanel>
+            <TabPanel value="finish">{renderTabMemo}</TabPanel>
+            <TabPanel value="cancel">{renderTabMemo}</TabPanel>
           </TabContext>
         </MainCard>
       </Container>

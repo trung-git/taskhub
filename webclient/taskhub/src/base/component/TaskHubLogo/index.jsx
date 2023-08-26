@@ -1,10 +1,12 @@
-import { Box } from '@mui/material';
+import { Box, Button, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router';
 
 import logo from '../../../assets/img/logo/logo.png';
 import logo_horizontal from '../../../assets/img/logo/logo_horizontal.png';
 import logo_vertical from '../../../assets/img/logo/logo_vertical.png';
 import React from 'react';
+
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
 
 const Logo = (props) => {
   const { type = 'horizontal', size } = props;
@@ -50,6 +52,46 @@ const Logo = (props) => {
         />
       )}
     </Box>
+    // <Button
+    //   variant="text"
+    //   onClick={() => navigate('/')}
+    //   disableRipple
+    //   disableElevation
+    //   disableFocusRipple
+    //   disableTouchRipple
+    //   sx={{ textTransform: 'none' }}
+    // >
+    //   <Stack direction={'row'} spacing={1} alignItems={'center'}>
+    //     <Box
+    //       sx={{
+    //         //   backgroundColor: 'red',
+    //         display: 'flex',
+    //         flexDirection: 'row',
+    //         borderRadius: '4px',
+    //         //   border: '1px solid grey',
+    //       }}
+    //     >
+    //       <Typography color={'red'} fontSize={'24px'} sx={{ px: 1 }}>
+    //         Task
+    //       </Typography>
+    //       <Box
+    //         sx={{
+    //           backgroundColor: 'green',
+    //           borderRadius: '4px',
+    //           px: 1,
+    //           color: 'white',
+    //           display: 'flex',
+    //           alignItems: 'center',
+    //           fontSize: '24px',
+    //           fontWeight: 'bold',
+    //         }}
+    //       >
+    //         HUB
+    //       </Box>
+    //     </Box>
+    //     <TaskAltIcon sx={{ color: 'green' }} fontSize="large" />
+    //   </Stack>
+    // </Button>
   );
 };
 
