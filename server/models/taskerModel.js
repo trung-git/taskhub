@@ -59,6 +59,10 @@ const taskerSchema = new mongoose.Schema(
     averageRating: {
       type: Number,
     },
+    wallet: {
+      type: mongoose.Types.ObjectId,
+      ref: "Wallet"
+    }
   },
   baseOptions
 );
@@ -86,6 +90,9 @@ taskerSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'workLocation',
     select: '-__v -updatedAt -createdAt',
+  });
+  this.populate({
+    path: 'wallet',
   });
   next();
 });

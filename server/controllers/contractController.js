@@ -117,6 +117,9 @@ exports.createContractByPost = catchAsync(async (req, res, next) => {
 })
 
 exports.getContracts = catchAsync(async (req, res, next) => {
+  const pageNum = Number(req.query.pageNum) || 1;
+  const recordsPerPage = Number(process.env.RECORDS_PER_PAGE);
+
   const { _id, role } = req.user;
   const { status } = req.query;
 
@@ -130,11 +133,18 @@ exports.getContracts = catchAsync(async (req, res, next) => {
 
   const contracts = await Contract.find(query).populate({
     path: 'finder tasker taskTag workLocation review fromPost',
-  });
+  })
+    .skip(recordsPerPage * (pageNum - 1))
+    .limit(recordsPerPage);
+  const count = await Contract.countDocuments(query);
 
   return res.status(200).json({
     status: 'success',
     data: contracts,
+    recordsPerPage,
+    totalPage: Math.ceil(count / recordsPerPage),
+    pageNum,
+    totalRecords: count
   });
 });
 

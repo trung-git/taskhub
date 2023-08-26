@@ -76,6 +76,9 @@ exports.signup = catchAsync(async (req, res, next) => {
       return next(new AppError('Invalid Task', 400));
     }
     user.taskTag = { taskInfo: taskTag._id, price: taskTag.defaultPrice };
+
+    const wallet = await Wallet.create({});
+    user.wallet = wallet._id;
   }
   if (role === ROLE.FINDER) {
     const city = await City.findById(req.body.city);
@@ -84,8 +87,6 @@ exports.signup = catchAsync(async (req, res, next) => {
     }
     user.city = [city._id];
   }
-  const wallet = await Wallet.create({});
-  user.wallet = wallet._id;
   
   const newUser = await Object.create(user);
 
