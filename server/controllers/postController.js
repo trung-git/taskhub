@@ -229,7 +229,7 @@ const getAppliedPosts = catchAsync(async (req, res, next) => {
   const pageNum = Number(req.query.pageNum) || 1;
   const recordsPerPage = Number(process.env.RECORDS_PER_PAGE);
 
-  const findCondition = { $elemMatch: { 'candidate.user._id': req.user._id }};
+  const findCondition = { candidate : {$elemMatch: { 'user': req.user._id} }};
   const posts = await Post.find( findCondition )
     .skip(recordsPerPage * (pageNum - 1))
     .limit(recordsPerPage);
