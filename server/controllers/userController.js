@@ -287,10 +287,10 @@ exports.updateUnavailableTime = catchAsync(async (req, res, next) => {
   if (method === 'add') {
     user.unavailableTime = unavailableTime.push(contract.workTime);
   }
-  else {
+  else if (method === 'remove') {
     user.unavailableTime = unavailableTime.filter(v => String(v._id) !== String(contract.workTime._id));
   }
-  
+
   const savedUser = await user.save();
   res.status(200).json({
     status: 'success',
