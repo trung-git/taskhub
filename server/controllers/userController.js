@@ -206,7 +206,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   user.lastName = req.body.lastName || user.lastName;
   user.dateOfBirth = req.body.dateOfBirth || user.dateOfBirth;
   user.email = req.body.email || user.email;
-  user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
+  user.phoneNumber = req.body.phoneNumber ?? user.phoneNumber;
   user.gender = req.body.gender || user.gender;
 
   if (req.files && req?.files?.image) {
