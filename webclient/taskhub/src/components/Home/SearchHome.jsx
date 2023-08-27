@@ -12,8 +12,27 @@ const SearchHome = () => {
   return (
     <Box
       className="custom-box"
-      sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+      }}
     >
+      {/* <Box
+        sx={{
+          filter: 'blur(18px)',
+          position: 'absolute',
+          zIndex: 0,
+          bottom: 0,
+          left: 0,
+          width: 600,
+          height: 300,
+          borderRadius: 3,
+          transform: 'translate(50%, -22%)',
+        }}
+        component={Paper}
+      ></Box> */}
       <Box
         sx={{
           width: 600,

@@ -62,6 +62,10 @@ const PostList = () => {
     fetchPostListData(1);
   }, []);
 
+  const onCreateSuccess = () => {
+    fetchPostListData(1);
+  };
+
   useEffect(() => {
     if (pageNum) {
       setIsFetchingPostList(true);
@@ -146,6 +150,7 @@ const PostList = () => {
           open={openPostModal}
           value={selectedPost}
           onClose={() => setOpenPostModal(false)}
+          onCreateSuccess={() => onCreateSuccess()}
         />
       )}
     </Box>

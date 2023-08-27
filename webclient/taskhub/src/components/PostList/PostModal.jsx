@@ -10,6 +10,7 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
+  FormControl,
   Grid,
   InputLabel,
   MenuItem,
@@ -27,7 +28,7 @@ import { useTranslation } from 'react-i18next';
 import MultiFileDrop from '../../base/component/MultiFileDrop';
 import TasktagAutocomplete from '../../base/component/TasktagAutocomplete';
 import TimeRangeUnit from '../../base/component/DateTime/TimeRangeUnit';
-import { DatePicker } from '@mui/x-date-pickers';
+import { DatePicker, DateTimePicker } from '@mui/x-date-pickers';
 import dayjs, { isDayjs } from 'dayjs';
 import CitySelect from '../../base/component/CitySelect';
 import DistrictSelect from '../../base/component/DistrictSelect';
@@ -35,8 +36,10 @@ import axios from 'axios';
 import useLogin from '../../hooks/useLogin';
 import useToastify from '../../hooks/useToastify';
 import { API_URL } from '../../base/config';
+import vietnameseDayOfWeekFormatter from '../../utils/vietnameseDayOfWeekFormatter';
+import { LoadingButton } from '@mui/lab';
 
-const PostModal = ({ type, value = {}, open, onClose }) => {
+const PostModal = ({ type, value = {}, open, onClose, onCreateSuccess }) => {
   const theme = useTheme();
   const { t } = useTranslation();
   const isCreating = !value;
@@ -44,6 +47,19 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
   const token = getUserToken();
   const { toastError, toastSuccess } = useToastify();
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const curHour = dayjs().hour();
+
+  // const generateFromTo = (date) => {
+  //   if (date.isSame(dayjs(), 'day')) {
+  //     return ;
+  //   } else {
+  //     return {
+  //       from: '07:00',
+  //       to: '08:00',
+  //     };
+  //   }
+  // };
 
   const getInitialValues = (post) => {
     const newPost = {
@@ -62,13 +78,22 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
             from: dayjs(post?.workTime?.from).format('HH:mm'),
             to: dayjs(post?.workTime?.to).format('HH:mm'),
           }
+        : dayjs().hour() < 22
+        ? {
+            from: `0${dayjs().hour() + 1}:00`,
+            to: `0${dayjs().hour() + 2}:00`,
+          }
         : { from: '07:00', to: '08:00' },
-      workDate: dayjs(post?.workTime?.from) || dayjs(new Date()),
+      workDate: post?.workTime?.from
+        ? dayjs(post?.workTime?.from)
+        : dayjs().hour() < 22
+        ? dayjs(new Date())
+        : dayjs(new Date()).add(24, 'hour'),
       files: [],
       paymentPlan: post?.paymentPlan || 'per-hour',
       closeRegisterAt: post?.closeRegisterAt
-        ? new Date(post?.closeRegisterAt)
-        : new Date(),
+        ? dayjs(post?.closeRegisterAt)
+        : dayjs(new Date()).add(60, 'minute'),
     };
     return newPost;
   };
@@ -102,7 +127,19 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
 
   const cityIdValue = watch('cityId');
 
+  console.log(
+    'MaxTime',
+    dayjs(
+      `${watch('workDate').format('YYYY-MM-DD')} ${watch('workTime')?.from}`
+    ).format('DD-MM-YYYY HH:mm'),
+    'maxDate',
+    watch('closeRegisterAt').format('DD-MM-YYYY HH:mm'),
+    'minTime',
+    dayjs(new Date()).add(50, 'minute').format('DD-MM-YYYY HH:mm')
+  );
+
   const onSubmitHandler = (data) => {
+    setIsSubmitting(true);
     if (data) {
       const from = dayjs(
         `${dayjs(data?.workDate).format('YYYY-MM-DD')} ${data?.workTime?.from}`
@@ -142,7 +179,9 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
         .then((response) => {
           console.log('postValueSucces', response);
           toastSuccess('Create new post success');
-          //TODO reset close append new posr
+          setIsSubmitting(false);
+          onCreateSuccess && onCreateSuccess();
+          onClose && onClose();
           // resetForm();
         })
         .catch((error) => {
@@ -152,6 +191,7 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
           console.error(error?.request);
           console.error(error?.response);
           toastError(`Update error, ${error.message}`);
+          setIsSubmitting(false);
         });
     } else {
       setIsSubmitting(false);
@@ -159,8 +199,6 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
   };
 
   return (
-    // <FormikProvider value={formik}>
-    //   <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
     <Dialog
       open={open}
       onClose={onClose}
@@ -281,20 +319,17 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
                           // onChange={(date) => console.log('date', date)}
                           onChange={(date) => setValue('workDate', date)}
                           disableHighlightToday
-                          minDate={dayjs(startOfCurrentWeek)}
+                          minDate={
+                            dayjs().hour() < 22
+                              ? dayjs(new Date())
+                              : dayjs(new Date()).add(24, 'hour')
+                          }
                           maxDate={dayjs(maxDate)}
                           disablePast
+                          dayOfWeekFormatter={vietnameseDayOfWeekFormatter}
                         />
                       )}
                     />
-                    {/* <DatePicker
-                      value={dayjs(getValues('workDate'))}
-                      onChange={(date) => console.log('date', date)}
-                      disableHighlightToday
-                      minDate={dayjs(startOfCurrentWeek)}
-                      maxDate={dayjs(maxDate)}
-                      disablePast
-                    /> */}
                   </Stack>
                 </Grid>
                 <Grid item xs={6}>
@@ -307,6 +342,7 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
                         <TimeRangeUnit
                           value={field.value}
                           onChange={(val) => setValue('workTime', val)}
+                          selectedDate={watch('workDate')}
                         />
                       )}
                     />
@@ -373,6 +409,51 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
                 </Grid>
                 <Grid item xs={12}>
                   <Stack spacing={1.25}>
+                    <InputLabel htmlFor="customer-name">
+                      Thời hạn phản hồi
+                    </InputLabel>
+                    <Controller
+                      name="closeRegisterAt"
+                      control={control}
+                      render={({ field }) => (
+                        <FormControl fullWidth variant="standard">
+                          <DateTimePicker
+                            {...field}
+                            dayOfWeekFormatter={vietnameseDayOfWeekFormatter}
+                            disablePast
+                            onChange={(newValue) =>
+                              setValue('closeRegisterAt', newValue)
+                            }
+                            ampm={false}
+                            timeSteps={{ hours: 1, minutes: 1 }}
+                            firstDayOfWeek={0}
+                            disableHighlightToday
+                            maxDate={watch('workDate').add(1, 'day')}
+                            minTime={dayjs(new Date()).add(50, 'minute')}
+                            maxTime={dayjs(
+                              `${watch('workDate').format('YYYY-MM-DD')} ${
+                                watch('workTime')?.from
+                              }`
+                            )}
+                            renderInput={(params) => (
+                              <TextField
+                                sx={{ width: '100%' }}
+                                {...params}
+                                error={Boolean(errors.closeRegisterAt)}
+                                helperText={
+                                  errors.closeRegisterAt &&
+                                  errors.closeRegisterAt.message
+                                }
+                              />
+                            )}
+                          />
+                        </FormControl>
+                      )}
+                    />
+                  </Stack>
+                </Grid>
+                <Grid item xs={12}>
+                  <Stack spacing={1.25}>
                     <InputLabel htmlFor="customer-location">
                       Hình ảnh mô tả
                     </InputLabel>
@@ -405,13 +486,14 @@ const PostModal = ({ type, value = {}, open, onClose }) => {
                 <Button color="error" onClick={onClose}>
                   {t('th_key_btn_cancel')}
                 </Button>
-                <Button
+                <LoadingButton
                   type="submit"
                   variant="contained"
-                  disabled={isSubmitting}
+                  loading={isSubmitting}
+                  disabled={!isDirty}
                 >
                   {value ? t('th_key_btn_update') : t('th_key_btn_post')}
-                </Button>
+                </LoadingButton>
               </Stack>
             </Grid>
           </Grid>

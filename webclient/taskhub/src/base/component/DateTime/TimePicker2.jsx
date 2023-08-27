@@ -20,6 +20,7 @@ const MuiTimePicker = (props) => {
     timeSteps,
     minTime,
     maxTime,
+    disablePast,
   } = props;
   //state
   const [crrValue, setCrrValue] = useState(new Date());
@@ -55,6 +56,7 @@ const MuiTimePicker = (props) => {
       timeSteps={timeSteps}
       minTime={minTime}
       maxTime={maxTime}
+      disablePast={disablePast}
     />
   );
 };

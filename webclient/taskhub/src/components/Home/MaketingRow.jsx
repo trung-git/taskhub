@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { LoginContext } from '../../provider/LoginContext';
+import { LoginContext } from '../../../provider/LoginContext';
 import {
   Box,
   Button,
@@ -13,8 +13,8 @@ import {
   Typography,
   Avatar,
 } from '@mui/material';
-import NavBar from './NavBar';
-import SearchHome from './SearchHome';
+import NavBar from '../NavBar';
+import SearchHome from '../SearchHome';
 import { useTranslation } from 'react-i18next';
 import SellOutlinedIcon from '@mui/icons-material/SellOutlined';
 import TASK_MAIN_moving from '../../assets/img/TASK_MAIN_moving.png';

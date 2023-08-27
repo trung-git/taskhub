@@ -6,6 +6,7 @@ import NavBar from './NavBar';
 import SearchHome from './SearchHome';
 import { useTranslation } from 'react-i18next';
 import PopularTask from './PopularTask';
+import HowItWork from './sections/HowItWork';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ const Home = () => {
       <NavBar isLogin={isLogin} />
       <SearchHome />
       <PopularTask />
+      <HowItWork />
     </Box>
   );
 };

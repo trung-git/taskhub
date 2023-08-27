@@ -53,6 +53,7 @@ const PostCard = ({ post, onSelect }) => {
     photos,
     cityInfo,
     candidateInfo,
+    closeRegisterAt,
   } = post;
   const { t } = useTranslation();
   const theme = useTheme();
@@ -269,13 +270,13 @@ const PostCard = ({ post, onSelect }) => {
             <Typography variant="caption" color="secondary">
               Cập nhật lần cuối {dayjs(updatedAt).format('DD/MM/YYYY HH:mm')}
             </Typography>
-            {/* {expireAt && (
-            <Typography variant="caption" color="secondary">
-              {`${t('Thời hạn phản hồi')} : ${dayjs(expireAt).format(
-                'DD/MM/YYYY HH:mm'
-              )}`}
-            </Typography>
-          )} */}
+            {closeRegisterAt && (
+              <Typography variant="caption" color="secondary">
+                {`${t('Thời hạn phản hồi')} : ${dayjs(closeRegisterAt).format(
+                  'DD/MM/YYYY HH:mm'
+                )}`}
+              </Typography>
+            )}
           </Stack>
           <Button
             variant="outlined"

@@ -1,6 +1,5 @@
 import { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { LoginContext } from '../../provider/LoginContext';
 import {
   Box,
   Button,
@@ -12,8 +11,6 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import NavBar from './NavBar';
-import SearchHome from './SearchHome';
 import { useTranslation } from 'react-i18next';
 import SellOutlinedIcon from '@mui/icons-material/SellOutlined';
 import TASK_MAIN_moving from '../../assets/img/TASK_MAIN_moving.png';
@@ -24,10 +21,7 @@ import TASK_MAIN_pairing from '../../assets/img/TASK_MAIN_pairing.png';
 
 const PopularTask = () => {
   const navigate = useNavigate();
-  const logincontext = useContext(LoginContext);
-  const { isLogin } = useContext(LoginContext);
   const { t } = useTranslation();
-  const imageUrl = '../src/assets/img/homebackground.jpg';
 
   const taskTag = [
     {
@@ -118,7 +112,7 @@ const PopularTask = () => {
         <Grid container spacing={3}>
           {taskTag?.map((tag) => {
             return (
-              <Grid item xs={3} key={tag._id}>
+              <Grid item xs={12} md={6} lg={3} key={tag._id}>
                 <Card>
                   <CardMedia
                     sx={{ height: 200, backgroundSize: 'contain' }}

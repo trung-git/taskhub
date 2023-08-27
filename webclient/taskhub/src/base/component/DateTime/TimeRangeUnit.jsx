@@ -3,12 +3,12 @@ import React, { useEffect, useState } from 'react';
 //third-party
 import { Box, Stack, useTheme } from '@mui/material';
 
-import { parseStrTimeToDate } from './utils';
+import { parseStrTimeAndDateToDate, parseStrTimeToDate } from './utils';
 import TimePicker2 from './TimePicker2';
 import dayjs from 'dayjs';
 
 const TimeRangeUnit = (props) => {
-  const { value, onChange, isDisabled = false } = props;
+  const { value, onChange, isDisabled = false, selectedDate } = props;
   const theme = useTheme();
   const [curValue, setCurValue] = useState({ from: '07:00', to: '08:00' });
   console.log('valuesetCurValue', value);
@@ -67,6 +67,7 @@ const TimeRangeUnit = (props) => {
           isAmPm={false}
           ampm={false}
           timeSteps={{ hours: 1, minutes: 30 }}
+          disablePast={selectedDate.isSame(dayjs(), 'day')}
         />
         <Box>-</Box>
         <TimePicker2
@@ -74,13 +75,17 @@ const TimeRangeUnit = (props) => {
           value={parseStrTimeToDate(curValue.to || '08:00')}
           onChange={(val) => handleValueChange('to', val)}
           minTime={dayjs(parseStrTimeToDate(curValue.from || '07:00')).add(
-            1,
-            'hour'
+            30,
+            'minute'
           )}
-          maxTime={dayjs(parseStrTimeToDate(curValue.from || '07:00')).add(
-            8,
-            'hour'
-          )}
+          maxTime={
+            dayjs(parseStrTimeToDate(curValue.from || '07:00')).hour() < 15
+              ? dayjs(parseStrTimeToDate(curValue.from || '07:00')).add(
+                  8,
+                  'hour'
+                )
+              : undefined
+          }
           isAmPm={false}
           timeSteps={{ hours: 1, minutes: 30 }}
         />
