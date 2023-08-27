@@ -17,6 +17,7 @@ router.use(authController.protect);
 router.get('/me', userController.getMe);
 router.post('/update-profile', userController.updateMe);
 router.post('/update-password', authController.updatePassword);
+router.post('/update-unavailable-time', authController.restrictTo('Tasker'), userController.updateUnavailableTime);
 router.post('/verify-email/', authController.verifyEmail);
 router.post(
   '/generate-verify-email-token',

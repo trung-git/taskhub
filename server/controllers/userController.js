@@ -7,6 +7,7 @@ const imageValidate = require('../utils/imageValidation');
 const cloudinary = require('../utils/cloudinary');
 const Contract = require('../models/contractModel');
 const Post = require('../models/postModel');
+const User = require('../models/userModel');
 
 exports.getTaskers = catchAsync(async (req, res, next) => {
   const taskTagId = req.query.taskTagId;
@@ -272,3 +273,27 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.updateUnavailableTime = catchAsync(async (req, res, next) => {
+  const { method, contractId } = req.body;
+
+  const contract = await Contract.findOne({_id: contractId, tasker: req.user._id});
+  if (!contract) {
+    return next(new AppError('Invalid contract', 400));
+  }
+
+  const user = await Tasker.find(req.user._id);
+  const unavailableTime = [...user.unavailableTime];
+  if (method === 'add') {
+    user.unavailableTime = unavailableTime.push(contract.workTime);
+  }
+  else {
+    user.unavailableTime = unavailableTime.filter(v => String(v._id) !== String(contract.workTime._id));
+  }
+  
+  const savedUser = await user.save();
+  res.status(200).json({
+    status: 'success',
+    data: savedUser
+  });
+})
