@@ -6,19 +6,25 @@ import {
   StyleSheet,
   useWindowDimensions,
 } from 'react-native';
-import ChatListPage from './ChatListPage';
-import ChatPage from './ChatPage';
+import TaskListPage from './TaskListPage';
 import ContractDetail from './ContractDetail';
-import { TabView, SceneMap } from 'react-native-tab-view';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import { LogBox } from 'react-native';
 
-const ChatScreen = () => {
+LogBox.ignoreLogs([
+  // See: https://github.com/react-navigation/react-navigation/issues/7839
+  'Sending `onAnimatedValueUpdate` with no listeners registered.',
+]);
+
+const TaskManage = () => {
   const layout = useWindowDimensions();
 
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     { key: 'invitation', title: 'Lời mời' },
-    { key: 'disscuss', title: 'Đã chấp nhận' },
-    { key: 'finish', title: 'Lời mời' },
+    { key: 'discuss', title: 'Trao đổi' },
+    { key: 'official', title: 'Hiện tại' },
+    { key: 'finish', title: 'Đã hủy' },
   ]);
 
   const [taskOpen, setTaskOpen] = useState(false);
@@ -37,20 +43,31 @@ const ChatScreen = () => {
     <View style={{ flex: 1, backgroundColor: '#ff4081' }} />
   );
 
-  // {!taskOpen && <ChatListPage onOpenChat={openChat} />}
+  // {!taskOpen && <TaskListPage onOpenChat={openChat} />}
 
   const renderScene = ({ route }) => {
     switch (route.key) {
       case 'invitation':
-        return <ChatListPage status={route.key} onOpenChat={openChat} />;
-      case 'disscuss':
-        return <ChatListPage status={route.key} onOpenChat={openChat} />;
+        return <TaskListPage status={route.key} onOpenChat={openChat} />;
+      case 'discuss':
+        return <TaskListPage status={route.key} onOpenChat={openChat} />;
+      case 'official':
+        return <TaskListPage status={route.key} onOpenChat={openChat} />;
       case 'finish':
-        return <ChatListPage status={route.key} onOpenChat={openChat} />;
+        return <TaskListPage status={route.key} onOpenChat={openChat} />;
       default:
         return null;
     }
   };
+
+  const renderTabBar = (props) => (
+    <TabBar
+      {...props}
+      indicatorStyle={{ backgroundColor: 'white' }}
+      labelStyle={{ fontWeight: 600 }}
+      style={{ backgroundColor: 'green' }}
+    />
+  );
 
   return (
     <View style={{ flex: 1 }}>
@@ -59,6 +76,7 @@ const ChatScreen = () => {
         renderScene={renderScene}
         onIndexChange={setIndex}
         initialLayout={{ width: layout.width }}
+        renderTabBar={renderTabBar}
       />
       <Modal visible={taskOpen} animationType="none" transparent={false}>
         <SafeAreaView style={styles.safeContainer}>
@@ -76,4 +94,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChatScreen;
+export default TaskManage;

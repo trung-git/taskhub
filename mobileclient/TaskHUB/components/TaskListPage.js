@@ -12,14 +12,14 @@ import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import i18n from '../i18n';
+import { API_URL } from '../config/constans';
 
-const ChatListPage = ({ onOpenChat, status }) => {
+const TaskListPage = ({ onOpenChat, status }) => {
   const openChat = (item) => {
     onOpenChat(item);
   };
 
   const [task, setTask] = useState([]);
-  // const [fetchingPost, setFetchingPost] = useState(true);
   const [loading, setLoading] = useState(false);
   const [pageNum, setPageNum] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
@@ -33,14 +33,12 @@ const ChatListPage = ({ onOpenChat, status }) => {
   const fetchData = async (status) => {
     try {
       const response = await axios.get(
-        `https://taskhub-mhm7.onrender.com/api/v1/contract/?status=${status}`
+        `${API_URL}/api/v1/contract/?status=${status}`
       );
       const responseData = response.data.data;
       setTask(responseData);
       setRefreshing(false);
       setLoading(false);
-      // setFetchingPost(false);
-      // return responseData;
     } catch (error) {
       console.error('Error fetching data:', error);
       // return [];
@@ -179,4 +177,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChatListPage;
+export default TaskListPage;

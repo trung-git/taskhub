@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
+import { API_URL } from '../config/constans';
 
 const AddressPicker = ({ value, onChange }) => {
   const [selectedValue, setSelectedValue] = useState('');
@@ -21,10 +22,10 @@ const AddressPicker = ({ value, onChange }) => {
   }, []);
 
   useEffect(() => {
-    if(value) {
-      setSelectedValue(value)
+    if (value) {
+      setSelectedValue(value);
     }
-  }, [value])
+  }, [value]);
 
   const fetchData = async () => {
     try {
@@ -32,9 +33,7 @@ const AddressPicker = ({ value, onChange }) => {
       setLoading(true);
 
       // Gọi API để lấy danh sách các mục
-      const response = await axios.get(
-        'https://taskhub-mhm7.onrender.com/api/v1/area/city'
-      );
+      const response = await axios.get(`${API_URL}/api/v1/area/city`);
       const responseData = response.data.data;
       console.log('responseData', responseData);
 
@@ -87,7 +86,8 @@ const AddressPicker = ({ value, onChange }) => {
         <>
           <TouchableOpacity
             style={styles.textInput}
-            onPress={() => setModalVisible(true)}>
+            onPress={() => setModalVisible(true)}
+          >
             <Text>{selectedValue.name ?? 'Chọn Thành Phố'}</Text>
           </TouchableOpacity>
 
@@ -95,7 +95,8 @@ const AddressPicker = ({ value, onChange }) => {
             visible={modalVisible}
             animationType="slide"
             transparent={true}
-            onRequestClose={() => setModalVisible(false)}>
+            onRequestClose={() => setModalVisible(false)}
+          >
             <View style={styles.modalContainer}>
               <Picker
                 style={{ backgroundColor: 'white' }}
@@ -113,7 +114,8 @@ const AddressPicker = ({ value, onChange }) => {
                   } else {
                     setModalVisible(false);
                   }
-                }}>
+                }}
+              >
                 <Picker.Item label="Chọn Thành Phố" value="" key="" />
                 {data.length > 0 &&
                   data.map((item) => {

@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import axios from 'axios';
 import { AuthContext } from '../provider/AuthContext';
+import { API_URL } from '../config/constans';
 
 const UserUpdateModal = ({ field, isOpenEditModal, onClose }) => {
   const { login } = useContext(AuthContext);
@@ -35,7 +36,7 @@ const UserUpdateModal = ({ field, isOpenEditModal, onClose }) => {
   const handUpdate = () => {
     setIsUpdate(true);
     axios
-      .post('https://taskhub-mhm7.onrender.com/api/v1/user/update-profile', {
+      .post(`${API_URL}/api/v1/user/update-profile`, {
         [field?.name]: fieldValue,
       })
       .then((response) => {
@@ -70,8 +71,11 @@ const UserUpdateModal = ({ field, isOpenEditModal, onClose }) => {
               justifyContent: 'space-between',
               alignItems: 'center',
               width: '100%',
-            }}>
-            <View style={{ flex: 2, display: 'flex', justifyContent: 'flex-start' }}>
+            }}
+          >
+            <View
+              style={{ flex: 2, display: 'flex', justifyContent: 'flex-start' }}
+            >
               <Button
                 color="red"
                 title="Đóng"
@@ -89,12 +93,15 @@ const UserUpdateModal = ({ field, isOpenEditModal, onClose }) => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 flex: 4,
-              }}>
+              }}
+            >
               <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
                 {field?.label}
               </Text>
             </View>
-            <View style={{ flex: 2, display: 'flex', justifyContent: 'flex-end' }}>
+            <View
+              style={{ flex: 2, display: 'flex', justifyContent: 'flex-end' }}
+            >
               {isUpdate ? (
                 <ActivityIndicator size="small" color="green" /> // Show ActivityIndicator when loading
               ) : (

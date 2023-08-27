@@ -7,7 +7,7 @@ import {
   StyleSheet,
   SafeAreaView,
   Dimensions,
-  Alert
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Divider from './Divider';
@@ -26,26 +26,22 @@ const SideBar = ({ isSideBarOpen, closeSideBar }) => {
   };
 
   const handleConfirm = () => {
-    Alert.alert(
-      'Xác nhận',
-      'Bạn có chắc muốn thực hiện hành động này?',
-      [
-        {
-          text: 'Hủy',
-          style: 'cancel',
-        },
-        {
-          text: 'Xác nhận',
-          onPress: () => handleLogOut(),
-        },
-      ]
-    );
+    Alert.alert('Xác nhận', 'Bạn có chắc muốn thực hiện hành động này?', [
+      {
+        text: 'Hủy',
+        style: 'cancel',
+      },
+      {
+        text: 'Xác nhận',
+        onPress: () => handleLogOut(),
+      },
+    ]);
   };
 
   const handleLogOut = () => {
     logout();
     toggleModal();
-  }
+  };
 
   const windowHeight = Dimensions.get('window').height;
   const modalHeight = windowHeight * 0.5; // Chiều cao bằng nửa màn hình
@@ -55,24 +51,29 @@ const SideBar = ({ isSideBarOpen, closeSideBar }) => {
       <TouchableOpacity
         style={styles.modalContainer}
         activeOpacity={1}
-        onPress={handleOutsidePress}>
+        onPress={handleOutsidePress}
+      >
         <SafeAreaView style={[styles.safeContainer, { height: modalHeight }]}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>-</Text>
             <TouchableOpacity
               style={styles.modalCloseButton}
-              onPress={toggleModal}>
+              onPress={toggleModal}
+            >
               <Ionicons
                 name="bookmark-outline"
                 size={24}
                 style={styles.iconSideBar}
               />
-              <Text style={styles.modalCloseButtonText}>Xem các công việc đã đăng ký</Text>
+              <Text style={styles.modalCloseButtonText}>
+                Xem các công việc đã đăng ký
+              </Text>
             </TouchableOpacity>
             <Divider direction="horizontal" color="gray" height={1} />
             <TouchableOpacity
               style={styles.modalCloseButton}
-              onPress={toggleModal}>
+              onPress={toggleModal}
+            >
               <Ionicons
                 name="settings-outline"
                 size={24}
@@ -83,13 +84,16 @@ const SideBar = ({ isSideBarOpen, closeSideBar }) => {
             <Divider direction="horizontal" color="gray" height={1} />
             <TouchableOpacity
               style={styles.modalCloseButton}
-              onPress={handleConfirm}>
+              onPress={handleConfirm}
+            >
               <Ionicons
                 name="log-out-outline"
                 size={24}
                 style={{ ...styles.iconSideBar, color: 'red' }}
               />
-              <Text style={{ ...styles.modalCloseButtonText, color: 'red' }}>Đăng xuất</Text>
+              <Text style={{ ...styles.modalCloseButtonText, color: 'red' }}>
+                Đăng xuất
+              </Text>
             </TouchableOpacity>
           </View>
         </SafeAreaView>
@@ -134,7 +138,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   iconSideBar: {
-    marginRight: 8
+    marginRight: 8,
   },
   modalCloseButtonText: {
     fontSize: 16,

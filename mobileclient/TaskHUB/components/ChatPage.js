@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import {
   View,
   Text,
@@ -14,113 +14,135 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 import { AuthContext } from '../provider/AuthContext';
 import { Avatar } from 'react-native-elements';
+import axios from 'axios';
+import { API_URL } from '../config/constans';
+import dayjs from 'dayjs';
 
-const ChatPage = ({ chatId, onClose }) => {
+const ChatPage = ({ chatId, finder }) => {
   const { userData } = useContext(AuthContext);
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
   const [keyboardOffset, setKeyboardOffset] = useState(8);
+  const [isFetching, setIsFetching] = useState(false);
+  const [lastChatId, setLastChatId] = useState('');
+  const [isScrollBottom, setIsScrollBottom] = useState(false);
+  const flatListRef = useRef(null);
 
-  console.log('useruserData', chatId);
+  useEffect(() => {
+    setLastChatId(messages?.[messages?.length - 1]?._id);
+  }, [messages]);
+
+  console.log('messageChatData', finder);
+
+  const fetchData = async (chatId) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/api/v1/chat/${chatId}/messages`
+      );
+      const responseData = response.data.data;
+      setMessages(responseData);
+      setIsFetching(false);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      // return [];
+    }
+  };
+
+  useEffect(() => {
+    setIsFetching(true);
+    fetchData(chatId);
+  }, [chatId]);
 
   const handleSend = () => {
-    const currentTime = moment().format('h:mm A');
     if (inputText.trim() !== '') {
       setMessages([
         {
           id: messages.length + 1,
-          text: inputText,
+          content: inputText,
           isSent: true,
-          time: currentTime,
+          createdAt: dayjs(),
+          sender: userData?._id,
+          isSending: true,
         },
         ...messages,
       ]);
+      if (flatListRef.current) {
+        const newIndex = messages.length - 1;
+        flatListRef.current.scrollToIndex({ index: 0, animated: true });
+      }
       setInputText('');
     }
   };
 
-  const handleRecive = () => {
-    const currentTime = moment().format('h:mm A');
-    if (inputText.trim() !== '') {
-      setMessages([
-        {
-          id: messages.length + 1,
-          text: inputText,
-          isSent: false,
-          time: currentTime,
-        },
-        ...messages,
-      ]);
-      setInputText('');
+  const fetchLoadOldChat = async (chatId, lastChatId) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}api/v1/chat/${chatId}/messages?messageId=${lastChatId}`
+      );
+      const responseData = response.data.data;
+      setMessages((prev) => [...prev, ...responseData]);
+      // setIsLoadingMore(false);
+      // if (response.data?.lenght < 20) {
+      //   setIsHasMore(false);
+      // }
+    } catch (error) {
+      console.error('Error fetching data:', error, chatId, 'last', lastChatId);
+      // setIsLoadingMore(false);
     }
   };
 
   const renderMessage = ({ item }) => {
-    const messageContainerStyle = item.isSent
-      ? styles.sentMessageContainer
-      : styles.receivedMessageContainer;
-    const messageTextStyle = item.isSent
-      ? styles.sentMessageText
-      : styles.receivedMessageText;
+    const messageContainerStyle =
+      item.sender === userData?._id
+        ? styles.sentMessageContainer
+        : styles.receivedMessageContainer;
+
+    const messageTextStyle =
+      item.sender === userData?._id
+        ? styles.sentMessageText
+        : styles.receivedMessageText;
+
     const senderAvatar = userData?.image;
-    const reciverAvatar = userData?.image;
+    const reciverAvatar = finder?.image;
 
     return (
       <View style={messageContainerStyle}>
-        {!item.isSent && (
+        {item.sender !== userData?._id && (
           <Avatar rounded size={20} source={{ uri: reciverAvatar }} />
         )}
         <View style={styles.messageContent}>
-          <Text style={messageTextStyle}>{item.text}</Text>
+          <Text style={messageTextStyle}>{item.content}</Text>
           {item.isSent && (
-            <Text style={styles.messageTimeSend}>{item.time}</Text>
+            <Text style={styles.messageTimeSend}>
+              {item.isSending
+                ? 'Đang gởi...'
+                : dayjs(item.createdAt).format('HH:mm')}
+            </Text>
           )}
           {!item.isSent && (
-            <Text style={styles.messageTimeReceive}>{item.time}</Text>
+            <Text style={styles.messageTimeReceive}>
+              {dayjs(item.createdAt).format('HH:mm')}
+            </Text>
           )}
         </View>
-        {item.isSent && (
+        {item.sender === userData?._id && (
           <Avatar rounded size={20} source={{ uri: senderAvatar }} />
         )}
       </View>
     );
   };
 
-  // <View
-  //   style={{
-  //     flexDirection: 'row',
-  //     alignItems: 'center',
-  //     justifyContent: 'space-between',
-  //     padding: 10,
-  //   }}>
-  //   <TouchableOpacity onPress={() => onClose()}>
-  //     <Icon name="arrow-left" size={20} />
-  //   </TouchableOpacity>
-  //   <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
-  //     {user.sender}
-  //   </Text>
-  //   <TouchableOpacity>
-  //     <Icon name="phone" size={20} />
-  //   </TouchableOpacity>
-  // </View>
-
-  // <TouchableOpacity onPress={handleRecive}>
-  //   <Icon
-  //     name="send"
-  //     color="blue"
-  //     size={20}
-  //     style={{ marginRight: 8, padding: 8 }}
-  //   />
-  // </TouchableOpacity>
-
   return (
     <View style={{ flex: 1 }}>
       <FlatList
         data={messages}
         renderItem={renderMessage}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item._id?.toString()}
         contentContainerStyle={{ flexGrow: 1, paddingVertical: 10 }}
         inverted
+        ref={flatListRef}
+        onEndReached={() => fetchLoadOldChat(chatId, lastChatId)} // Triggered when scrolling to the top
+        onEndReachedThreshold={0.1}
       />
       <View
         style={{

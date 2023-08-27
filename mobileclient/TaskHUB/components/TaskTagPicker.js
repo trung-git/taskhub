@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
+import { API_URL } from '../config/constans';
 
 const TaskTagPicker = ({ onChange, value }) => {
   const [selectedValue, setSelectedValue] = useState('');
@@ -18,9 +19,9 @@ const TaskTagPicker = ({ onChange, value }) => {
 
   useEffect(() => {
     if (value) {
-      setSelectedValue(value)
+      setSelectedValue(value);
     }
-  }, [value])
+  }, [value]);
 
   useEffect(() => {
     fetchData();
@@ -32,9 +33,7 @@ const TaskTagPicker = ({ onChange, value }) => {
       setLoading(true);
 
       // Gọi API để lấy danh sách các mục
-      const response = await axios.get(
-        'https://taskhub-mhm7.onrender.com/api/v1/task-tag/'
-      );
+      const response = await axios.get(`${API_URL}/api/v1/task-tag/`);
       const responseData = response.data.data;
       console.log('responseData', responseData);
       setData(responseData);
@@ -81,15 +80,19 @@ const TaskTagPicker = ({ onChange, value }) => {
         <>
           <TouchableOpacity
             style={styles.textInput}
-            onPress={() => setModalVisible(true)}>
-            <Text>{(data.length > 0 && selectedValue.title) ?? 'Chọn Công Việc'}</Text>
+            onPress={() => setModalVisible(true)}
+          >
+            <Text>
+              {(data.length > 0 && selectedValue.title) ?? 'Chọn Công Việc'}
+            </Text>
           </TouchableOpacity>
 
           <Modal
             visible={modalVisible}
             animationType="slide"
             transparent={true}
-            onRequestClose={() => setModalVisible(false)}>
+            onRequestClose={() => setModalVisible(false)}
+          >
             <View style={styles.modalContainer}>
               <Picker
                 style={{ backgroundColor: 'white' }}
@@ -107,7 +110,8 @@ const TaskTagPicker = ({ onChange, value }) => {
                   } else {
                     setModalVisible(false);
                   }
-                }}>
+                }}
+              >
                 <Picker.Item label="Chọn Công Việc" value="" key="" />
                 {data.length > 0 &&
                   data.map((item) => {

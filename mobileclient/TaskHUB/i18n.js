@@ -73,6 +73,10 @@ const resources = {
       th_key_main_switch_lang: 'Tiếng Việt',
       //
       th_task_errands: 'Việc vặt',
+      th_task_cleaning: 'Dọn dẹp',
+      th_task_electricalhelp: 'Sửa điện',
+      th_task_helpmoving: 'Hỗ trợ vận chuyển',
+      th_task_generalmounting: 'Lắp đặt',
       //
       th_key_signup: 'Đăng ký',
       th_key_signin: 'Đăng nhập',

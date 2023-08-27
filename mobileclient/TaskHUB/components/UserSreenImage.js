@@ -12,6 +12,7 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import { AuthContext } from '../provider/AuthContext';
+import { API_URL } from '../config/constans';
 
 const UserSreenImage = () => {
   const { login } = useContext(AuthContext);
@@ -63,15 +64,11 @@ const UserSreenImage = () => {
       console.log('formData', formData);
 
       axios
-        .post(
-          'https://taskhub-mhm7.onrender.com/api/v1/user/update-profile',
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data', // Đảm bảo đặt đúng header 'Content-Type' cho form data
-            },
-          }
-        )
+        .post(`${API_URL}/api/v1/user/update-profile`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data', // Đảm bảo đặt đúng header 'Content-Type' cho form data
+          },
+        })
         .then((response) => {
           console.log('signUpsuccess', response);
           // setSignUpData(initSignUpData);

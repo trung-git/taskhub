@@ -4,13 +4,14 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import HomeScreen from './Home';
 import UserScreen from './UserScreen';
-import ChatScreen from './ChatScreen';
+import TaskManage from './TaskManage';
 import Header from './Header';
 import LoginScreen from './Login';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AuthContext } from '../provider/AuthContext';
 
 import { Ionicons } from '@expo/vector-icons';
+import { StatusBar } from 'expo-status-bar';
 
 const Tab = createBottomTabNavigator();
 
@@ -48,7 +49,7 @@ const TabBar = () => (
     />
     <Tab.Screen
       name="Chat"
-      component={ChatScreen}
+      component={TaskManage}
       options={{
         tabBarLabel: () => null,
       }}
@@ -71,6 +72,7 @@ const Verify = () => {
     <ActivityIndicator size="large" color="green" />
   ) : (
     <SafeAreaProvider>
+      <StatusBar barStyle="dark-content" />
       {!isLoggedIn ? (
         <LoginScreen />
       ) : (

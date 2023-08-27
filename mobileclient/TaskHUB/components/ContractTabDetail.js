@@ -17,12 +17,6 @@ import GenderPicker from './GenderPicker';
 import dayjs from 'dayjs';
 
 const ContractTabDetail = ({ taskData }) => {
-  // const { userData } = useContext(AuthContext);
-  // const initials = userData.firstName
-  //   ? userData.firstName.charAt(0).toUpperCase()
-  //   : '';
-  // console.log('userDatatab', userData?.image);
-
   const fields = [
     {
       name: 'lastName',
@@ -96,6 +90,8 @@ const ContractTabDetail = ({ taskData }) => {
     setSelectedField(fields.find((_ele) => _ele.name == field));
   };
 
+  console.log('taskData', taskData);
+
   useEffect(() => {
     if (selectedField) {
       setIsOpenEditModal(true);
@@ -146,6 +142,7 @@ const ContractTabDetail = ({ taskData }) => {
                     // backgroundColor: 'red',
                     width: '100%',
                   }}
+                  key={field.name}
                 >
                   <TouchableOpacity
                     key={field?.name}

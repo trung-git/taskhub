@@ -46,27 +46,52 @@ const ImageListPost = ({ images }) => {
 
   return (
     <View style={styles.container}>
-      <FlatList
+      {/* <FlatList
         data={images.slice(0, 3)}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
         numColumns={3}
-      />
+      /> */}
+      <View style={{ display: 'flex', flexDirection: 'row' }}>
+        {images.slice(0, 3)?.map((item, index) => {
+          if (index === 2 && images.length > 3) {
+            return (
+              <TouchableOpacity onPress={handleImagePress} key={index}>
+                <View style={styles.imageContainer}>
+                  <Image source={{ uri: item }} style={styles.image} />
+                  <View style={styles.overlay}>
+                    <Text style={styles.overlayText}>+{images.length - 3}</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            );
+          } else {
+            return (
+              <TouchableOpacity onPress={handleImagePress} key={index}>
+                <Image source={{ uri: item }} style={styles.image} />
+              </TouchableOpacity>
+            );
+          }
+        })}
+      </View>
 
       <Modal
         visible={showModal}
         transparent={true}
-        onRequestClose={() => setShowModal(false)}>
+        onRequestClose={() => setShowModal(false)}
+      >
         <View style={styles.modalContainer}>
           <TouchableOpacity
             style={styles.closeButton}
-            onPress={() => setShowModal(false)}>
+            onPress={() => setShowModal(false)}
+          >
             <Ionicons name={'close-circle-outline'} size={40} color={'red'} />
           </TouchableOpacity>
           <ScrollView
             style={{ marginTop: 150 }}
             showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}>
+            showsHorizontalScrollIndicator={false}
+          >
             {images.map((item, index) => (
               <Image
                 key={index}
@@ -88,7 +113,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   // image: {
   //   width: 100,

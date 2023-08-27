@@ -21,6 +21,7 @@ import Divider from './Divider';
 import ImageListPost from './ImageListPost';
 import { AuthContext } from '../provider/AuthContext';
 import axios from 'axios';
+import { API_URL } from '../config/constans';
 
 const Post = ({
   avatar,
@@ -55,9 +56,7 @@ const Post = ({
   const onCancelRegister = () => {
     // Thực hiện xác thực đăng nhập
     axios
-      .patch(
-        `https://taskhub-mhm7.onrender.com/api/v1/post/unregister-candidate/${postId}`
-      )
+      .patch(`${API_URL}/api/v1/post/unregister-candidate/${postId}`)
       .then((response) => {
         console.log('onCancelRegistersuccess', response);
         setApply(false);
@@ -76,13 +75,10 @@ const Post = ({
   const onSubmitRegister = (selfDescription, salaryExpectation) => {
     // Thực hiện xác thực đăng nhập
     axios
-      .patch(
-        `https://taskhub-mhm7.onrender.com/api/v1/post/register-candidate/${postId}`,
-        {
-          text: selfDescription,
-          price: salaryExpectation,
-        }
-      )
+      .patch(`${API_URL}/api/v1/post/register-candidate/${postId}`, {
+        text: selfDescription,
+        price: salaryExpectation,
+      })
       .then((response) => {
         console.log('onRegistersuccess', response);
         setModalVisible(false);

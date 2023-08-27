@@ -24,6 +24,7 @@ import TaskTagPicker from './TaskTagPicker';
 import DateTimePicker from './DateTimePicker';
 import GenderPicker from './GenderPicker';
 import DatePick from './DatePick';
+import { API_URL } from '../config/constans';
 
 const initSignUpData = {
   username: '',
@@ -104,7 +105,7 @@ const LoginScreen = () => {
       // call api login
       setIsFetchingLogin(true);
       axios
-        .post('https://taskhub-mhm7.onrender.com/api/v1/user/login', {
+        .post(`${API_URL}/api/v1/user/login`, {
           username,
           password,
           role: 'Tasker',
@@ -118,7 +119,7 @@ const LoginScreen = () => {
         .catch((error) => {
           // Xử lý lỗi đăng nhập
           setIsFetchingLogin(false);
-          console.error(error);
+          console.error(error.message);
           Alert.alert(
             'Đăng nhập thất bại',
             'Tài khoản hoặc mật khẩu không chính xác'
@@ -170,7 +171,7 @@ const LoginScreen = () => {
   const onSubmitSignUp = (signUpFormData) => {
     // Thực hiện xác thực đăng nhập
     axios
-      .post('https://taskhub-mhm7.onrender.com/api/v1/user/signup', {
+      .post(`${API_URL}/api/v1/user/signup`, {
         ...signUpFormData,
       })
       .then((response) => {

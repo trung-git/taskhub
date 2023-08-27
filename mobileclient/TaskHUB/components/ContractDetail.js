@@ -11,7 +11,7 @@ import {
   Keyboard,
   Image,
 } from 'react-native';
-import { TabView, SceneMap } from 'react-native-tab-view';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 import ChatPage from './ChatPage';
@@ -34,11 +34,20 @@ const ContractDetail = ({ taskData, onClose }) => {
       case 'first':
         return <ContractTabDetail taskData={taskData} />;
       case 'second':
-        return <ChatPage chatId={taskData?.chat} onClose={onClose} />;
+        return <ChatPage chatId={taskData?.chat} finder={taskData?.finder} />;
       default:
         return null;
     }
   };
+
+  const renderTabBar = (props) => (
+    <TabBar
+      {...props}
+      indicatorStyle={{ backgroundColor: 'white' }}
+      labelStyle={{ fontWeight: 600 }}
+      style={{ backgroundColor: 'green' }}
+    />
+  );
 
   return (
     <KeyboardAvoidingView
@@ -75,6 +84,7 @@ const ContractDetail = ({ taskData, onClose }) => {
           renderScene={renderScene}
           onIndexChange={setIndex}
           initialLayout={{ width: layout.width }}
+          renderTabBar={renderTabBar}
         />
       </View>
     </KeyboardAvoidingView>

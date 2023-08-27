@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
+import { API_URL } from '../config/constans';
 
 const SubAddressPicker = ({ cityId, onChange, value }) => {
   const [selectedValue, setSelectedValue] = useState();
@@ -18,10 +19,10 @@ const SubAddressPicker = ({ cityId, onChange, value }) => {
   const [district, setDistrict] = useState([]);
 
   useEffect(() => {
-    if(value) {
-      setSelectedValue(value)
+    if (value) {
+      setSelectedValue(value);
     }
-  }, [value])
+  }, [value]);
 
   useEffect(() => {
     console.log('cityIdChange', cityId);
@@ -35,9 +36,7 @@ const SubAddressPicker = ({ cityId, onChange, value }) => {
     console.log('cityIdChangefetchDistricData', cityId);
 
     axios
-      .get(
-        `https://taskhub-mhm7.onrender.com/api/v1/area/districts-by-city/${cityId}`
-      )
+      .get(`${API_URL}/api/v1/area/districts-by-city/${cityId}`)
       .then((response) => {
         const responseData = response.data.data;
         setDistrict(responseData);
@@ -49,9 +48,7 @@ const SubAddressPicker = ({ cityId, onChange, value }) => {
         console.error('Error:', Object.keys(error), error.message);
         setLoading(false);
       });
-
   };
-
 
   const handleValueChange = (itemValue) => {
     setSelectedValue(itemValue._id);
@@ -74,17 +71,23 @@ const SubAddressPicker = ({ cityId, onChange, value }) => {
             style={styles.textInput}
             onPress={() =>
               district.length > 0 ? setModalVisible(true) : () => {}
-            }>
-            <Text>{ (district.length > 0 && selectedValue?.name) ? selectedValue?.prefix == 'th_key_district_type1'
-                            ? `Quận ${selectedValue.name}`
-                            : `Huyện ${selectedValue.name}` : 'Chọn Quận/ Huyện'}</Text>
+            }
+          >
+            <Text>
+              {district.length > 0 && selectedValue?.name
+                ? selectedValue?.prefix == 'th_key_district_type1'
+                  ? `Quận ${selectedValue.name}`
+                  : `Huyện ${selectedValue.name}`
+                : 'Chọn Quận/ Huyện'}
+            </Text>
           </TouchableOpacity>
 
           <Modal
             visible={modalVisible}
             animationType="slide"
             transparent={true}
-            onRequestClose={() => setModalVisible(false)}>
+            onRequestClose={() => setModalVisible(false)}
+          >
             <View style={styles.modalContainer}>
               <Picker
                 style={{ backgroundColor: 'white' }}
@@ -92,19 +95,18 @@ const SubAddressPicker = ({ cityId, onChange, value }) => {
                 onValueChange={(itemValue, itemIndex) => {
                   console.log('itemValue', itemValue);
                   if (itemValue !== '') {
-                    const newItem = district.find((_item) => _item?._id === itemValue)
+                    const newItem = district.find(
+                      (_item) => _item?._id === itemValue
+                    );
                     setSelectedValue(newItem);
                     setModalVisible(false);
-                    onChange && onChange(newItem)
+                    onChange && onChange(newItem);
                   } else {
                     setModalVisible(false);
                   }
-                }}>
-                <Picker.Item
-                        label="Chọn Quận/ Huyện"
-                        value=""
-                        key=""
-                      />
+                }}
+              >
+                <Picker.Item label="Chọn Quận/ Huyện" value="" key="" />
                 {district.length > 0 &&
                   district.map((item) => {
                     return (

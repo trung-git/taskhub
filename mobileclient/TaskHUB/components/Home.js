@@ -5,12 +5,13 @@ import {
   ScrollView,
   ActivityIndicator,
   RefreshControl,
-  Text
+  Text,
 } from 'react-native';
 import axios from 'axios';
 import { dummyPost } from './dummy';
 import Post from './Post';
 import dayjs from 'dayjs';
+import { API_URL } from '../config/constans';
 
 const MainScreen = () => {
   const [posts, setPosts] = useState([]);
@@ -22,7 +23,7 @@ const MainScreen = () => {
   const fetchData = async (pageNum) => {
     try {
       const response = await axios.get(
-        `https://taskhub-mhm7.onrender.com/api/v1/post?pageNum=${pageNum}`
+        `${API_URL}/api/v1/post?pageNum=${pageNum}`
       );
       const responseData = response.data.data;
       if (pageNum == 1) {
@@ -68,7 +69,10 @@ const MainScreen = () => {
           if (contentOffset.y < -100 && !refreshing) {
             refreshPosts();
           }
-          console.log('layoutMeasurement', nativeEvent.layoutMeasurement.height)
+          console.log(
+            'layoutMeasurement',
+            nativeEvent.layoutMeasurement.height
+          );
           const isCloseToBottom =
             nativeEvent.layoutMeasurement.height +
               nativeEvent.contentOffset.y >=
@@ -80,7 +84,8 @@ const MainScreen = () => {
         scrollEventThrottle={400}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={refreshPosts} />
-        }>
+        }
+      >
         {posts?.length > 0 &&
           posts.map((item, index) => (
             <Post
@@ -100,17 +105,19 @@ const MainScreen = () => {
               photo={item?.photos || []}
             />
           ))}
-          {posts?.length <= 0 && !fetchingPost && (
-            <View>
+        {posts?.length <= 0 && !fetchingPost && (
+          <View>
             <Text> Hiện tại chưa có tìm công việc nào mới </Text>
-            </View>
-          )}
-          {fetchingPost && (
-            <View>
-             <ActivityIndicator size={50} />
-            <Text>Đang tải các tìm việc liên quan đến chuyên môn của bạn... </Text>
-            </View>
-          )}
+          </View>
+        )}
+        {fetchingPost && (
+          <View>
+            <ActivityIndicator size={50} />
+            <Text>
+              Đang tải các tìm việc liên quan đến chuyên môn của bạn...{' '}
+            </Text>
+          </View>
+        )}
         {loading && <ActivityIndicator style={styles.loading} />}
       </ScrollView>
     </View>
