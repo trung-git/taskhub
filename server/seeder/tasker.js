@@ -125,19 +125,13 @@ const taskers = [
     ],
     unavailableTime: [
       {
-        date: '2023-08-08',
-        time: {
-          from : '13:00',
-          to: '15:00'
-        }
+        from : new Date(2023, 8, 29, 10, 0, 0, 0),
+        to: new Date(2023, 8, 29, 13, 0, 0, 0),
       },
       {
-        date: '2023-08-14',
-        time: {
-          from : '12:00',
-          to: '13:00'
-        }
-      }
+        from : new Date(2023, 8, 30, 10, 0, 0, 0),
+        to: new Date(2023, 8, 30, 13, 0, 0, 0),
+      },
     ],
     reviews: [
       mongoose.Types.ObjectId.createFromHexString('64a029cd505314a289b1c18d'),
@@ -188,19 +182,13 @@ const taskers = [
     ],
     unavailableTime: [
       {
-        date: '2023-08-11',
-        time: {
-          from : '13:00',
-          to: '15:00'
-        }
+        from : new Date(2023, 8, 30, 10, 0, 0, 0),
+        to: new Date(2023, 8, 30, 13, 0, 0, 0),
       },
       {
-        date: '2023-08-15',
-        time: {
-          from : '12:00',
-          to: '13:00'
-        }
-      }
+        from : new Date(2023, 9, 1, 10, 0, 0, 0),
+        to: new Date(2023, 9, 1, 13, 0, 0, 0),
+      },
     ],
     reviews: [
       mongoose.Types.ObjectId.createFromHexString('64a029cd505314a289b1c18d'),
