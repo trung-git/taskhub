@@ -15,6 +15,7 @@ router.patch('/reset-password/:token', authController.resetPassword);
 
 router.use(authController.protect);
 router.get('/me', userController.getMe);
+router.delete('/me', userController.deleteMe);
 router.post('/update-profile', userController.updateMe);
 router.post('/update-password', authController.updatePassword);
 router.post('/update-unavailable-time', authController.restrictTo('Tasker'), userController.updateUnavailableTime);

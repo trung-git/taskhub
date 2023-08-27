@@ -296,4 +296,15 @@ exports.updateUnavailableTime = catchAsync(async (req, res, next) => {
     status: 'success',
     data: savedUser
   });
+});
+
+exports.deleteMe = catchAsync(async (req, res, next) => {
+  const user = await User.findByIdAndDelete(req.user._id);
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      deletedUser: user,
+    }
+  });
 })
