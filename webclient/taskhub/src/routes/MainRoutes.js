@@ -18,8 +18,8 @@ import PostList from '../components/PostList';
 const UserTabPersonal = Loadable(
   lazy(() => import('../components/UserPage/TabPersonal'))
 );
-const UserTabPayment = Loadable(
-  lazy(() => import('../components/UserPage/TabPayment'))
+const UserTabEmailVerify = Loadable(
+  lazy(() => import('../components/UserPage/TabEmailVerify'))
 );
 const UserTabPassword = Loadable(
   lazy(() => import('../components/UserPage/TabPassword'))
@@ -80,8 +80,8 @@ const MainRoutes = {
           element: <UserTabPersonal />,
         },
         {
-          path: 'payment',
-          element: <UserTabPayment />,
+          path: 'emailverify',
+          element: <UserTabEmailVerify />,
         },
         {
           path: 'password',

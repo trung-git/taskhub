@@ -22,7 +22,7 @@ const resources = {
       th_key_logout: 'Log out',
       th_key_person_information: 'Personal',
       th_key_change_password: 'Change password',
-      th_key_person_wallet: 'My Wallet',
+      th_key_person_verification: 'Email verification',
       th_key_setting: 'Settings',
       th_key_post: 'Post',
       th_key_workphotos: 'Work photos',
@@ -32,6 +32,7 @@ const resources = {
       th_key_btn_close: 'Close',
       th_key_btn_post: 'Create new post',
       th_key_btn_update: 'Update',
+      th_key_btn_confirm: 'Confirm',
       th_key_btn_send_invitation: 'Send invitation',
       th_key_firstname: 'First name',
       th_key_lastname: 'Last name',
@@ -47,6 +48,8 @@ const resources = {
       th_key_navbar_services: 'Task List',
       th_key_navbar_task_feed: 'Task Feed',
       th_key_navbar_home_page: 'Home Page',
+      th_key_navbar_language: 'Language',
+      th_key_navbar_theme_mode: 'Theme mode',
       //
       th_key_home_help_search_title: 'What do you need help with ?',
       th_key_home_help_search_place_holder:
@@ -115,6 +118,19 @@ const resources = {
       //
       th_key_tooltip_explain_pricing:
         'The cost of the task is the price calculated by multiplying the proposed price with the working time for hourly wage payment method or the proposed price for one-time payment cases.',
+      //
+      th_key_setting_lang: 'Language',
+      th_key_setting_dark_mode: 'Dark Mode',
+      th_key_setting_remove_account: 'Delete Account',
+      th_key_setting_sub_lang:
+        'You can change language between Vietnamese and English',
+      th_key_setting_sub_mode: 'Using dark mode',
+      th_key_setting_sub_remove_account:
+        'All information about your account will be permanently deleted',
+      th_key_setting_delete_message_affirm:
+        'Are you sure to delete this account ?',
+      th_key_setting_logout_message_affirm:
+        'Are you sure to log out current account ?',
     },
   },
   vi: {
@@ -134,7 +150,7 @@ const resources = {
       th_key_btn_send_invitation: 'Gởi lời mời',
       th_key_change_password: 'Đổi mật khẩu',
       th_key_person_information: 'Thông tin cá nhân',
-      th_key_person_wallet: 'Ví của tôi',
+      th_key_person_verification: 'Xác thực email',
       th_key_setting: 'Cài đặt',
       th_key_post: 'Bài đăng',
       th_key_workphotos: 'Hình ảnh làm việc',
@@ -144,6 +160,7 @@ const resources = {
       th_key_btn_close: 'Đóng',
       th_key_btn_post: 'Đăng bài',
       th_key_btn_update: 'Cập nhật',
+      th_key_btn_confirm: 'Xác nhận',
       th_key_firstname: 'Tên',
       th_key_lastname: 'Họ',
       th_key_email: 'Email',
@@ -158,6 +175,8 @@ const resources = {
       th_key_navbar_services: 'Quản lý việc',
       th_key_navbar_task_feed: 'Bảng tin việc',
       th_key_navbar_home_page: 'Trang chủ',
+      th_key_navbar_language: 'Ngôn ngữ',
+      th_key_navbar_theme_mode: 'Nền chủ đề',
       //
       th_key_home_help_search_title: 'Bạn cần giúp đỡ gì ?',
       th_key_home_help_search_place_holder: 'Chọn công việc bạn cần giúp đỡ...',
@@ -226,6 +245,19 @@ const resources = {
       //
       th_key_tooltip_explain_pricing:
         'Chi phí công việc là giá được tính bằng giá đề xuất nhân với thời gian làm việc đối với hình thức trã lương theo giờ hoặc là giá đề xuất đối với trường hợp trã lương một lần',
+      //
+      th_key_setting_lang: 'Ngôn ngữ',
+      th_key_setting_dark_mode: 'Nền tối',
+      th_key_setting_remove_account: 'Xóa tài khoản',
+      th_key_setting_sub_lang:
+        'Bạn có thể chuyển đổi ngôn ngữ giữa Tiếng Việt và Tiếng Anh',
+      th_key_setting_sub_mode: 'Áp dụng nền tối',
+      th_key_setting_sub_remove_account:
+        'Mọi thông tin về tài khoản của bạn sẽ được xóa vĩnh viễn',
+      th_key_setting_delete_message_affirm:
+        'Bạn có chắc muốn xóa tài khoản này ?',
+      th_key_setting_logout_message_affirm:
+        'Bạn có chắc muốn đăng xuất khỏi tài khoản hiện tại ?',
     },
   },
 };

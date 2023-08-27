@@ -41,6 +41,11 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import HorizontalRuleOutlinedIcon from '@mui/icons-material/HorizontalRuleOutlined';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
+import { API_URL } from '../../base/config';
+import useLogin from '../../hooks/useLogin';
+import useToastify from '../../hooks/useToastify';
+import { LoadingButton } from '@mui/lab';
 
 // ==============================|| TAB - PASSWORD CHANGE ||============================== //
 
@@ -50,7 +55,12 @@ const TabPassword = () => {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { t } = useTranslation();
+
+  const { getUserToken, setUserToken } = useLogin();
+  // const token = getUserToken();
+  const { toastError, toastSuccess } = useToastify();
 
   const handleClickShowOldPassword = () => {
     setShowOldPassword(!showOldPassword);
@@ -87,30 +97,41 @@ const TabPassword = () => {
             .required('Confirm Password is required')
             .oneOf([Yup.ref('password'), null], "Passwords don't match."),
         })}
-        onSubmit={async (
-          values,
-          { resetForm, setErrors, setStatus, setSubmitting }
-        ) => {
+        onSubmit={async (values, { resetForm, setErrors, setStatus }) => {
           try {
-            // dispatch(
-            //   openSnackbar({
-            //     open: true,
-            //     message: 'Password changed successfully.',
-            //     variant: 'alert',
-            //     alert: {
-            //       color: 'success',
-            //     },
-            //     close: false,
-            //   })
-            // );
+            const codeParams = {
+              passwordCurrent: values.old,
+              password: values.password,
+            };
+            setIsSubmitting(true);
 
-            resetForm();
-            setStatus({ success: false });
-            setSubmitting(false);
+            axios
+              .post(`${API_URL}api/v1/user/update-password`, codeParams, {
+                headers: {
+                  Authorization: `Bearer ${getUserToken()}`,
+                },
+              })
+              .then((response) => {
+                console.log('postValueSucces', response);
+                setUserToken(response.data.token);
+                toastSuccess('Update password success');
+                setIsSubmitting(false);
+                resetForm();
+              })
+              .catch((error) => {
+                console.error(error);
+                console.error('Error:', Object.keys(error), error.message);
+                console.error(error?.config);
+                console.error(error?.request);
+                console.error(error?.response);
+                toastError(`Update password error, ${error.message}`);
+                setIsSubmitting(false);
+                resetForm();
+              });
           } catch (err) {
             setStatus({ success: false });
             setErrors({ submit: err.message });
-            setSubmitting(false);
+            setIsSubmitting(false);
           }
         }}
       >
@@ -352,16 +373,14 @@ const TabPassword = () => {
                   alignItems="center"
                   spacing={2}
                 >
-                  <Button variant="outlined" color="secondary">
-                    Cancel
-                  </Button>
-                  <Button
-                    disabled={isSubmitting || Object.keys(errors).length !== 0}
+                  <LoadingButton
+                    loading={isSubmitting}
+                    disabled={Object.keys(errors).length !== 0}
                     type="submit"
                     variant="contained"
                   >
                     Save
-                  </Button>
+                  </LoadingButton>
                 </Stack>
               </Grid>
             </Grid>

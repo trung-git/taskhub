@@ -22,6 +22,7 @@ const useLogin = () => {
   function logOut() {
     localStorage.removeItem('users_taskhub_app_value');
     localStorage.removeItem('users_taskhub_app_token');
+    //TODO nvigate tro login
   }
 
   return { getUserData, setUserData, logOut, setUserToken, getUserToken };

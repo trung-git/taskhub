@@ -29,6 +29,7 @@ import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import useLogin from '../../hooks/useLogin';
 import useToastify from '../../hooks/useToastify';
+import { API_URL } from '../../base/config';
 
 // ==============================|| USER PROFILE - TAB CONTENT ||============================== //
 
@@ -43,7 +44,7 @@ const ProfileTabs = () => {
     getUserData,
   } = useLogin();
   const { toastError, toastSuccess } = useToastify();
-  const { setCurrentUser } = useContext(LoginContext);
+  const { setCurrentUser, currentUser } = useContext(LoginContext);
   const [isUploadImage, setIsUploadImage] = useState(false);
 
   useEffect(() => {
@@ -56,16 +57,12 @@ const ProfileTabs = () => {
       const token = getUserToken();
 
       axios
-        .post(
-          'https://taskhub-mhm7.onrender.com/api/v1/user/update-profile',
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data', // Đảm bảo đặt đúng header 'Content-Type' cho form data
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
+        .post(`${API_URL}api/v1/user/update-profile`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data', // Đảm bảo đặt đúng header 'Content-Type' cho form data
+            Authorization: `Bearer ${token}`,
+          },
+        })
         .then((response) => {
           console.log('signUpsuccess', response);
           console.log('Upload successful:', response?.data.data?.updatedUser);
@@ -92,9 +89,9 @@ const ProfileTabs = () => {
   const [userData, setUserData] = useState();
 
   useEffect(() => {
-    setUserData(getUserData());
-    setAvatar(getUserData().image);
-  }, []);
+    setUserData(currentUser);
+    setAvatar(currentUser?.image);
+  }, [currentUser]);
 
   console.log('userDataProfileTabs', userData);
 
@@ -201,13 +198,13 @@ const ProfileTabs = () => {
               <Typography variant="h5">{userData?.postCount || '0'}</Typography>
               <Typography color="green">{t('th_key_post')}</Typography>
             </Stack>
-            <Divider orientation="vertical" flexItem />
+            {/* <Divider orientation="vertical" flexItem />
             <Stack spacing={0.5} alignItems="center">
               <Typography variant="h5">
                 {userData?.wallet?.amount || '0'}
               </Typography>
               <Typography color="green">VND</Typography>
-            </Stack>
+            </Stack> */}
           </Stack>
         </Grid>
         <Grid item xs={12}>

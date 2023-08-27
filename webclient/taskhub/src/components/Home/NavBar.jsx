@@ -270,55 +270,24 @@ function NavBar({ isLogin = true }) {
           )}
           {isLogin && (
             <div>
-              {/* <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-              >
-                <AccountCircle />
-              </IconButton> */}
               <Button
                 variant="text"
                 color="secondary"
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
-                onClick={handleMenu}
+                onClick={() => navigate('/profile/personal')}
                 endIcon={
-                  <Avatar sizes="40px" src={logincontext?.currentUser?.image} />
+                  <Avatar
+                    sx={{ width: 32, height: 32 }}
+                    src={logincontext?.currentUser?.image}
+                  />
                 }
               >
                 {' '}
                 Xin chào {logincontext?.currentUser?.firstName}{' '}
                 {logincontext?.currentUser?.lastName} !
               </Button>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={() => navigate('/profile/personal')}>
-                  {t('th_key_person_information')}
-                </MenuItem>
-                <MenuItem onClick={handleLogout}>
-                  <Typography color={'error'} sx={{ mr: 1 }}>
-                    {t('th_key_logout')}
-                  </Typography>
-                  <LogoutIcon color="error" fontSize="small" />
-                </MenuItem>
-              </Menu>
             </div>
           )}
           <IconButton
@@ -349,10 +318,16 @@ function NavBar({ isLogin = true }) {
             open={Boolean(anchorElSetting)}
             onClose={handleCloseSettingMenu}
           >
-            <MenuItem>
+            <MenuItem sx={{ justifyContent: 'space-between' }}>
+              <Typography sx={{ mr: 1 }}>
+                {t('th_key_navbar_language')}
+              </Typography>
               <LanguageSwitch />
             </MenuItem>
-            <MenuItem sx={{ justifyContent: 'center' }}>
+            <MenuItem sx={{ justifyContent: 'space-between' }}>
+              <Typography sx={{ mr: 1 }}>
+                {t('th_key_navbar_theme_mode')}
+              </Typography>
               <ThemeModeSwitch />
             </MenuItem>
           </Menu>

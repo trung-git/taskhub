@@ -35,6 +35,10 @@ import MainCard from '../../base/component/MainCard';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LoginContext } from '../../provider/LoginContext';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
+import { API_URL } from '../../base/config';
+import useToastify from '../../hooks/useToastify';
+import useLogin from '../../hooks/useLogin';
 
 // ==============================|| TAB - PERSONAL ||============================== //
 
@@ -53,18 +57,10 @@ const TabPersonal = () => {
   }, [currentUser]);
 
   console.log('currentUser', userData);
-  // const inputRef = useInputRef();
 
-  // const initialValues = {
-  //   firstname: userData?.firstName,
-  //   lastname: userData?.lastName,
-  //   email: userData?.email,
-  //   dob: userData?.dateOfBirth,
-  //   phoneNumber: userData?.phoneNumber,
-  //   city: userData?.city,
-  //   gender: userData?.gender,
-  //   submit: null,
-  // };
+  const { setUserData: setLocalUserData, getUserToken } = useLogin();
+  const { toastError, toastSuccess } = useToastify();
+  const { setCurrentUser } = useContext(LoginContext);
 
   return (
     <MainCard
@@ -79,7 +75,8 @@ const TabPersonal = () => {
             lastName: userData?.lastName,
             email: userData?.email,
             dateOfBirth: dayjs(userData?.dateOfBirth),
-            phoneNumber: userData?.phoneNumber,
+            phoneNumber:
+              userData?.phoneNumber !== undefined ? userData?.phoneNumber : '',
             city: userData?.city,
             gender: userData?.gender,
             submit: null,
@@ -96,25 +93,57 @@ const TabPersonal = () => {
             dateOfBirth: Yup.date()
               .max(maxDate, 'Age should be 18+ years.')
               .required('Date of birth is requird.'),
-            phoneNumber: Yup.number(),
+            phoneNumber: Yup.string() // Sử dụng Yup.string() thay vì Yup.number() để cho phép giá trị null
+              .nullable() // Cho phép giá trị null
+              .test('phone-test', 'Invalid phone number.', function (value) {
+                if (!value) {
+                  return true; // Cho phép giá trị null
+                }
+                return /^\d{10}$/.test(value);
+              }),
           })}
           onSubmit={(
             values,
-            { setErrors, setStatus, setSubmitting, resetForm }
+            { setErrors, setStatus, setSubmitting, resetForm, setValues }
           ) => {
             try {
               console.log('valuesOnUpdate', values);
-              // dispatch(
-              //   openSnackbar({
-              //     open: true,
-              //     message: 'Personal profile updated successfully.',
-              //     variant: 'alert',
-              //     alert: {
-              //       color: 'success',
-              //     },
-              //     close: false,
-              //   })
-              // );
+              const formData = {
+                firstName: values?.firstName,
+                lastName: values?.lastName,
+                gender: values?.gender,
+                dateOfBirth: values?.dateOfBirth,
+                phoneNumber: values?.phoneNumber || '',
+              };
+              console.log('formData', formData);
+              const token = getUserToken();
+
+              axios
+                .post(`${API_URL}api/v1/user/update-profile`, formData, {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                })
+                .then((response) => {
+                  console.log('signUpsuccess', response);
+                  console.log(
+                    'Upload successful:',
+                    response?.data.data?.updatedUser
+                  );
+                  setLocalUserData(response?.data.data?.updatedUser);
+                  setCurrentUser(response?.data.data?.updatedUser);
+                  setValues(response?.data.data?.updatedUser);
+                  resetForm({ values: response?.data.data?.updatedUser });
+                  toastSuccess('Update success');
+                })
+                .catch((error) => {
+                  console.error(error);
+                  console.error('Error:', Object.keys(error), error.message);
+                  console.error(error?.config);
+                  console.error(error?.request);
+                  console.error(error?.response);
+                  toastError(`Update error, ${error.message}`);
+                });
               setStatus({ success: true });
               setSubmitting(false);
             } catch (err) {
@@ -134,8 +163,10 @@ const TabPersonal = () => {
             setFieldValue,
             touched,
             values,
+            dirty,
+            resetForm,
           }) => {
-            console.log('valuesFormik', values);
+            console.log('valuesFormik', values, dirty);
             return (
               <form noValidate onSubmit={handleSubmit}>
                 <Box sx={{ p: 2.5 }}>
@@ -207,6 +238,9 @@ const TabPersonal = () => {
                           onChange={handleChange}
                           id="personal-email"
                           placeholder={t('th_key_email')}
+                          InputProps={{
+                            readOnly: true,
+                          }}
                         />
                         {touched.email && errors.email && (
                           <FormHelperText error id="personal-email-helper">
@@ -308,16 +342,21 @@ const TabPersonal = () => {
                     alignItems="center"
                     spacing={2}
                   >
-                    <Button
-                      variant="outlined"
-                      color="secondary"
-                      disabled={isSubmitting}
-                    >
-                      {t('th_key_btn_cancel')}
-                    </Button>
+                    {dirty && (
+                      <Button
+                        variant="outlined"
+                        color="secondary"
+                        disabled={isSubmitting}
+                        onClick={() => resetForm()}
+                      >
+                        {t('th_key_btn_cancel')}
+                      </Button>
+                    )}
                     <Button
                       disabled={
-                        isSubmitting || Object.keys(errors).length !== 0
+                        isSubmitting ||
+                        Object.keys(errors).length !== 0 ||
+                        !dirty
                       }
                       type="submit"
                       variant="contained"

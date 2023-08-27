@@ -10,16 +10,19 @@ import {
   ListItemText,
 } from '@mui/material';
 
-import PaymentsIcon from '@mui/icons-material/Payments';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import PersonIcon from '@mui/icons-material/Person';
 import LockIcon from '@mui/icons-material/Lock';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useTranslation } from 'react-i18next';
+import ConfirmDialog from '../../base/component/ConfirmDialog';
+import LogoutIcon from '@mui/icons-material/Logout';
+import useLogin from '../../hooks/useLogin';
 
 function getPathIndex(pathname) {
   let selectedTab = 0;
   switch (pathname) {
-    case '/profile/payment':
+    case '/profile/emailverify':
       selectedTab = 1;
       break;
     case '/profile/password':
@@ -42,6 +45,7 @@ const ProfileTab = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const { logOut } = useLogin();
 
   const [selectedIndex, setSelectedIndex] = useState(getPathIndex(pathname));
   const handleListItemClick = (index, route) => {
@@ -52,6 +56,20 @@ const ProfileTab = () => {
   useEffect(() => {
     setSelectedIndex(getPathIndex(pathname));
   }, [pathname]);
+
+  const [openLogoutDialog, setOpenLogoutDialog] = useState(false);
+
+  const handleOnClickLogout = () => {
+    setOpenLogoutDialog(true);
+  };
+
+  const handleConfirmLogout = () => {
+    setOpenLogoutDialog(false);
+    logOut();
+    setTimeout(() => {
+      navigate('/login');
+    }, 1000);
+  };
 
   return (
     <List
@@ -75,12 +93,12 @@ const ProfileTab = () => {
       </ListItemButton>
       <ListItemButton
         selected={selectedIndex === 1}
-        onClick={() => handleListItemClick(1, '/profile/payment')}
+        onClick={() => handleListItemClick(1, '/profile/emailverify')}
       >
         <ListItemIcon>
-          <PaymentsIcon />
+          <VerifiedUserIcon />
         </ListItemIcon>
-        <ListItemText primary={t('th_key_person_wallet')} />
+        <ListItemText primary={t('th_key_person_verification')} />
       </ListItemButton>
       <ListItemButton
         selected={selectedIndex === 2}
@@ -100,6 +118,27 @@ const ProfileTab = () => {
         </ListItemIcon>
         <ListItemText primary={t('th_key_setting')} />
       </ListItemButton>
+      <ListItemButton
+        selected={selectedIndex === 4}
+        onClick={() => handleOnClickLogout()}
+      >
+        <ListItemIcon>
+          <LogoutIcon color="error" />
+        </ListItemIcon>
+        <ListItemText
+          sx={{ color: theme.palette.error.main }}
+          primary={t('th_key_logout')}
+        />
+      </ListItemButton>
+      {openLogoutDialog && (
+        <ConfirmDialog
+          isOpenDialog={openLogoutDialog}
+          onClose={() => setOpenLogoutDialog(false)}
+          onAgree={() => handleConfirmLogout()}
+          title="th_key_logout"
+          content="th_key_setting_logout_message_affirm"
+        />
+      )}
     </List>
   );
 };
