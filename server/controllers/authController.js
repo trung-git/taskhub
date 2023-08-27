@@ -107,7 +107,7 @@ exports.verifyEmail = catchAsync(async (req, res, next) => {
     verifyEmailExpired: { $gt: Date.now() },
   });
   //If not expired and there is user => set password
-  if (!user)  return next(new AppError('Token is invalid or expired', 400));
+  if (!user)  return next(new AppError('Code is invalid or expired', 400));
 
   user.isVerified = true;
   user.verifyEmailToken = undefined;
