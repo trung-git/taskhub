@@ -30,14 +30,15 @@ const TaskListByType = ({ type }) => {
     headers: { Authorization: `Bearer ${token}` },
   };
 
-  const fetchTaskListData = async (status) => {
+  const fetchTaskListData = async (status, pageNum) => {
     try {
       const response = await axios.get(
-        `${API_URL}api/v1/contract/?status=${status}`,
+        `${API_URL}api/v1/contract/?status=${status}&pageNum=${pageNum}`,
         config
       );
       const responseData = response.data.data;
       setTaskList(responseData);
+      setTotalPage(response.data.totalPage);
       setIsFetchingTaskList(false);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -49,14 +50,14 @@ const TaskListByType = ({ type }) => {
   useEffect(() => {
     if (type) {
       setIsFetchingTaskList(true);
-      fetchTaskListData(type);
+      fetchTaskListData(type, pageNum);
     }
-  }, [type]);
+  }, [type, pageNum]);
 
   // useEffect(() => {
   //   if (pageNum) {
-  //     setIsFetchingPostList(true);
-  //     fetchPostListData(pageNum);
+  //     setIsFetchingTaskList(true);
+  //     fetchTaskListData(type, pageNum);
   //   }
   // }, [pageNum]);
 

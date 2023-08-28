@@ -23,7 +23,7 @@ const MainScreen = () => {
   const fetchData = async (pageNum) => {
     try {
       const response = await axios.get(
-        `${API_URL}/api/v1/post?pageNum=${pageNum}`
+        `${API_URL}/api/v1/post/get-related-post/?pageNum=${pageNum}`
       );
       const responseData = response.data.data;
       if (pageNum == 1) {
@@ -40,6 +40,16 @@ const MainScreen = () => {
       // return [];
     }
   };
+
+  // axios.interceptors.request.use((request) => {
+  //   console.log('Starting Request', JSON.stringify(request, null, 2));
+  //   return request;
+  // });
+
+  // axios.interceptors.response.use((response) => {
+  //   console.log('Response:', JSON.stringify(response, null, 2));
+  //   return response;
+  // });
 
   useEffect(() => {
     fetchData(pageNum);

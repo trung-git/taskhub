@@ -32,7 +32,7 @@ const ChatPage = ({ chatId, finder }) => {
     setLastChatId(messages?.[messages?.length - 1]?._id);
   }, [messages]);
 
-  console.log('messageChatData', finder);
+  // console.log('messageChatData', finder);
 
   const fetchData = async (chatId) => {
     try {
@@ -43,7 +43,7 @@ const ChatPage = ({ chatId, finder }) => {
       setMessages(responseData);
       setIsFetching(false);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('Error fetching data in Chat :', error);
       // return [];
     }
   };
@@ -75,19 +75,23 @@ const ChatPage = ({ chatId, finder }) => {
   };
 
   const fetchLoadOldChat = async (chatId, lastChatId) => {
-    try {
-      const response = await axios.get(
-        `${API_URL}api/v1/chat/${chatId}/messages?messageId=${lastChatId}`
-      );
-      const responseData = response.data.data;
-      setMessages((prev) => [...prev, ...responseData]);
-      // setIsLoadingMore(false);
-      // if (response.data?.lenght < 20) {
-      //   setIsHasMore(false);
-      // }
-    } catch (error) {
-      console.error('Error fetching data:', error, chatId, 'last', lastChatId);
-      // setIsLoadingMore(false);
+    if (chatId && lastChatId) {
+      try {
+        const response = await axios.get(
+          `${API_URL}/api/v1/chat/${chatId}/messages/?messageId=${lastChatId}`
+        );
+        const responseData = response.data.data;
+        console.log('loadOldMessage', responseData);
+        setMessages((prev) => [...prev, ...responseData]);
+      } catch (error) {
+        console.error(
+          'Error fetching data:',
+          error,
+          chatId,
+          'last',
+          lastChatId
+        );
+      }
     }
   };
 
@@ -142,7 +146,7 @@ const ChatPage = ({ chatId, finder }) => {
         inverted
         ref={flatListRef}
         onEndReached={() => fetchLoadOldChat(chatId, lastChatId)} // Triggered when scrolling to the top
-        onEndReachedThreshold={0.1}
+        onEndReachedThreshold={0.2}
       />
       <View
         style={{

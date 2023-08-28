@@ -57,6 +57,8 @@ const PostList = () => {
     }
   };
 
+  console.log('totalPage', totalPage);
+
   useEffect(() => {
     setIsFetchingPostList(true);
     fetchPostListData(1);

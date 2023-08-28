@@ -24,7 +24,7 @@ const TaskManage = () => {
     { key: 'invitation', title: 'Lời mời' },
     { key: 'discuss', title: 'Trao đổi' },
     { key: 'official', title: 'Hiện tại' },
-    { key: 'finish', title: 'Đã hủy' },
+    { key: 'finish', title: 'Kết thúc' },
   ]);
 
   const [taskOpen, setTaskOpen] = useState(false);

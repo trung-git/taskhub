@@ -289,7 +289,9 @@ const Post = ({
               </View>
 
               <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Mô tả bản thân đi bro</Text>
+                <Text style={styles.inputLabel}>
+                  Ghi chú của bạn cho công việc này
+                </Text>
                 <TextInput
                   style={[styles.textInput, styles.selfDescriptionInput]}
                   multiline={true}

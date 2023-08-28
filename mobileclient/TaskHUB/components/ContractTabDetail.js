@@ -15,64 +15,100 @@ import { Ionicons } from '@expo/vector-icons';
 import DatePick from './DatePick';
 import GenderPicker from './GenderPicker';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
+import locToString from '../config/locToString';
+import axios from 'axios';
+import { API_URL } from '../config/constans';
+import { predictAmount } from '../config/predictAmount';
 
 const ContractTabDetail = ({ taskData }) => {
+  const [taskDataVal, setTaskDataVal] = useState(taskData);
+  const { t } = useTranslation();
+
+  // useEffect(() => {
+
+  // }, [])
+
   const fields = [
     {
       name: 'lastName',
-      value: taskData?.lastName,
+      value: t(taskDataVal?.taskTag?.langKey),
       label: 'Công việc',
       component: TextUpdate,
       canUpdate: false,
     },
     {
-      name: 'firstName',
-      value: taskData?.firstName,
+      name: 'workTime',
+      value: dayjs(taskDataVal?.workTime?.from).format('DD-MM-YYYY'),
       label: 'Ngày làm',
       component: TextUpdate,
       canUpdate: false,
     },
     {
       name: 'dateOfBirth',
-      value: dayjs(taskData?.dateOfBirth).format('DD-MM-YYYY'),
-      editValue: taskData?.dateOfBirth,
+      value: `${dayjs(taskDataVal?.workTime?.from).format('HH:mm')} - ${dayjs(
+        taskDataVal?.workTime?.to
+      ).format('HH:mm')}`,
+      editValue: taskDataVal?.dateOfBirth,
       label: 'Thời gian làm việc',
       component: DatePick,
       canUpdate: false,
     },
     {
-      name: 'gender',
-      value: taskData?.gender == 'Male' ? 'Nam' : 'Nữ',
-      editValue: taskData?.gender,
+      name: 'workLocation',
+      value: locToString(taskDataVal?.workLocation),
+      editValue: taskDataVal?.workLocation,
       label: 'Khu vực làm việc',
       component: GenderPicker,
       canUpdate: false,
     },
     {
-      name: 'phoneNumber',
-      value: taskData?.phoneNumber,
+      name: 'address',
+      value: taskDataVal?.address,
       label: 'Địa chỉ cụ thể',
       component: TextUpdate,
       canUpdate: false,
     },
     {
-      name: 'email',
-      value: taskData?.email || '',
-      label: 'Email',
+      name: 'price',
+      value: taskDataVal?.price || '',
+      label: 'Giá',
+      component: TextUpdate,
+      canUpdate: true,
+    },
+    {
+      name: 'price',
+      value: taskDataVal?.paymentPlan == 'one-time' ? 'Một lần' : 'Theo giờ',
+      label: 'Thu nhập',
       component: TextUpdate,
       canUpdate: false,
     },
     {
-      name: 'aboutMe',
-      value: taskData?.aboutMe || '',
-      label: 'Chi tiết công việc',
-      component: TextUpdateMultiLine,
+      name: 'price',
+      value:
+        taskDataVal?.paymentPlan == 'by-wallet'
+          ? 'Paypal'
+          : 'Tiền mặt khi làm việc',
+      label: 'Thanh toán',
+      component: TextUpdate,
       canUpdate: false,
     },
     {
-      name: 'skillAndExperience',
-      value: taskData?.skillAndExperience || '',
-      label: 'Bạn có thể giúp gì',
+      name: 'price',
+      value: predictAmount(
+        taskDataVal?.workTime?.from,
+        taskDataVal?.workTime?.to,
+        taskDataVal?.price,
+        taskDataVal?.paymentPlan
+      ),
+      label: 'Thu nhập ước tính',
+      component: TextUpdate,
+      canUpdate: false,
+    },
+    {
+      name: 'description',
+      value: taskDataVal?.description || '',
+      label: 'Chi tiết công việc',
       component: TextUpdateMultiLine,
       canUpdate: false,
     },
@@ -102,11 +138,20 @@ const ContractTabDetail = ({ taskData }) => {
 
   const [refreshing, setRefreshing] = useState(false);
 
-  const refreshPosts = () => {
+  const refreshTaskData = async () => {
     setRefreshing(true);
-    setTimeout(() => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/api/v1/contract/${taskData._id}`
+      );
+      const responseData = response.data.data;
+      setTaskDataVal(responseData);
+      // setChatId(responseData.chat);
       setRefreshing(false);
-    }, 2000);
+    } catch (error) {
+      console.error('Error fetching data on tab task detail', error);
+      setRefreshing(false);
+    }
   };
 
   return (
@@ -115,12 +160,12 @@ const ContractTabDetail = ({ taskData }) => {
         onScroll={({ nativeEvent }) => {
           const { contentOffset } = nativeEvent;
           if (contentOffset.y < -100 && !refreshing) {
-            refreshPosts();
+            refreshTaskData();
           }
         }}
         scrollEventThrottle={400}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={refreshPosts} />
+          <RefreshControl refreshing={refreshing} onRefresh={refreshTaskData} />
         }
       >
         <View
@@ -132,7 +177,7 @@ const ContractTabDetail = ({ taskData }) => {
           }}
         >
           <View style={{ marginTop: 16, width: '100%' }}>
-            {fields.map((field) => {
+            {fields.map((field, index) => {
               return (
                 <View
                   style={{
@@ -142,7 +187,7 @@ const ContractTabDetail = ({ taskData }) => {
                     // backgroundColor: 'red',
                     width: '100%',
                   }}
-                  key={field.name}
+                  key={index}
                 >
                   <TouchableOpacity
                     key={field?.name}
@@ -180,6 +225,22 @@ const ContractTabDetail = ({ taskData }) => {
           </View>
         </View>
       </ScrollView>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={[styles.button, styles.btncancel]}>
+          <Text style={{ color: 'red', fontSize: 20 }}>Hủy</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.button, styles.btnsuccess]}>
+          <Text style={{ color: 'white', fontSize: 20 }}>Chấp nhận</Text>
+        </TouchableOpacity>
+      </View>
+      {/* <View style={styles.buttonContainer}>
+        <TouchableOpacity style={[styles.button, styles.btncancel]}>
+          <Text style={{ color: 'red', fontSize: 20 }}>Hủy</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.button, styles.btnsuccess]}>
+          <Text style={{ color: 'white', fontSize: 20 }}>Bắt đầu</Text>
+        </TouchableOpacity>
+      </View> */}
       {isOpenEditModal && selectedField && (
         <UserUpdateModal
           field={selectedField}
@@ -228,6 +289,35 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 48,
     fontWeight: 'bold',
+  },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 50,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+  },
+  button: {
+    // backgroundColor: 'blue',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    width: '40%',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btncancel: {
+    backgroundColor: 'white',
+    borderColor: 'red',
+    borderWidth: 2,
+    borderStyle: 'solid',
+  },
+  btnsuccess: {
+    backgroundColor: 'green',
   },
 });
 

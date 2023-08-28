@@ -13,6 +13,12 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import i18n from '../i18n';
 import { API_URL } from '../config/constans';
+import { RefreshControl } from 'react-native';
+import locToString from '../config/locToString';
+import moment from 'moment';
+import 'moment/locale/vi'; // Import the Vietnamese locale
+
+moment.locale('vi');
 
 const TaskListPage = ({ onOpenChat, status }) => {
   const openChat = (item) => {
@@ -22,21 +28,28 @@ const TaskListPage = ({ onOpenChat, status }) => {
   const [task, setTask] = useState([]);
   const [loading, setLoading] = useState(false);
   const [pageNum, setPageNum] = useState(1);
+  const [totalRecords, setTotalRecords] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
 
-  const locToString = (location) => {
-    return `${i18n.t(location?.city?.prefix)} ${location?.city?.name}, ${i18n.t(
-      location?.prefix
-    )} ${location?.name}`;
-  };
+  // const locToString = (location) => {
+  //   return `${i18n.t(location?.city?.prefix)} ${location?.city?.name}, ${i18n.t(
+  //     location?.prefix
+  //   )} ${location?.name}`;
+  // };
 
-  const fetchData = async (status) => {
+  const fetchData = async (status, pageNum) => {
     try {
       const response = await axios.get(
-        `${API_URL}/api/v1/contract/?status=${status}`
+        `${API_URL}/api/v1/contract/?status=${status}&pageNum=${pageNum}`
       );
       const responseData = response.data.data;
-      setTask(responseData);
+      if (pageNum == 1) {
+        setTask(responseData);
+      } else {
+        setTask([...task, ...responseData]);
+      }
+      setTotalRecords(response.data.totalRecords);
       setRefreshing(false);
       setLoading(false);
     } catch (error) {
@@ -46,11 +59,24 @@ const TaskListPage = ({ onOpenChat, status }) => {
   };
   useEffect(() => {
     setLoading(true);
-    fetchData(status);
-  }, [status]);
+    fetchData(status, pageNum);
+  }, [status, pageNum]);
+
+  const handleLoadMore = () => {
+    setLoading(true);
+    setPageNum((prev) => Number(prev) + 1);
+  };
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchData(1);
+    setPageNum(1);
+  };
+
+  console.log('totalRecords', totalRecords);
 
   const renderTaskItem = ({ item }) => {
-    console.log('itemrenderTaskItem', JSON.stringify(item));
+    // console.log('itemrenderTaskItem', JSON.stringify(item));
     return (
       <TouchableOpacity style={styles.chatItem} onPress={() => openChat(item)}>
         <View
@@ -110,6 +136,21 @@ const TaskListPage = ({ onOpenChat, status }) => {
                 {locToString(item?.workLocation)}
               </Text>
             </View>
+
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 16,
+                marginBottom: 8,
+              }}
+            >
+              <Text style={{ fontSize: 16 }}>Thời hạn phản hồi: </Text>
+              <Text style={{ fontSize: 16, color: 'red', fontWeight: 'bold' }}>
+                {moment(item?.expireAt).fromNow()}
+              </Text>
+            </View>
           </View>
           <View
             style={{
@@ -139,12 +180,17 @@ const TaskListPage = ({ onOpenChat, status }) => {
   return (
     <View style={styles.container}>
       <Text style={{ marginVertical: 16, marginLeft: '5%', fontSize: 16 }}>
-        New task (15)
+        {`New task (${totalRecords || 0})`}
       </Text>
       <FlatList
         data={task}
         renderItem={renderTaskItem}
         keyExtractor={(item) => item._id.toString()}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+        }
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.1}
       />
       {loading && <ActivityIndicator style={styles.loading} />}
     </View>
