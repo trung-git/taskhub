@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
 
 const User = require('../models/userModel');
 
@@ -100,14 +101,17 @@ exports.signup = catchAsync(async (req, res, next) => {
 
 exports.verifyEmail = catchAsync(async (req, res, next) => {
   //Get token
-  const hashToken = req.body.code;
+  const { otpCode, email } = req.body;
 
   const user = await User.findOne({
-    verifyEmailToken: hashToken,
-    verifyEmailExpired: { $gt: Date.now() },
+    email: email,
   });
-  //If not expired and there is user => set password
-  if (!user)  return next(new AppError('Code is invalid or expired', 400));
+
+  if (!user) return next(new AppError('Email was not found', 400));
+
+  const isValidOTP = await bcrypt.compare(otpCode, user.verifyEmailToken);
+  if (!(isValidOTP && user.verifyEmailExpired > Date.now()))
+    return next(new AppError('Code is invalid or expired', 400));
 
   user.isVerified = true;
   user.verifyEmailToken = undefined;
@@ -121,7 +125,7 @@ exports.verifyEmail = catchAsync(async (req, res, next) => {
 
 exports.generateVerifyEmailToken = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user._id);
-  const code = user.createVerifyEmailToken();
+  const code = await user.createVerifyEmailToken();
   await user.save();
 
   try {

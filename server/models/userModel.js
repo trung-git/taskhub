@@ -108,10 +108,10 @@ userSchema.methods.createPasswordResetToken = function () {
   return resetToken;
 };
 
-userSchema.methods.createVerifyEmailToken = function () {
+userSchema.methods.createVerifyEmailToken = async function () {
   const verifyEmailToken = String(Math.floor(100000 + Math.random() * 900000));
 
-  this.verifyEmailToken = verifyEmailToken;
+  this.verifyEmailToken = await bcrypt.hash(verifyEmailToken, 10);
 
   this.verifyEmailExpired = Date.now() + 10 * 60 * 1000;
 
