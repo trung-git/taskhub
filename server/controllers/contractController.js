@@ -130,7 +130,7 @@ exports.getContracts = catchAsync(async (req, res, next) => {
   if (status) {
     query.status = status;
     if (status === 'invitation') {
-      sortOption.expireAt = -1;
+      sortOption.expireAt = 1;
     }
   }
 
