@@ -126,16 +126,21 @@ exports.getContracts = catchAsync(async (req, res, next) => {
   const query = {
     [role.toLowerCase()]: _id,
   };
-
+  const sortOption = {};
   if (status) {
     query.status = status;
+    if (status === 'invitation') {
+      sortOption.expireAt = 1;
+    }
   }
 
   const contracts = await Contract.find(query).populate({
     path: 'finder tasker taskTag workLocation review fromPost',
   })
     .skip(recordsPerPage * (pageNum - 1))
-    .limit(recordsPerPage);
+    .limit(recordsPerPage)
+    .sort(sortOption);
+
   const count = await Contract.countDocuments(query);
 
   return res.status(200).json({
