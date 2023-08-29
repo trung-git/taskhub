@@ -6,6 +6,7 @@ import HomeScreen from './Home';
 import UserScreen from './UserScreen';
 import TaskManage from './TaskManage';
 import Header from './Header';
+import IncomeManage from './IncomeManage';
 import LoginScreen from './Login';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AuthContext } from '../provider/AuthContext';
@@ -13,10 +14,17 @@ import { AuthContext } from '../provider/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs([
+  `Bottom Tab Navigator: 'tabBarOptions' is deprecated. Migrate the options to 'screenOptions' instead.`,
+]);
+
 const Tab = createBottomTabNavigator();
 
 const TabBar = () => (
   <Tab.Navigator
+    initialRouteName="Chat"
     screenOptions={({ route }) => ({
       tabBarIcon: ({ focused, color, size }) => {
         let iconName;
@@ -27,6 +35,8 @@ const TabBar = () => (
           iconName = focused ? 'briefcase' : 'briefcase-outline';
         } else if (route.name === 'Me') {
           iconName = focused ? 'person' : 'person-outline';
+        } else if (route.name === 'Income') {
+          iconName = focused ? 'cash' : 'cash-outline';
         }
 
         return <Ionicons name={iconName} size={size} color={color} />;
@@ -50,6 +60,13 @@ const TabBar = () => (
     <Tab.Screen
       name="Chat"
       component={TaskManage}
+      options={{
+        tabBarLabel: () => null,
+      }}
+    />
+    <Tab.Screen
+      name="Income"
+      component={IncomeManage}
       options={{
         tabBarLabel: () => null,
       }}

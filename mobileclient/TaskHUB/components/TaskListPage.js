@@ -32,12 +32,6 @@ const TaskListPage = ({ onOpenChat, status }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
 
-  // const locToString = (location) => {
-  //   return `${i18n.t(location?.city?.prefix)} ${location?.city?.name}, ${i18n.t(
-  //     location?.prefix
-  //   )} ${location?.name}`;
-  // };
-
   const fetchData = async (status, pageNum) => {
     try {
       const response = await axios.get(
@@ -46,6 +40,7 @@ const TaskListPage = ({ onOpenChat, status }) => {
       const responseData = response.data.data;
       if (pageNum == 1) {
         setTask(responseData);
+        console.log('TotalOnPageNum1', response.data.totalRecords);
       } else {
         setTask([...task, ...responseData]);
       }
@@ -70,13 +65,11 @@ const TaskListPage = ({ onOpenChat, status }) => {
   const handleRefresh = () => {
     setRefreshing(true);
     fetchData(1);
-    setPageNum(1);
   };
 
   console.log('totalRecords', totalRecords);
 
   const renderTaskItem = ({ item }) => {
-    // console.log('itemrenderTaskItem', JSON.stringify(item));
     return (
       <TouchableOpacity style={styles.chatItem} onPress={() => openChat(item)}>
         <View
@@ -180,7 +173,7 @@ const TaskListPage = ({ onOpenChat, status }) => {
   return (
     <View style={styles.container}>
       <Text style={{ marginVertical: 16, marginLeft: '5%', fontSize: 16 }}>
-        {`New task (${totalRecords || 0})`}
+        {`New task (${totalRecords})`}
       </Text>
       <FlatList
         data={task}
