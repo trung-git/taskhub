@@ -12,6 +12,7 @@ import { dummyPost } from './dummy';
 import Post from './Post';
 import dayjs from 'dayjs';
 import { API_URL } from '../config/constans';
+import { useTranslation } from 'react-i18next';
 
 const MainScreen = () => {
   const [posts, setPosts] = useState([]);
@@ -19,6 +20,7 @@ const MainScreen = () => {
   const [loading, setLoading] = useState(false);
   const [pageNum, setPageNum] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
+  const { t } = useTranslation();
 
   const fetchData = async (pageNum) => {
     try {
@@ -109,10 +111,15 @@ const MainScreen = () => {
               time={`${dayjs(item.createdAt).format('HH:mm')} ${dayjs(
                 item.createdAt
               ).format('DD-MM-YYYY')}`}
-              tag={item.taskTag?.title}
+              tag={t(item.taskTag?.langKey)}
               candidate={item?.candidate || []}
               postId={item?._id}
               photo={item?.photos || []}
+              closeRegisterAt={item?.closeRegisterAt}
+              workLocation={item?.workLocation}
+              cityInfo={item?.cityInfo}
+              address={item?.address}
+              paymentPlan={item?.paymentPlan}
             />
           ))}
         {posts?.length <= 0 && !fetchingPost && (

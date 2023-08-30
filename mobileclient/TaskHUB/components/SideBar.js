@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Màu nền mờ
+    backgroundColor: 'rgba(0, 0, 0, 0)', // Màu nền mờ
     height: '50%',
   },
   safeContainer: {
@@ -115,6 +115,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: '100%',
     maxHeight: '100%',
+    borderTopColor: 'green',
+    borderWidth: '1px',
+    borderStyle: 'solid',
   },
   modalContent: {
     paddingHorizontal: 20,

@@ -64,7 +64,7 @@ const TaskListPage = ({ onOpenChat, status }) => {
 
   const handleRefresh = () => {
     setRefreshing(true);
-    fetchData(1);
+    fetchData(status, 1);
   };
 
   console.log('totalRecords', totalRecords);
@@ -173,19 +173,28 @@ const TaskListPage = ({ onOpenChat, status }) => {
   return (
     <View style={styles.container}>
       <Text style={{ marginVertical: 16, marginLeft: '5%', fontSize: 16 }}>
-        {`New task (${totalRecords})`}
+        {`Số lượng công việc (${totalRecords})`}
       </Text>
+
       <FlatList
         data={task}
         renderItem={renderTaskItem}
-        keyExtractor={(item) => item._id.toString()}
+        keyExtractor={(item, index) => index}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
         }
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.1}
       />
-      {loading && <ActivityIndicator style={styles.loading} />}
+      {loading && (
+        <View>
+          <ActivityIndicator
+            style={styles.loading}
+            color={'green'}
+            size={'large'}
+          />
+        </View>
+      )}
     </View>
   );
 };

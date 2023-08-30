@@ -28,6 +28,11 @@ const TabBar = () => (
     screenOptions={({ route }) => ({
       tabBarIcon: ({ focused, color, size }) => {
         let iconName;
+        let iconSize = size;
+
+        if (focused) {
+          iconSize = size + 4; // Kích thước lớn hơn cho biểu tượng được chọn
+        }
 
         if (route.name === 'Home') {
           iconName = focused ? 'home' : 'home-outline';
@@ -39,7 +44,13 @@ const TabBar = () => (
           iconName = focused ? 'cash' : 'cash-outline';
         }
 
-        return <Ionicons name={iconName} size={size} color={color} />;
+        // return <Ionicons name={iconName} size={iconSize} color={color} />;
+        return (
+          <View style={styles.tabBarButtonContainer}>
+            {focused && <View style={styles.tabBarLine} />}
+            <Ionicons name={iconName} size={iconSize} color={color} />
+          </View>
+        );
       },
       headerShown: false,
     })}
@@ -116,6 +127,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
+  },
+  tabBarButtonContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tabBarLine: {
+    width: '100%',
+    height: 4,
+    backgroundColor: 'green', // Màu của đường line khi biểu tượng được chọn
+    position: 'absolute',
+    top: -9,
   },
 });
 

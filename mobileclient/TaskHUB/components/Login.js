@@ -42,6 +42,7 @@ const LoginScreen = () => {
   const { login } = useContext(AuthContext);
 
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isModalForgetVisible, setModalForgetVisible] = useState(false);
   const [keyboardOffset, setKeyboardOffset] = useState(8);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -51,6 +52,8 @@ const LoginScreen = () => {
 
   const [signUpFormValid, setSignUpFormValid] = useState(false);
   const [signUpFormError, setSignUpFormError] = useState('');
+
+  const [isSigningUp, setIsSigningUp] = useState(false);
 
   console.log('signUpData', signUpData);
 
@@ -179,11 +182,13 @@ const LoginScreen = () => {
         // setIsFetchingLogin(false);
         console.log('signUpsuccess', response);
         setSignUpData(initSignUpData);
+        setIsSigningUp(false);
+
         // login(response.data.data.user);
       })
       .catch((error) => {
         // Xử lý lỗi đăng nhập
-        setIsFetchingLogin(false);
+        setIsSigningUp(false);
         console.error(error);
         console.error('Error:', Object.keys(error), error.message);
         console.error(error?.config);
@@ -221,6 +226,7 @@ const LoginScreen = () => {
     };
 
     console.log('signUpVal', signUpVal);
+    setIsSigningUp(true);
 
     onSubmitSignUp(signUpVal);
 
@@ -232,7 +238,7 @@ const LoginScreen = () => {
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      {isFetchingLogin ? (
+      {isFetchingLogin || isSigningUp ? (
         <ActivityIndicator size="large" color="green" />
       ) : (
         <React.Fragment>
@@ -304,7 +310,7 @@ const LoginScreen = () => {
                         display: 'flex',
                         justifyContent: 'center',
                       }}
-                      onPress={() => setModalVisible(true)}
+                      onPress={() => setModalForgetVisible(true)}
                     >
                       <Text
                         style={{
@@ -541,12 +547,16 @@ const LoginScreen = () => {
                   </View>
 
                   <View style={styles.fixToText}>
-                    <Button
-                      style={[styles.button, styles.backButton]}
-                      disabled={activeStep < 1}
-                      title="◀◁ Trở về"
-                      onPress={() => handleSignUpBack()}
-                    />
+                    {activeStep >= 1 ? (
+                      <Button
+                        style={[styles.button, styles.backButton]}
+                        disabled={activeStep < 1}
+                        title="◀◁ Trở về"
+                        onPress={() => handleSignUpBack()}
+                      />
+                    ) : (
+                      <View></View>
+                    )}
                     <Button
                       disabled={!signUpFormValid}
                       style={[styles.button, styles.submitButton]}
@@ -561,7 +571,7 @@ const LoginScreen = () => {
                     style={{
                       flexDirection: 'row',
                       justifyContent: 'flex-end',
-                      marginTop: 16,
+                      marginTop: 48,
                       width: '100%',
                       paddingHorizontal: 16,
                     }}
@@ -576,6 +586,8 @@ const LoginScreen = () => {
                       <Text
                         style={{
                           color: 'green',
+                          fontSize: 18,
+                          textDecorationLine: 'underline',
                         }}
                       >
                         Đăng nhập

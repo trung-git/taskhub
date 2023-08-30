@@ -17,13 +17,16 @@ import DateTimePicker from './DateTimePicker';
 import DatePick from './DatePick';
 import GenderPicker from './GenderPicker';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
+import WorkLocationSelect from './WorkLocationSelect';
 
 const UserScreen = () => {
   const { userData } = useContext(AuthContext);
+  const { t } = useTranslation();
   const initials = userData.firstName
     ? userData.firstName.charAt(0).toUpperCase()
     : '';
-  console.log('userData', userData?.image);
+  console.log('userData', userData);
 
   const fields = [
     {
@@ -78,6 +81,31 @@ const UserScreen = () => {
     },
   ];
 
+  const workFields = [
+    {
+      name: 'taskTag',
+      value: userData?.taskTag
+        ?.map((tag) => {
+          return t(tag?.taskInfo?.langKey);
+        })
+        .join(','),
+      label: 'Công việc',
+      editValue: userData?.taskTag,
+      component: TextUpdate,
+    },
+    {
+      name: 'workLocation',
+      value: userData?.workLocation
+        ?.map((loc) => {
+          return `${t(loc?.prefix)} ${loc?.name}`;
+        })
+        .join(','),
+      label: 'Khu vực làm',
+      editValue: userData?.workLocation,
+      component: WorkLocationSelect,
+    },
+  ];
+
   const [selectedField, setSelectedField] = useState(null);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
 
@@ -85,14 +113,17 @@ const UserScreen = () => {
     console.log(
       'selectedField',
       field,
-      fields.find((_ele) => _ele.name == field)
+      fields.concat(workFields).find((_ele) => _ele.name == field)
     );
-    setSelectedField(fields.find((_ele) => _ele.name == field));
+    setSelectedField(
+      fields.concat(workFields).find((_ele) => _ele.name == field)
+    );
   };
 
   useEffect(() => {
     if (selectedField) {
       setIsOpenEditModal(true);
+      console.log('OpentModal');
     } else {
       setIsOpenEditModal(false);
     }
@@ -122,6 +153,27 @@ const UserScreen = () => {
             </View>
           )}
           <UserSreenImage />
+          <View
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexDirection: 'row',
+              paddingVertical: 12,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: '500',
+                flex: 1,
+                textAlign: 'center',
+              }}
+            >
+              Thông tin cá nhân
+            </Text>
+          </View>
           <View style={{ marginTop: 16, width: '100%' }}>
             {fields.map((field) => {
               return (
@@ -157,7 +209,80 @@ const UserScreen = () => {
                         borderColor: '#f0f0f0',
                       }}
                     >
-                      <Text style={{ fontSize: 18, color: '#474747' }}>
+                      <Text
+                        style={{ fontSize: 18, color: '#474747' }}
+                        numberOfLines={3}
+                        ellipsizeMode="tail"
+                      >
+                        {field?.value}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
+          </View>
+          <View
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexDirection: 'row',
+              paddingVertical: 12,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: '500',
+                flex: 1,
+                textAlign: 'center',
+              }}
+            >
+              Thông tin đăng ký làm việc
+            </Text>
+          </View>
+          <View style={{ marginTop: 16, width: '100%' }}>
+            {workFields.map((field) => {
+              return (
+                <View
+                  key={field?.name}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    // backgroundColor: 'red',
+                    width: '100%',
+                  }}
+                >
+                  <TouchableOpacity
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      width: '100%',
+                      paddingVertical: 12,
+                    }}
+                    onPress={() => handleFieldSelect(field?.name)}
+                  >
+                    <Text
+                      style={{ fontSize: 18, fontWeight: '500', width: '30%' }}
+                    >
+                      {field?.label} :
+                    </Text>
+                    <View
+                      style={{
+                        flex: 1,
+                        borderBottomWidth: 2,
+                        borderStyle: 'solid',
+                        borderColor: '#f0f0f0',
+                      }}
+                    >
+                      <Text
+                        style={{ fontSize: 18, color: '#474747' }}
+                        numberOfLines={3}
+                        ellipsizeMode="tail"
+                      >
                         {field?.value}
                       </Text>
                     </View>

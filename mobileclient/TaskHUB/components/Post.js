@@ -22,6 +22,9 @@ import ImageListPost from './ImageListPost';
 import { AuthContext } from '../provider/AuthContext';
 import axios from 'axios';
 import { API_URL } from '../config/constans';
+import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
+import locToString from '../config/locToString';
 
 const Post = ({
   avatar,
@@ -32,6 +35,10 @@ const Post = ({
   candidate,
   postId,
   photo,
+  closeRegisterAt,
+  paymentPlan,
+  workLocation,
+  address,
 }) => {
   const { userData } = useContext(AuthContext);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -42,8 +49,11 @@ const Post = ({
   const [keyboardOffset, setKeyboardOffset] = useState(8);
   // const [isSaved, setIsSaved] = useState(false);
   const [isApply, setApply] = useState(false);
+  const { t } = useTranslation();
 
   console.log('salaryExpectation', salaryExpectation);
+
+  console.log('workLocation', workLocation);
 
   const handleApply = () => {
     setModalVisible(true);
@@ -197,7 +207,7 @@ const Post = ({
             <Ionicons name="ios-flag-outline" size={24} color="gray" />
           </TouchableOpacity>
         </View>
-        <Text style={styles.content}>{content}</Text>
+
         {tag && (
           <View style={{ display: 'flex', flexDirection: 'row', my: 8 }}>
             <Text
@@ -219,6 +229,44 @@ const Post = ({
             </Text>
           </View>
         )}
+        <Text style={styles.content}>{content}</Text>
+        <View style={{ display: 'flex', flexDirection: 'row' }}>
+          <Text style={{ fontWeight: 'bold', marginBottom: 6, fontSize: 16 }}>
+            Địa chỉ làm việc:{' '}
+          </Text>
+          <Text
+            numberOfLines={3}
+            ellipsizeMode="tail"
+            style={{ marginBottom: 6, fontSize: 16 }}
+          >{`${address}, ${locToString(workLocation, false)}`}</Text>
+        </View>
+        <View style={{ display: 'flex', flexDirection: 'row' }}>
+          <Text style={{ fontWeight: 'bold', marginBottom: 6, fontSize: 16 }}>
+            Hình thức trã lương:{' '}
+          </Text>
+          <Text style={{ marginBottom: 6, fontSize: 16 }}>{`${
+            paymentPlan === 'per-hour' ? 'Trã theo giờ' : 'Trã một lần'
+          }`}</Text>
+        </View>
+        <View style={{ display: 'flex', flexDirection: 'row' }}>
+          <Text
+            style={{
+              fontSize: 16,
+              marginBottom: 9,
+              fontWeight: 'bold',
+            }}
+          >
+            Thời hạn đăng ký:{' '}
+          </Text>
+          <Text
+            style={{
+              fontSize: 16,
+              marginBottom: 9,
+            }}
+          >
+            {dayjs(closeRegisterAt).format('HH:mm DD-MM-YYYY')}
+          </Text>
+        </View>
         {photo?.length > 0 && <ImageListPost images={photo} />}
 
         <View style={styles.actionButtons}>
