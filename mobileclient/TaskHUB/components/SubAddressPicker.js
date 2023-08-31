@@ -13,7 +13,7 @@ import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import { API_URL } from '../config/constans';
 
-const SubAddressPicker = ({ cityId, onChange, value }) => {
+const SubAddressPicker = ({ cityId, onChange, value, excludeIds }) => {
   const [selectedValue, setSelectedValue] = useState();
   const [loading, setLoading] = useState(false);
   const [district, setDistrict] = useState([]);
@@ -118,6 +118,7 @@ const SubAddressPicker = ({ cityId, onChange, value }) => {
                         }
                         value={item._id}
                         key={item._id}
+                        enabled={excludeIds?.includes(item._id)}
                       />
                     );
                   })}

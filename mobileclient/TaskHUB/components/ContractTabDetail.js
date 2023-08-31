@@ -56,7 +56,7 @@ const ContractTabDetail = ({ taskData }) => {
     },
     {
       name: 'workLocation',
-      value: locToString(taskDataVal?.workLocation),
+      value: locToString(taskDataVal?.workLocation, false),
       editValue: taskDataVal?.workLocation,
       label: 'Khu vực làm việc',
       component: GenderPicker,
@@ -227,7 +227,7 @@ const ContractTabDetail = ({ taskData }) => {
       </ScrollView>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={[styles.button, styles.btncancel]}>
-          <Text style={{ color: 'red', fontSize: 20 }}>Hủy</Text>
+          <Text style={{ color: 'red', fontSize: 20 }}>Từ chối</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.button, styles.btnsuccess]}>
           <Text style={{ color: 'white', fontSize: 20 }}>Chấp nhận</Text>

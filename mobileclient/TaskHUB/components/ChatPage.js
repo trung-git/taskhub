@@ -66,9 +66,9 @@ const ChatPage = ({ chatId, finder }) => {
         },
         ...messages,
       ]);
-      if (flatListRef.current) {
+      if (flatListRef?.current) {
         const newIndex = messages.length - 1;
-        flatListRef.current.scrollToIndex({ index: 0, animated: true });
+        // flatListRef?.current?.scrollToIndex({ index: 0, animated: true });
       }
       setInputText('');
     }
@@ -95,7 +95,7 @@ const ChatPage = ({ chatId, finder }) => {
     }
   };
 
-  const renderMessage = ({ item }) => {
+  const renderMessage = ({ item, index }) => {
     const messageContainerStyle =
       item.sender === userData?._id
         ? styles.sentMessageContainer
@@ -110,20 +110,20 @@ const ChatPage = ({ chatId, finder }) => {
     const reciverAvatar = finder?.image;
 
     return (
-      <View style={messageContainerStyle}>
+      <View style={messageContainerStyle} key={index}>
         {item.sender !== userData?._id && (
           <Avatar rounded size={20} source={{ uri: reciverAvatar }} />
         )}
         <View style={styles.messageContent}>
           <Text style={messageTextStyle}>{item.content}</Text>
-          {item.isSent && (
+          {item.sender === userData?._id && (
             <Text style={styles.messageTimeSend}>
               {item.isSending
                 ? 'Đang gởi...'
                 : dayjs(item.createdAt).format('HH:mm')}
             </Text>
           )}
-          {!item.isSent && (
+          {item.sender !== userData?._id && (
             <Text style={styles.messageTimeReceive}>
               {dayjs(item.createdAt).format('HH:mm')}
             </Text>

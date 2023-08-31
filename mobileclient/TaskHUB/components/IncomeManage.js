@@ -18,6 +18,7 @@ const IncomeManage = () => {
   const [cashIncome, setCashIncome] = useState(5000000); // Số dư thu nhập tiền mặt
   const [withdrawModalVisible, setWithdrawModalVisible] = useState(false);
   const [withdrawAmount, setWithdrawAmount] = useState('');
+  const [errorText, setErrorText] = useState('');
 
   const [transactionHistory, setTransactionHistory] = useState([
     { type: 'deposit', amount: 100000, timestamp: new Date() },
@@ -52,7 +53,12 @@ const IncomeManage = () => {
       <View
         style={[
           styles.transactionItem,
-          { backgroundColor: transactionTypeBackgroundColor },
+          {
+            backgroundColor: transactionTypeBackgroundColor,
+            borderBottomColor: transactionAmountColor,
+            borderBottomWidth: 2,
+            borderStyle: 'solid',
+          },
         ]}
       >
         <View style={{ display: 'flex' }}>
@@ -76,6 +82,8 @@ const IncomeManage = () => {
   };
 
   const withdrawMoney = () => {
+    setErrorText('');
+    setWithdrawAmount('');
     setWithdrawModalVisible(true);
   };
 
@@ -84,18 +92,25 @@ const IncomeManage = () => {
       const withdrawalAmount = parseFloat(withdrawAmount);
       if (withdrawalAmount <= balance) {
         setBalance(balance - withdrawalAmount);
-        setCashIncome(cashIncome - withdrawalAmount);
+        // setCashIncome(cashIncome - withdrawalAmount);
         setWithdrawModalVisible(false);
         setWithdrawAmount('');
         schedulePushNotification(
           '[TaskHUB] - Rút tiền',
-          withdrawAmount.toLocaleString('vi-VN')
+          `${withdrawAmount.toLocaleString('vi-VN')} ₫`
         );
+        setErrorText('');
+        setTransactionHistory((prev) => [
+          { type: 'withdraw', amount: withdrawalAmount, timestamp: new Date() },
+          ...prev,
+        ]);
       } else {
         // Xử lý thông báo không đủ số dư
+        setErrorText('Số tiền vượt quá số dư');
       }
     } else {
       // Xử lý thông báo nhập số tiền hợp lệ
+      setErrorText('Vui lòng nhập số tiền hợp lệ');
     }
   };
 
@@ -154,12 +169,15 @@ const IncomeManage = () => {
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Rút tiền</Text>
             <TextInput
-              style={styles.modalInput}
+              style={[styles.modalInput, errorText ? styles.inputError : null]}
               placeholder="Nhập số tiền cần rút"
               keyboardType="numeric"
               value={withdrawAmount}
               onChangeText={(text) => setWithdrawAmount(text)}
             />
+            {errorText ? (
+              <Text style={styles.errorText}>{errorText}</Text>
+            ) : null}
             <View
               style={{
                 display: 'flex',
@@ -193,10 +211,13 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   card: {
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#E8F5E9',
     padding: 16,
     borderRadius: 8,
     marginBottom: 16,
+    borderWidth: 2,
+    borderStyle: 'dotted',
+    borderColor: '#4CAF50',
   },
   balance: {
     fontSize: 20,
@@ -262,6 +283,13 @@ const styles = StyleSheet.create({
     padding: 16,
     paddingHorizontal: 12,
     marginBottom: 16,
+  },
+  inputError: {
+    borderColor: 'red',
+  },
+  errorText: {
+    color: 'red',
+    marginBottom: 8,
   },
   modalButton: {
     backgroundColor: 'green',

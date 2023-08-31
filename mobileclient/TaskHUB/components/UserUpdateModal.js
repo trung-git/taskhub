@@ -19,6 +19,8 @@ const UserUpdateModal = ({ field, isOpenEditModal, onClose }) => {
   const [isUpdate, setIsUpdate] = useState(false);
   const [fieldValue, setFieldValue] = useState('');
 
+  console.log('fieldValue', fieldValue);
+
   const Component = field?.component;
 
   useEffect(() => {
@@ -37,7 +39,10 @@ const UserUpdateModal = ({ field, isOpenEditModal, onClose }) => {
     setIsUpdate(true);
     axios
       .post(`${API_URL}/api/v1/user/update-profile`, {
-        [field?.name]: fieldValue,
+        [field?.name]:
+          field?.name === 'workLocation'
+            ? fieldValue?.map((val) => val?._id)
+            : fieldValue,
       })
       .then((response) => {
         console.log('signUpsuccess', response);

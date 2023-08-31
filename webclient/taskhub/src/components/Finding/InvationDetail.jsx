@@ -28,6 +28,7 @@ import useLogin from '../../hooks/useLogin';
 import ResponseTime from '../../base/component/ResponseTime';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import vietnameseDayOfWeekFormatter from '../../utils/vietnameseDayOfWeekFormatter';
+import { useNavigate } from 'react-router';
 dayjs.extend(customParseFormat);
 
 const validationSchema = yup.object({
@@ -58,6 +59,7 @@ const InvationDetail = ({ bookingData, isOpen, handleCloseBookingForm }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { getUserToken } = useLogin();
   const token = getUserToken();
+  const navigate = useNavigate();
 
   console.log(
     'bookingData',
@@ -132,6 +134,9 @@ const InvationDetail = ({ bookingData, isOpen, handleCloseBookingForm }) => {
           toastSuccess('Send invitation success');
           //TODO reset close append new posr
           // resetForm();
+          setTimeout(() => {
+            navigate(`/tasklist/${response?.data?.data?._id}`);
+          }, 2000);
         })
         .catch((error) => {
           console.error(error);
