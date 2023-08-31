@@ -258,7 +258,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   }
 
   const updatedUser = await user.save();
-  const populatedUser = await updatedUser.populate('workLocation');
+  const populatedUser = await Tasker.populate(updatedUser, {path: 'workLocation'});
 
   const contractCount = await Contract.countDocuments({$or: [{finder: updatedUser._id}, {tasker: updatedUser._id}]});
   const postCount = await Post.countDocuments({user: updatedUser._id});
