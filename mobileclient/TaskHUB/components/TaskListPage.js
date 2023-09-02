@@ -184,7 +184,7 @@ const TaskListPage = ({ onOpenChat, status }) => {
           <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
         }
         onEndReached={handleLoadMore}
-        onEndReachedThreshold={0.1}
+        onEndReachedThreshold={0}
       />
       {loading && (
         <View>

@@ -42,6 +42,13 @@ const UserUpdateModal = ({ field, isOpenEditModal, onClose }) => {
         [field?.name]:
           field?.name === 'workLocation'
             ? fieldValue?.map((val) => val?._id)
+            : field?.name === 'taskTag'
+            ? fieldValue?.map((val) => {
+                return {
+                  price: val?.price,
+                  taskInfo: val?.taskInfo?._id,
+                };
+              })
             : fieldValue,
       })
       .then((response) => {

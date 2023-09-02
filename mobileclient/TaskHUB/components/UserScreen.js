@@ -19,6 +19,7 @@ import GenderPicker from './GenderPicker';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import WorkLocationSelect from './WorkLocationSelect';
+import PriceByTagSelect from './PriceByTagSelect';
 
 const UserScreen = () => {
   const { userData } = useContext(AuthContext);
@@ -88,10 +89,10 @@ const UserScreen = () => {
         ?.map((tag) => {
           return t(tag?.taskInfo?.langKey);
         })
-        .join(','),
+        .join(', '),
       label: 'Công việc',
       editValue: userData?.taskTag,
-      component: TextUpdate,
+      component: PriceByTagSelect,
     },
     {
       name: 'workLocation',
