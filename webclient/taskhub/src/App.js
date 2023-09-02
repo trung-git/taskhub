@@ -12,6 +12,7 @@ import ThemeCustomization from './themes';
 import { viVN } from '@mui/x-date-pickers/locales';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Navigate, Route } from 'react-router';
 
 function App() {
   return (

@@ -50,6 +50,7 @@ function TaskViewDetail({ task, onSubmit, isSubmitting }) {
   } = task;
   const { t } = useTranslation();
   const theme = useTheme();
+  const isDone = status === 'cancel' || status === 'finish';
 
   const {
     handleSubmit,
@@ -57,6 +58,7 @@ function TaskViewDetail({ task, onSubmit, isSubmitting }) {
     setValue,
     getValues,
     watch,
+    reset,
     formState: { errors, isDirty, isValid },
   } = useForm({
     resolver: yupResolver(validationSchema),
@@ -72,6 +74,34 @@ function TaskViewDetail({ task, onSubmit, isSubmitting }) {
       paymentType: paymentType,
     },
   });
+
+  console.log('taskValue', task);
+
+  useEffect(() => {
+    if (task) {
+      reset({
+        taskTag: taskTag,
+        workLocation: workLocation,
+        address: address,
+        workTimeFrom: workTime.from,
+        workTimeTo: workTime.to,
+        price: price,
+        paymentPlan: paymentPlan,
+        description: description,
+        paymentType: paymentType,
+      });
+    }
+  }, [
+    task,
+    taskTag,
+    workLocation,
+    address,
+    workTime,
+    price,
+    paymentPlan,
+    description,
+    paymentType,
+  ]);
 
   const RenderChipByStatus = (status) => {
     const configChipType = [
@@ -188,7 +218,9 @@ function TaskViewDetail({ task, onSubmit, isSubmitting }) {
                 <IconButton variant="outlined" color="secondary">
                   <ArrowBackIcon />
                 </IconButton>
-                <Typography variant="subtitle1">Thông tin công việc</Typography>
+                <Typography variant="subtitle1">
+                  {t('th_key_task_information')}
+                </Typography>
                 {/* <IconButton
                   variant="outlined"
                   color="secondary"
@@ -342,51 +374,44 @@ function TaskViewDetail({ task, onSubmit, isSubmitting }) {
                       <Controller
                         name="workTimeTo"
                         control={control}
-                        render={({ field }) => {
-                          console.log(
-                            'fieldworkTimeTo',
-                            field,
-                            dayjs(new Date()).isSame(dayjs(field.value), 'day')
-                          );
-                          return (
-                            <TimePicker
-                              id="workTimeTo"
-                              name="workTimeTo"
-                              value={dayjs(new Date(field.value))}
-                              minTime={dayjs(getValues('workTimeFrom')).add(
-                                1,
-                                'hour'
-                              )}
-                              maxTime={
-                                dayjs(getValues('workTimeFrom')).hour() < 16
-                                  ? dayjs(getValues('workTimeFrom')).add(
-                                      8,
-                                      'hour'
-                                    )
-                                  : undefined
-                              }
-                              disablePast={dayjs(new Date()).isSame(
-                                dayjs(field.value),
-                                'day'
-                              )}
-                              onChange={(val) => {
-                                console.log(
-                                  'valTimePickeChange',
-                                  val.toISOString()
-                                );
-                                setValue('workTimeTo', val.toISOString());
-                              }}
-                              ampm={false}
-                              timeSteps={{ hours: 1, minutes: 30 }}
-                              sx={{
-                                '& .MuiOutlinedInput-input': {
-                                  padding: '8px 16px',
-                                },
-                              }}
-                              error={false}
-                            />
-                          );
-                        }}
+                        render={({ field }) => (
+                          <TimePicker
+                            id="workTimeTo"
+                            name="workTimeTo"
+                            value={dayjs(new Date(field.value))}
+                            minTime={dayjs(getValues('workTimeFrom')).add(
+                              1,
+                              'hour'
+                            )}
+                            maxTime={
+                              dayjs(getValues('workTimeFrom')).hour() < 16
+                                ? dayjs(getValues('workTimeFrom')).add(
+                                    8,
+                                    'hour'
+                                  )
+                                : undefined
+                            }
+                            disablePast={dayjs(new Date()).isSame(
+                              dayjs(field.value),
+                              'day'
+                            )}
+                            onChange={(val) => {
+                              console.log(
+                                'valTimePickeChange',
+                                val.toISOString()
+                              );
+                              setValue('workTimeTo', val.toISOString());
+                            }}
+                            ampm={false}
+                            timeSteps={{ hours: 1, minutes: 30 }}
+                            sx={{
+                              '& .MuiOutlinedInput-input': {
+                                padding: '8px 16px',
+                              },
+                            }}
+                            error={false}
+                          />
+                        )}
                       />
                     </Stack>
                   </Stack>
@@ -542,7 +567,9 @@ function TaskViewDetail({ task, onSubmit, isSubmitting }) {
               >
                 <InputLabel htmlFor="email" sx={{ textAlign: 'start' }}>
                   <Stack direction={'row'} alignItems={'center'} spacing={0.5}>
-                    <Typography>Lasted update at:</Typography>
+                    <Typography>
+                      {t('th_key_task_lasted_update_at')}:
+                    </Typography>
                     <Typography>
                       {dayjs(updatedAt).format('HH:mm DD/MM/YYYY')}
                     </Typography>

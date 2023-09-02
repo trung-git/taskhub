@@ -90,6 +90,8 @@ const resources = {
       th_key_payment_onetime: 'Salary',
       th_key_payment_type_cash: 'Cash (Pay at work location)',
       th_key_payment_type_online: 'Paypal (Transfer first)',
+      th_key_task_information: 'Task information',
+      th_key_task_lasted_update_at: 'Lasted update at',
       //
       th_key_nodata: 'No record(s) found',
       th_key_task: 'Task',
@@ -214,6 +216,8 @@ const resources = {
       th_key_tasklist_btn_view_detail: 'Xem chi tiết',
       th_key_payment_perhour: 'Theo giờ',
       th_key_payment_onetime: 'Một lần',
+      th_key_task_information: 'Thông tin công việc',
+      th_key_task_lasted_update_at: 'Cập nhật lần cuối lúc',
       //
       th_key_nodata: 'Không có dữ liệu',
       th_key_task: 'Công việc',

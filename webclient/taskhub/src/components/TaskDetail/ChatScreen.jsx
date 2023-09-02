@@ -347,7 +347,16 @@ function ChatScreen({ user, chatId, otherUser }) {
         >
           <div ref={endRef} style={{ pt: 5 }} />
           {RenderChatMemo}
-          {isLoadingMore && isHasMore && <CircularProgress />}
+          {isLoadingMore && isHasMore && (
+            <Stack
+              direction={'row'}
+              justifyContent={'center'}
+              alignItems={'center'}
+              sx={{ width: '100%' }}
+            >
+              <CircularProgress />
+            </Stack>
+          )}
         </div>
         <Stack
           spacing={1}
