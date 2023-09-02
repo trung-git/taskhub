@@ -6,7 +6,7 @@ const cors = require('cors');
 const fileUpload = require('express-fileupload');
 
 const corsOptions = {
-  origin: ['http://localhost:3000'],
+  origin: ['http://localhost:*', 'https://taskhub-pro.netlify.app'],
   credentials: true,
 };
 
