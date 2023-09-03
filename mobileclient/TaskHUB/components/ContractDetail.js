@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   View,
   useWindowDimensions,
@@ -10,21 +10,25 @@ import {
   Platform,
   Keyboard,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 import ChatPage from './ChatPage';
 import ContractTabDetail from './ContractTabDetail';
+import { API_URL } from '../config/constans';
+import axios from 'axios';
 
 const FirstRoute = () => <View style={{ flex: 1, backgroundColor: 'white' }} />;
 
 const ContractDetail = ({ taskData, onClose }) => {
   const layout = useWindowDimensions();
 
-  console.log('taskData', taskData);
+  const [taskDataVal, setTaskDataVal] = useState(taskData);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const [index, setIndex] = React.useState(0);
+  const [index, setIndex] = useState(0);
   const [routes] = React.useState([
     { key: 'first', title: 'Chi tiết' },
     { key: 'second', title: 'Tin nhắn' },
@@ -32,11 +36,50 @@ const ContractDetail = ({ taskData, onClose }) => {
   const renderScene = ({ route }) => {
     switch (route.key) {
       case 'first':
-        return <ContractTabDetail taskData={taskData} />;
+        return (
+          <ContractTabDetail
+            taskData={taskDataVal}
+            onRefresh={refreshTaskData}
+          />
+        );
       case 'second':
-        return <ChatPage chatId={taskData?.chat} finder={taskData?.finder} />;
+        return taskDataVal?.status === 'invitation' ? (
+          <View
+            styles={{
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'red',
+            }}
+          >
+            <Text>Bạn có thể trau đổi sau khi đã chấp nhận lời mời này</Text>
+          </View>
+        ) : (
+          <ChatPage
+            chatId={taskDataVal?.chat}
+            finder={taskDataVal?.finder}
+            taskDataVal={taskDataVal}
+          />
+        );
       default:
         return null;
+    }
+  };
+
+  const refreshTaskData = async () => {
+    setIsRefreshing(true);
+    try {
+      const response = await axios.get(
+        `${API_URL}/api/v1/contract/${taskData._id}`
+      );
+      const responseData = response.data.data;
+      setTaskDataVal(responseData);
+      setIsRefreshing(false);
+    } catch (error) {
+      console.error('Error fetching data on tab task detail', error);
+      setIsRefreshing(false);
     }
   };
 
@@ -75,8 +118,12 @@ const ContractDetail = ({ taskData, onClose }) => {
           <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
             {taskData.finder.firstName}
           </Text>
-          <TouchableOpacity>
-            <Icon name="phone" size={20} />
+          <TouchableOpacity onPress={() => refreshTaskData()}>
+            {isRefreshing ? (
+              <ActivityIndicator size="small" color="green" />
+            ) : (
+              <Icon name="rotate-right" size={24} />
+            )}
           </TouchableOpacity>
         </View>
         <TabView

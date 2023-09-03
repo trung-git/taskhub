@@ -20,14 +20,15 @@ import locToString from '../config/locToString';
 import axios from 'axios';
 import { API_URL } from '../config/constans';
 import { predictAmount } from '../config/predictAmount';
+import ContractRejectModal from './ContractRejectModal';
 
-const ContractTabDetail = ({ taskData }) => {
+const ContractTabDetail = ({ taskData, onRefresh }) => {
   const [taskDataVal, setTaskDataVal] = useState(taskData);
   const { t } = useTranslation();
-
-  // useEffect(() => {
-
-  // }, [])
+  const [selectedField, setSelectedField] = useState(null);
+  const [isOpenEditModal, setIsOpenEditModal] = useState(false);
+  const [openReject, setOpenReject] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const fields = [
     {
@@ -86,7 +87,7 @@ const ContractTabDetail = ({ taskData }) => {
     {
       name: 'price',
       value:
-        taskDataVal?.paymentPlan == 'by-wallet'
+        taskDataVal?.paymentType == 'by-wallet'
           ? 'Paypal'
           : 'Tiền mặt khi làm việc',
       label: 'Thanh toán',
@@ -114,9 +115,6 @@ const ContractTabDetail = ({ taskData }) => {
     },
   ];
 
-  const [selectedField, setSelectedField] = useState(null);
-  const [isOpenEditModal, setIsOpenEditModal] = useState(false);
-
   const handleFieldSelect = (field) => {
     console.log(
       'selectedField',
@@ -126,7 +124,11 @@ const ContractTabDetail = ({ taskData }) => {
     setSelectedField(fields.find((_ele) => _ele.name == field));
   };
 
-  console.log('taskData', taskData);
+  useEffect(() => {
+    if (taskData) {
+      setTaskDataVal(taskData);
+    }
+  }, [taskData]);
 
   useEffect(() => {
     if (selectedField) {
@@ -135,8 +137,6 @@ const ContractTabDetail = ({ taskData }) => {
       setIsOpenEditModal(false);
     }
   }, [selectedField]);
-
-  const [refreshing, setRefreshing] = useState(false);
 
   const refreshTaskData = async () => {
     setRefreshing(true);
@@ -148,8 +148,62 @@ const ContractTabDetail = ({ taskData }) => {
       setTaskDataVal(responseData);
       // setChatId(responseData.chat);
       setRefreshing(false);
+      onRefresh && onRefresh();
     } catch (error) {
       console.error('Error fetching data on tab task detail', error);
+      setRefreshing(false);
+    }
+  };
+
+  const handleOnReject = (reason) => {};
+
+  const handleUpdateTaskState = async (state) => {
+    // setIsSubmitting(true);
+    let taskUpdateValue = {
+      status: state,
+    };
+    if (state === 'discuss') {
+      taskUpdateValue.updateExpires = true;
+    }
+    setRefreshing(true);
+    try {
+      const response = await axios.patch(
+        `${API_URL}/api/v1/contract/${taskData._id}`,
+        taskUpdateValue
+      );
+      const responseData = response.data.data;
+      setTaskDataVal(responseData);
+      console.log('User updated successfully:', response);
+      // setTaskData(responseData);
+      // toastSuccess('Update task success');
+      // setIsSubmitting(false);
+      setRefreshing(false);
+      onRefresh && onRefresh();
+    } catch (error) {
+      console.error('Error updating user:', error);
+      setRefreshing(false);
+    }
+  };
+
+  const handleUpdateTaskTime = async (act) => {
+    setRefreshing(true);
+    try {
+      const response = await axios.patch(
+        `${API_URL}/api/v1/contract/${taskData._id}`,
+        act === 'start'
+          ? { startTime: dayjs(new Date()).toISOString() }
+          : { endTime: dayjs(new Date()).toISOString() }
+      );
+      const responseData = response.data.data;
+      setTaskDataVal(responseData);
+      console.log('User updated successfully:', response);
+      // setTaskData(responseData);
+      // toastSuccess('Update task success');
+      // setIsSubmitting(false);
+      setRefreshing(false);
+      onRefresh && onRefresh();
+    } catch (error) {
+      console.error('Error updating user:', error);
       setRefreshing(false);
     }
   };
@@ -225,27 +279,160 @@ const ContractTabDetail = ({ taskData }) => {
           </View>
         </View>
       </ScrollView>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={[styles.button, styles.btncancel]}>
-          <Text style={{ color: 'red', fontSize: 20 }}>Từ chối</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, styles.btnsuccess]}>
-          <Text style={{ color: 'white', fontSize: 20 }}>Chấp nhận</Text>
-        </TouchableOpacity>
-      </View>
-      {/* <View style={styles.buttonContainer}>
-        <TouchableOpacity style={[styles.button, styles.btncancel]}>
-          <Text style={{ color: 'red', fontSize: 20 }}>Hủy</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, styles.btnsuccess]}>
-          <Text style={{ color: 'white', fontSize: 20 }}>Bắt đầu</Text>
-        </TouchableOpacity>
-      </View> */}
+      {taskDataVal?.status === 'invitation' && (
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              styles.btncancel,
+              refreshing && styles.btnDisable,
+            ]}
+            onPress={() => setOpenReject(true)}
+          >
+            <Text
+              style={{
+                color: 'red',
+                fontSize: 20,
+                ...(refreshing && styles.textDisable),
+              }}
+            >
+              Từ chối
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              styles.btnsuccess,
+              refreshing && styles.btnDisable,
+            ]}
+            onPress={() => handleUpdateTaskState('discuss')}
+          >
+            <Text
+              style={{
+                color: 'white',
+                fontSize: 18,
+                ...(refreshing && styles.textDisable),
+              }}
+            >
+              Chấp nhận trao đổi
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      {taskDataVal?.status === 'discuss' && (
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              styles.btncancel,
+              refreshing && styles.btnDisable,
+            ]}
+          >
+            <Text
+              style={{
+                color: 'red',
+                fontSize: 18,
+                ...(refreshing && styles.textDisable),
+              }}
+            >
+              Hủy
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              styles.btnsuccess,
+              refreshing && styles.btnDisable,
+            ]}
+            onPress={() => handleUpdateTaskState('official')}
+          >
+            <Text
+              style={{
+                color: 'white',
+                fontSize: 18,
+                ...(refreshing && styles.textDisable),
+              }}
+            >
+              Đồng ý thực hiện
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      {taskDataVal?.status === 'official' && (
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              styles.btncancel,
+              refreshing && styles.btnDisable,
+            ]}
+          >
+            <Text
+              style={{
+                color: 'red',
+                fontSize: 20,
+                ...(refreshing && styles.textDisable),
+              }}
+            >
+              Hủy
+            </Text>
+          </TouchableOpacity>
+          {!taskDataVal?.startTime ? (
+            <TouchableOpacity
+              style={[
+                styles.button,
+                styles.btnsuccess,
+                refreshing && styles.btnDisable,
+              ]}
+              disabled={taskDataVal?.startTime}
+              onPress={() => handleUpdateTaskTime('start')}
+            >
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 18,
+                  ...(refreshing && styles.textDisable),
+                }}
+              >
+                Bắt đầu
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={[
+                styles.button,
+                styles.btnsuccess,
+                refreshing && styles.btnDisable,
+              ]}
+              // disabled={!taskDataVal?.startTime}
+            >
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 18,
+                  ...(refreshing && styles.textDisable),
+                }}
+                onPress={() => handleUpdateTaskTime('end')}
+              >
+                Kết thúc
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      )}
       {isOpenEditModal && selectedField && (
         <UserUpdateModal
           field={selectedField}
           isOpenEditModal={isOpenEditModal}
           onClose={() => setSelectedField(null)}
+        />
+      )}
+      {openReject && (
+        <ContractRejectModal
+          isRejectOpen={openReject}
+          closeReject={() => setOpenReject(false)}
+          taskId={taskDataVal?._id}
+          onReject={(reason) => handleOnReject(reason)}
         />
       )}
     </View>
@@ -302,9 +489,9 @@ const styles = StyleSheet.create({
   button: {
     // backgroundColor: 'blue',
     paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     borderRadius: 5,
-    width: '40%',
+    width: '45%',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
@@ -315,6 +502,15 @@ const styles = StyleSheet.create({
     borderColor: 'red',
     borderWidth: 2,
     borderStyle: 'solid',
+  },
+  btnDisable: {
+    backgroundColor: 'white',
+    borderColor: 'grey',
+    borderWidth: 2,
+    borderStyle: 'solid',
+  },
+  textDisable: {
+    color: 'grey',
   },
   btnsuccess: {
     backgroundColor: 'green',

@@ -11,11 +11,13 @@ import {
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import { API_URL } from '../config/constans';
+import { useTranslation } from 'react-i18next';
 
 const TaskTagPicker = ({ onChange, value }) => {
   const [selectedValue, setSelectedValue] = useState('');
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (value) {
@@ -83,7 +85,8 @@ const TaskTagPicker = ({ onChange, value }) => {
             onPress={() => setModalVisible(true)}
           >
             <Text>
-              {(data.length > 0 && selectedValue.title) ?? 'Chọn Công Việc'}
+              {(data.length > 0 && t(selectedValue.langKey)) ??
+                'Chọn Công Việc'}
             </Text>
           </TouchableOpacity>
 
@@ -117,7 +120,7 @@ const TaskTagPicker = ({ onChange, value }) => {
                   data.map((item) => {
                     return (
                       <Picker.Item
-                        label={item.title}
+                        label={t(item.langKey)}
                         value={item._id}
                         key={item._id}
                       />

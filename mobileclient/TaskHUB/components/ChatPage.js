@@ -18,7 +18,7 @@ import axios from 'axios';
 import { API_URL } from '../config/constans';
 import dayjs from 'dayjs';
 
-const ChatPage = ({ chatId, finder }) => {
+const ChatPage = ({ chatId, finder, taskDataVal }) => {
   const { userData } = useContext(AuthContext);
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
@@ -51,7 +51,7 @@ const ChatPage = ({ chatId, finder }) => {
   useEffect(() => {
     setIsFetching(true);
     fetchData(chatId);
-  }, [chatId]);
+  }, [chatId, taskDataVal]);
 
   const handleSend = () => {
     if (inputText.trim() !== '') {
@@ -66,11 +66,32 @@ const ChatPage = ({ chatId, finder }) => {
         },
         ...messages,
       ]);
-      if (flatListRef?.current) {
-        const newIndex = messages.length - 1;
-        // flatListRef?.current?.scrollToIndex({ index: 0, animated: true });
-      }
+      sendMessage(inputText);
       setInputText('');
+    }
+  };
+
+  const sendMessage = async (message) => {
+    const messageData = {
+      chatId: chatId,
+      message: message,
+    };
+    try {
+      const response = await axios.post(
+        `${API_URL}/api/v1/chat/send`,
+        messageData
+      );
+      // const responseData = response.data.data;
+      setMessages((prevState) => {
+        return prevState?.map((_message) => {
+          return {
+            ..._message,
+            isSending: false,
+          };
+        });
+      });
+    } catch (error) {
+      console.error('Error fetching data:', error);
     }
   };
 

@@ -39,12 +39,6 @@ const TaskManage = () => {
     setTaskOpen(false);
   };
 
-  const FirstRoute = () => (
-    <View style={{ flex: 1, backgroundColor: '#ff4081' }} />
-  );
-
-  // {!taskOpen && <TaskListPage onOpenChat={openChat} />}
-
   const renderScene = ({ route }) => {
     switch (route.key) {
       case 'invitation':

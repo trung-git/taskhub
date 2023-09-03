@@ -130,20 +130,24 @@ const TaskListPage = ({ onOpenChat, status }) => {
               </Text>
             </View>
 
-            <View
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginTop: 16,
-                marginBottom: 8,
-              }}
-            >
-              <Text style={{ fontSize: 16 }}>Thời hạn phản hồi: </Text>
-              <Text style={{ fontSize: 16, color: 'red', fontWeight: 'bold' }}>
-                {moment(item?.expireAt).fromNow()}
-              </Text>
-            </View>
+            {item?.status === 'invitation' && (
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginTop: 16,
+                  marginBottom: 8,
+                }}
+              >
+                <Text style={{ fontSize: 16 }}>Thời hạn phản hồi: </Text>
+                <Text
+                  style={{ fontSize: 16, color: 'red', fontWeight: 'bold' }}
+                >
+                  {moment(item?.expireAt).fromNow()}
+                </Text>
+              </View>
+            )}
           </View>
           <View
             style={{

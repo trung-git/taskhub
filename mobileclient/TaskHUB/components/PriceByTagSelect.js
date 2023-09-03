@@ -139,7 +139,7 @@ const PriceByTagSelect = ({ value, onChange }) => {
               backgroundColor: 'green',
               width: '90%',
             }}
-            title="Thêm địa chỉ làm việc"
+            title="Thêm công việc khác"
             onPress={() => handleAddLoc()}
           />
         </View>
