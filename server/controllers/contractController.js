@@ -87,6 +87,7 @@ exports.createContractByPost = catchAsync(async (req, res, next) => {
   }
   
   candidate.isSendInvitation = true;
+  await post.save();
 
   const chat = await Chat.create({
     users: [{ user: post.user._id }, { user: candidateId }],
