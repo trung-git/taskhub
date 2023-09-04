@@ -79,7 +79,7 @@ exports.createContractByPost = catchAsync(async (req, res, next) => {
   }
 
   const candidate = post.candidate.find(v => {
-    return String(v.user) === String(candidateId);
+    return String(v.user._id) === String(candidateId);
   })
 
   if (!candidate) {
