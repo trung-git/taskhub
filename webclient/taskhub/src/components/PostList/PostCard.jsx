@@ -95,7 +95,7 @@ const PostCard = ({ post, onSelect, onRefresh }) => {
       const contractParams = {
         postId: id,
         candidateId: candidateId,
-        expireAt: closeRegisterAt,
+        expireAt: dayjs(new Date()).add(1, 'hour').toISOString(),
       };
       console.log('formDataOnsubmit', contractParams);
 
@@ -369,6 +369,7 @@ const PostCard = ({ post, onSelect, onRefresh }) => {
             onClose={() => setOpenCandidateModal(false)}
             onSendInvitation={(id) => onSubmitHandler(id)}
             isSendInvitation={isSendInvitation}
+            isCanInvitation={new Date(closeRegisterAt) > new Date()}
           />
         )}
       </Dialog>

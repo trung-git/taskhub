@@ -64,6 +64,7 @@ const CandidateModal = ({
   onClose,
   onSendInvitation,
   isSendInvitation,
+  isCanInvitation,
 }) => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -146,6 +147,7 @@ const CandidateModal = ({
                     sx={{ my: 2, justifyContent: 'flex-end', width: '100%' }}
                   >
                     <LoadingButton
+                      disabled={!isCanInvitation}
                       loading={isSendInvitation}
                       variant="contained"
                       color="primary"
