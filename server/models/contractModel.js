@@ -36,7 +36,7 @@ const contractModel = new mongoose.Schema(
     status: {
       type: String,
       enum: {
-        values: ["invitation", "discuss", "official", "cancel", "finish"]
+        values: ["invitation", "discuss", "official", "cancel", "finish", "rejected"]
       },
       default: "invitation"
     },
