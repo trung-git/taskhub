@@ -37,8 +37,12 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import CandidateModal from './CandidateModal';
 import ImagesList from '../../base/component/ImagesList';
 import PostModal from './PostModal';
+import useToastify from '../../hooks/useToastify';
+import axios from 'axios';
+import { API_URL } from '../../base/config';
+import useLogin from '../../hooks/useLogin';
 
-const PostCard = ({ post, onSelect }) => {
+const PostCard = ({ post, onSelect, onRefresh }) => {
   const {
     user,
     address,
@@ -60,6 +64,10 @@ const PostCard = ({ post, onSelect }) => {
   const [openCandidateModal, setOpenCandidateModal] = useState(false);
   const [openPostModal, setOpenPostModal] = useState(false);
   const navigate = useNavigate();
+  const { toastError, toastSuccess } = useToastify();
+  const { getUserToken } = useLogin();
+  const token = getUserToken();
+  const [isSendInvitation, setIsSendInvitation] = useState(false);
 
   const handleClickOpen = () => {
     setOpenCandidateModal(true);
@@ -80,11 +88,65 @@ const PostCard = ({ post, onSelect }) => {
     setAnchorEl(null);
   };
 
-  // const handleOnEdit = () => {
-  //   onSelect && onSelect(id);
-  // };
+  const onSubmitHandler = (candidateId) => {
+    if (candidateId) {
+      setIsSendInvitation(true);
 
-  const handleOnDelete = () => {};
+      const contractParams = {
+        postId: id,
+        candidateId: candidateId,
+        expireAt: closeRegisterAt,
+      };
+      console.log('formDataOnsubmit', contractParams);
+
+      axios
+        .post(
+          `${API_URL}api/v1/contract/create-contract-by-post`,
+          contractParams,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log('postValueSucces', response);
+          toastSuccess('Send invitation success');
+          //TODO reset close append new posr
+          // resetForm();
+          setTimeout(() => {
+            navigate(`/tasklist/${response?.data?.data?._id}`);
+          }, 2000);
+          setIsSendInvitation(false);
+        })
+        .catch((error) => {
+          console.error(error);
+          console.error('Error:', Object.keys(error), error.message);
+          console.error(error?.config);
+          console.error(error?.request);
+          console.error(error?.response);
+          toastError(`Update error, ${error.message}`);
+          setIsSendInvitation(false);
+        });
+    } else {
+      setIsSendInvitation(false);
+    }
+  };
+
+  const deletePost = async () => {
+    try {
+      const response = await axios.delete(`${API_URL}api/v1/post/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const responseData = response.data.data;
+      onRefresh && onRefresh();
+      toastSuccess('Delete post success');
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   return (
     <div>
@@ -163,7 +225,10 @@ const PostCard = ({ post, onSelect }) => {
                 <ListItemText primary="Edit" />
               </MenuItem>
               <MenuItem
-                onClick={handleMenuClose}
+                onClick={() => {
+                  deletePost();
+                  handleMenuClose();
+                }}
                 sx={{ color: theme.palette.error.main }}
               >
                 <ListItemIcon>
@@ -302,6 +367,8 @@ const PostCard = ({ post, onSelect }) => {
             candidateList={candidate}
             candidateInfo={candidateInfo}
             onClose={() => setOpenCandidateModal(false)}
+            onSendInvitation={(id) => onSubmitHandler(id)}
+            isSendInvitation={isSendInvitation}
           />
         )}
       </Dialog>

@@ -39,6 +39,7 @@ import DateBookingModal from './DateBookingModal';
 import InvationDetail from './InvationDetail';
 import { LoadingButton } from '@mui/lab';
 import Nodata from '../../base/component/Nodata';
+import formatVietnameseCurrency from '../../utils/formatVietnameseCurrency';
 
 const Finding = (props) => {
   const params = useParams();
@@ -55,7 +56,7 @@ const Finding = (props) => {
   const [pageNum, setPageNum] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const [sortOption, setSortOption] = useState(1);
-  const [price, setPrice] = useState([1, 100]);
+  const [price, setPrice] = useState([20000, 200000]);
   const [loading, setLoading] = useState(false);
   const [loadingTasker, setLoadingTasker] = useState(false);
 
@@ -276,11 +277,12 @@ const Finding = (props) => {
                     }}
                   >
                     <Typography sx={{ fontWeight: 600, mb: 0.5 }}>
-                      Sort By:
+                      {t('th_key_task_sort_by')}:
                     </Typography>
                     <SortBy value={sortOption} onChange={setSortOption} />
                     <Typography sx={{ fontWeight: 600, my: 0.5 }}>
-                      Price:
+                      {t('th_key_price')}: {formatVietnameseCurrency(price[0])}{' '}
+                      - {formatVietnameseCurrency(price[1])}
                     </Typography>
                     <Box sx={{ width: '100%', mt: 2, px: 1 }}>
                       <PriceSlider value={price} onChange={setPrice} />

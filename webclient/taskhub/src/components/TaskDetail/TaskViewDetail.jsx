@@ -10,7 +10,9 @@ import {
   IconButton,
   InputLabel,
   MenuItem,
+  Popover,
   Select,
+  Skeleton,
   Stack,
   TextField,
   Tooltip,
@@ -26,6 +28,8 @@ import { TimePicker } from '@mui/x-date-pickers';
 import { useState, useEffect } from 'react';
 import formatVietnameseCurrency from '../../utils/formatVietnameseCurrency';
 import { LoadingButton } from '@mui/lab';
+import { loadScript } from '@paypal/paypal-js';
+import { useNavigate } from 'react-router';
 
 const validationSchema = yup.object({
   address: yup.string().required('Address is required'),
@@ -33,7 +37,13 @@ const validationSchema = yup.object({
   price: yup.number().moreThan(0).required('Price is required'),
 });
 
-function TaskViewDetail({ task, onSubmit, isSubmitting }) {
+function TaskViewDetail({
+  task,
+  onSubmit,
+  isSubmitting,
+  onRefresh,
+  isLoading,
+}) {
   const {
     taskTag,
     workLocation,
@@ -50,6 +60,7 @@ function TaskViewDetail({ task, onSubmit, isSubmitting }) {
   } = task;
   const { t } = useTranslation();
   const theme = useTheme();
+  const navigate = useNavigate();
   const isDone = status === 'cancel' || status === 'finish';
 
   const {
@@ -148,6 +159,14 @@ function TaskViewDetail({ task, onSubmit, isSubmitting }) {
   const paymentPlanValue = watch('paymentPlan');
 
   const [predictAmount, setPredictAmount] = useState(0);
+  const [isRenderPaypalButton, setIsRenderPaypalButton] = useState(false);
+
+  const [anchorPayEl, setAnchorPayEl] = useState(null);
+
+  const handlePayment = (e) => {
+    setAnchorPayEl(e.currentTarget);
+    loadPayPalScript(predictAmount, setIsRenderPaypalButton);
+  };
 
   useEffect(() => {
     const timeFrom = dayjs(workTimeFromValue);
@@ -169,6 +188,76 @@ function TaskViewDetail({ task, onSubmit, isSubmitting }) {
 
   const onSubmitHandler = (data) => {
     onSubmit && onSubmit(data);
+  };
+
+  // Paypal
+  const loadPayPalScript = (price) => {
+    loadScript({
+      'client-id':
+        'AYcmJkmn67k3lN7Cb0b5gwp37bz_xxy6iMpQZKjaT_2xg8ALUvStP-_3c0gyePfwWWC7E3-0vayOSZQC',
+    })
+      .then((paypal) => {
+        paypal
+          .Buttons(
+            renderPaypalBtn({
+              description: 'Thanh toán hợp đồng',
+              value: price,
+            })
+          )
+          .render('#paypal-container-element');
+
+        // setIsRenderBtn(true);
+      })
+      .catch((err) => {
+        console.error('failed to load the PayPal JS SDK script', err);
+      });
+  };
+
+  const renderPaypalBtn = (item) => {
+    const value = Math.round(item.value / 23);
+    return {
+      createOrder: function (data, actions) {
+        return actions.order.create({
+          purchase_units: [
+            {
+              amount: {
+                description: 'Thanh toán hợp đồng',
+                value: value,
+              },
+            },
+          ],
+        });
+      },
+      onCancel: onCancelHandler,
+      onApprove: function (data, actions) {
+        // const value = Math.round(data.value / 23);
+        console.log('dataOnApprove', data, actions);
+        return actions.order.capture().then(function (orderData) {
+          console.log('orderData', orderData);
+          var transaction = orderData.purchase_units[0].payments.captures[0];
+          if (transaction.status === 'COMPLETED') {
+            // TODO Call api update thanh toan thành công
+            // updateOrder(orderId)
+            //   .then((data) => {
+            //     if (data.isPaid) {
+            //       updateStateAfterOrder(data.paidAt);
+            //     }
+            //   })
+            //   .catch((er) => console.log(er));
+            console.log('Thanh toán thành công');
+          }
+        });
+      },
+      onError: onErrorHandler,
+    };
+  };
+
+  const onCancelHandler = function () {
+    console.log('cancel');
+  };
+
+  const onErrorHandler = function (err) {
+    console.log('error');
   };
 
   return (
@@ -215,7 +304,11 @@ function TaskViewDetail({ task, onSubmit, isSubmitting }) {
                 sx={{ width: '100%' }}
                 justifyContent={'space-between'}
               >
-                <IconButton variant="outlined" color="secondary">
+                <IconButton
+                  variant="outlined"
+                  color="secondary"
+                  onClick={() => navigate('/tasklist')}
+                >
                   <ArrowBackIcon />
                 </IconButton>
                 <Typography variant="subtitle1">
@@ -249,21 +342,30 @@ function TaskViewDetail({ task, onSubmit, isSubmitting }) {
                     <InputLabel htmlFor="taskTag" sx={{ textAlign: 'start' }}>
                       {t('th_key_task')}
                     </InputLabel>
-                    <Controller
-                      name="taskTag"
-                      control={control}
-                      render={({ field }) => (
-                        <TextField
-                          InputProps={{
-                            readOnly: true,
-                          }}
-                          fullWidth
-                          id="taskTag"
-                          {...field}
-                          value={t(field.value.langKey)}
-                        />
-                      )}
-                    />
+                    {isLoading ? (
+                      <Skeleton
+                        variant="rounded"
+                        width={'100%'}
+                        height={41}
+                        sx={{ mt: 1 }}
+                      />
+                    ) : (
+                      <Controller
+                        name="taskTag"
+                        control={control}
+                        render={({ field }) => (
+                          <TextField
+                            InputProps={{
+                              readOnly: true,
+                            }}
+                            fullWidth
+                            id="taskTag"
+                            {...field}
+                            value={t(field.value.langKey)}
+                          />
+                        )}
+                      />
+                    )}
                   </Stack>
                 </Grid>
                 <Grid item xs={12}>
@@ -274,23 +376,32 @@ function TaskViewDetail({ task, onSubmit, isSubmitting }) {
                     >
                       {t('th_key_worklocation')}
                     </InputLabel>
-                    <Controller
-                      name="workLocation"
-                      control={control}
-                      render={({ field }) => {
-                        return (
-                          <TextField
-                            InputProps={{
-                              readOnly: true,
-                            }}
-                            fullWidth
-                            id="workLocation"
-                            {...field}
-                            value={locToString(field.value)}
-                          />
-                        );
-                      }}
-                    />
+                    {isLoading ? (
+                      <Skeleton
+                        variant="rounded"
+                        width={'100%'}
+                        height={41}
+                        sx={{ mt: 1 }}
+                      />
+                    ) : (
+                      <Controller
+                        name="workLocation"
+                        control={control}
+                        render={({ field }) => {
+                          return (
+                            <TextField
+                              InputProps={{
+                                readOnly: true,
+                              }}
+                              fullWidth
+                              id="workLocation"
+                              {...field}
+                              value={locToString(field.value)}
+                            />
+                          );
+                        }}
+                      />
+                    )}
                   </Stack>
                 </Grid>
                 <Grid item xs={12}>
@@ -299,20 +410,31 @@ function TaskViewDetail({ task, onSubmit, isSubmitting }) {
                       {t('th_key_address')}{' '}
                       <span style={{ color: 'red' }}>*</span>
                     </InputLabel>
-                    <Controller
-                      name="address"
-                      control={control}
-                      render={({ field }) => (
-                        <TextField
-                          fullWidth
-                          id="address"
-                          placeholder="Enter address"
-                          {...field}
-                          error={Boolean(errors.address)}
-                          helperText={errors.address && errors.address.message}
-                        />
-                      )}
-                    />
+                    {isLoading ? (
+                      <Skeleton
+                        variant="rounded"
+                        width={'100%'}
+                        height={41}
+                        sx={{ mt: 1 }}
+                      />
+                    ) : (
+                      <Controller
+                        name="address"
+                        control={control}
+                        render={({ field }) => (
+                          <TextField
+                            fullWidth
+                            id="address"
+                            placeholder="Enter address"
+                            {...field}
+                            error={Boolean(errors.address)}
+                            helperText={
+                              errors.address && errors.address.message
+                            }
+                          />
+                        )}
+                      />
+                    )}
                   </Stack>
                 </Grid>
                 <Grid item xs={12}>
@@ -320,15 +442,24 @@ function TaskViewDetail({ task, onSubmit, isSubmitting }) {
                     <InputLabel htmlFor="address" sx={{ textAlign: 'start' }}>
                       {t('th_key_workdatetime')}
                     </InputLabel>
-                    <TextField
-                      InputProps={{
-                        readOnly: true,
-                      }}
-                      fullWidth
-                      value={dayjs(getValues('workTimeFrom')).format(
-                        'DD-MM-YYYY'
-                      )}
-                    />
+                    {isLoading ? (
+                      <Skeleton
+                        variant="rounded"
+                        width={'100%'}
+                        height={41}
+                        sx={{ mt: 1 }}
+                      />
+                    ) : (
+                      <TextField
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        fullWidth
+                        value={dayjs(getValues('workTimeFrom')).format(
+                          'DD-MM-YYYY'
+                        )}
+                      />
+                    )}
                   </Stack>
                 </Grid>
                 <Grid item xs={12}>
@@ -336,84 +467,93 @@ function TaskViewDetail({ task, onSubmit, isSubmitting }) {
                     <InputLabel sx={{ textAlign: 'start' }}>
                       {t('th_key_worktime')}
                     </InputLabel>
-                    <Stack
-                      direction={'row'}
-                      alignItems={'center'}
-                      justifyContent={'space-between'}
-                    >
-                      <Controller
-                        name="workTimeFrom"
-                        control={control}
-                        render={({ field }) => (
-                          <TimePicker
-                            id="workTimeFrom"
-                            name="workTimeFrom"
-                            value={dayjs(field.value)}
-                            disablePast={dayjs(new Date()).isSame(
-                              dayjs(field.value),
-                              'day'
-                            )}
-                            onChange={(val) => {
-                              console.log(
-                                'valTimePickeChange',
-                                val.toISOString()
-                              );
-                              setValue('workTimeFrom', val.toISOString());
-                            }}
-                            ampm={false}
-                            timeSteps={{ hours: 1, minutes: 30 }}
-                            sx={{
-                              '& .MuiOutlinedInput-input': {
-                                padding: '8px 16px',
-                              },
-                            }}
-                          />
-                        )}
+                    {isLoading ? (
+                      <Skeleton
+                        variant="rounded"
+                        width={'100%'}
+                        height={36}
+                        sx={{ mt: 1 }}
                       />
-                      <Box>-</Box>
-                      <Controller
-                        name="workTimeTo"
-                        control={control}
-                        render={({ field }) => (
-                          <TimePicker
-                            id="workTimeTo"
-                            name="workTimeTo"
-                            value={dayjs(new Date(field.value))}
-                            minTime={dayjs(getValues('workTimeFrom')).add(
-                              1,
-                              'hour'
-                            )}
-                            maxTime={
-                              dayjs(getValues('workTimeFrom')).hour() < 16
-                                ? dayjs(getValues('workTimeFrom')).add(
-                                    8,
-                                    'hour'
-                                  )
-                                : undefined
-                            }
-                            disablePast={dayjs(new Date()).isSame(
-                              dayjs(field.value),
-                              'day'
-                            )}
-                            onChange={(val) => {
-                              console.log(
-                                'valTimePickeChange',
-                                val.toISOString()
-                              );
-                              setValue('workTimeTo', val.toISOString());
-                            }}
-                            ampm={false}
-                            timeSteps={{ hours: 1, minutes: 30 }}
-                            sx={{
-                              '& .MuiOutlinedInput-input': {
-                                padding: '8px 16px',
-                              },
-                            }}
-                            error={false}
-                          />
-                        )}
-                      />
-                    </Stack>
+                    ) : (
+                      <Stack
+                        direction={'row'}
+                        alignItems={'center'}
+                        justifyContent={'space-between'}
+                      >
+                        <Controller
+                          name="workTimeFrom"
+                          control={control}
+                          render={({ field }) => (
+                            <TimePicker
+                              id="workTimeFrom"
+                              name="workTimeFrom"
+                              value={dayjs(field.value)}
+                              disablePast={dayjs(new Date()).isSame(
+                                dayjs(field.value),
+                                'day'
+                              )}
+                              onChange={(val) => {
+                                console.log(
+                                  'valTimePickeChange',
+                                  val.toISOString()
+                                );
+                                setValue('workTimeFrom', val.toISOString());
+                              }}
+                              ampm={false}
+                              timeSteps={{ hours: 1, minutes: 30 }}
+                              sx={{
+                                '& .MuiOutlinedInput-input': {
+                                  padding: '8px 16px',
+                                },
+                              }}
+                            />
+                          )}
+                        />
+                        <Box>-</Box>
+                        <Controller
+                          name="workTimeTo"
+                          control={control}
+                          render={({ field }) => (
+                            <TimePicker
+                              id="workTimeTo"
+                              name="workTimeTo"
+                              value={dayjs(new Date(field.value))}
+                              minTime={dayjs(getValues('workTimeFrom')).add(
+                                1,
+                                'hour'
+                              )}
+                              maxTime={
+                                dayjs(getValues('workTimeFrom')).hour() < 16
+                                  ? dayjs(getValues('workTimeFrom')).add(
+                                      8,
+                                      'hour'
+                                    )
+                                  : undefined
+                              }
+                              disablePast={dayjs(new Date()).isSame(
+                                dayjs(field.value),
+                                'day'
+                              )}
+                              onChange={(val) => {
+                                console.log(
+                                  'valTimePickeChange',
+                                  val.toISOString()
+                                );
+                                setValue('workTimeTo', val.toISOString());
+                              }}
+                              ampm={false}
+                              timeSteps={{ hours: 1, minutes: 30 }}
+                              sx={{
+                                '& .MuiOutlinedInput-input': {
+                                  padding: '8px 16px',
+                                },
+                              }}
+                              error={false}
+                            />
+                          )}
+                        />
+                      </Stack>
+                    )}
                   </Stack>
                 </Grid>
                 <Grid item xs={12}>
@@ -422,23 +562,32 @@ function TaskViewDetail({ task, onSubmit, isSubmitting }) {
                       {t('th_key_price')}{' '}
                       <span style={{ color: 'red' }}>*</span>
                     </InputLabel>
-                    <Controller
-                      name="price"
-                      control={control}
-                      //   defaultValue={field.value}
-                      render={({ field }) => (
-                        <TextField
-                          fullWidth
-                          id="price"
-                          name="price"
-                          type="number"
-                          {...field}
-                          InputProps={{ inputProps: { min: 1 } }}
-                          error={Boolean(errors.price)}
-                          helperText={errors.price && errors.price.message}
-                        />
-                      )}
-                    />
+                    {isLoading ? (
+                      <Skeleton
+                        variant="rounded"
+                        width={'100%'}
+                        height={41}
+                        sx={{ mt: 1 }}
+                      />
+                    ) : (
+                      <Controller
+                        name="price"
+                        control={control}
+                        //   defaultValue={field.value}
+                        render={({ field }) => (
+                          <TextField
+                            fullWidth
+                            id="price"
+                            name="price"
+                            type="number"
+                            {...field}
+                            InputProps={{ inputProps: { min: 1 } }}
+                            error={Boolean(errors.price)}
+                            helperText={errors.price && errors.price.message}
+                          />
+                        )}
+                      />
+                    )}
                   </Stack>
                 </Grid>
                 <Grid item xs={12}>
@@ -449,29 +598,38 @@ function TaskViewDetail({ task, onSubmit, isSubmitting }) {
                     >
                       {t('th_key_payrollmethod')}
                     </InputLabel>
-                    <Controller
-                      name="paymentPlan"
-                      control={control}
-                      render={({ field }) => (
-                        <Select
-                          labelId="paymentPlan"
-                          id="paymentPlan"
-                          name="paymentPlan"
-                          //   value={field.value}
-                          //   onChange={(e) =>
-                          //     setValue('paymentPlan', e.target.value)
-                          //   }
-                          {...field}
-                        >
-                          <MenuItem value={'per-hour'}>
-                            {t('th_key_payment_perhour')}
-                          </MenuItem>
-                          <MenuItem value={'one-time'}>
-                            {t('th_key_payment_onetime')}
-                          </MenuItem>
-                        </Select>
-                      )}
-                    />
+                    {isLoading ? (
+                      <Skeleton
+                        variant="rounded"
+                        width={'100%'}
+                        height={41}
+                        sx={{ mt: 1 }}
+                      />
+                    ) : (
+                      <Controller
+                        name="paymentPlan"
+                        control={control}
+                        render={({ field }) => (
+                          <Select
+                            labelId="paymentPlan"
+                            id="paymentPlan"
+                            name="paymentPlan"
+                            //   value={field.value}
+                            //   onChange={(e) =>
+                            //     setValue('paymentPlan', e.target.value)
+                            //   }
+                            {...field}
+                          >
+                            <MenuItem value={'per-hour'}>
+                              {t('th_key_payment_perhour')}
+                            </MenuItem>
+                            <MenuItem value={'one-time'}>
+                              {t('th_key_payment_onetime')}
+                            </MenuItem>
+                          </Select>
+                        )}
+                      />
+                    )}
                   </Stack>
                 </Grid>
                 <Grid item xs={12}>
@@ -479,29 +637,38 @@ function TaskViewDetail({ task, onSubmit, isSubmitting }) {
                     <InputLabel htmlFor="email" sx={{ textAlign: 'start' }}>
                       {t('th_key_paymentype')}
                     </InputLabel>
-                    <Controller
-                      name="paymentType"
-                      control={control}
-                      render={({ field }) => (
-                        <Select
-                          labelId="paymentType"
-                          id="paymentType"
-                          name="paymentType"
-                          //   value={field.value}
-                          //   onChange={(e) =>
-                          //     setValue('paymentType', e.target.value)
-                          //   }
-                          {...field}
-                        >
-                          <MenuItem value={'by-cash'}>
-                            {t('th_key_payment_type_cash')}
-                          </MenuItem>
-                          <MenuItem value={'by-wallet'}>
-                            {t('th_key_payment_type_online')}
-                          </MenuItem>
-                        </Select>
-                      )}
-                    />
+                    {isLoading ? (
+                      <Skeleton
+                        variant="rounded"
+                        width={'100%'}
+                        height={41}
+                        sx={{ mt: 1 }}
+                      />
+                    ) : (
+                      <Controller
+                        name="paymentType"
+                        control={control}
+                        render={({ field }) => (
+                          <Select
+                            labelId="paymentType"
+                            id="paymentType"
+                            name="paymentType"
+                            //   value={field.value}
+                            //   onChange={(e) =>
+                            //     setValue('paymentType', e.target.value)
+                            //   }
+                            {...field}
+                          >
+                            <MenuItem value={'by-cash'}>
+                              {t('th_key_payment_type_cash')}
+                            </MenuItem>
+                            <MenuItem value={'by-wallet'}>
+                              {t('th_key_payment_type_online')}
+                            </MenuItem>
+                          </Select>
+                        )}
+                      />
+                    )}
                   </Stack>
                 </Grid>
                 <Grid item xs={12} sx={{}}>
@@ -509,24 +676,33 @@ function TaskViewDetail({ task, onSubmit, isSubmitting }) {
                     <InputLabel htmlFor="email" sx={{ textAlign: 'start' }}>
                       {t('th_key_desc')}
                     </InputLabel>
-                    <Controller
-                      name="description"
-                      control={control}
-                      render={({ field }) => (
-                        <TextField
-                          id="description"
-                          name="description"
-                          multiline
-                          rows={4}
-                          {...field}
-                          InputProps={{ inputProps: { spellCheck: 'false' } }}
-                          error={Boolean(errors.description)}
-                          helperText={
-                            errors.description && errors.description.message
-                          }
-                        />
-                      )}
-                    />
+                    {isLoading ? (
+                      <Skeleton
+                        variant="rounded"
+                        width={'100%'}
+                        height={126}
+                        sx={{ mt: 1 }}
+                      />
+                    ) : (
+                      <Controller
+                        name="description"
+                        control={control}
+                        render={({ field }) => (
+                          <TextField
+                            id="description"
+                            name="description"
+                            multiline
+                            rows={4}
+                            {...field}
+                            InputProps={{ inputProps: { spellCheck: 'false' } }}
+                            error={Boolean(errors.description)}
+                            helperText={
+                              errors.description && errors.description.message
+                            }
+                          />
+                        )}
+                      />
+                    )}
                   </Stack>
                 </Grid>
 
@@ -576,7 +752,13 @@ function TaskViewDetail({ task, onSubmit, isSubmitting }) {
                   </Stack>
                 </InputLabel>
                 <Stack spacing={3} direction={'row'}>
-                  <IconButton variant="outlined" color="secondary">
+                  <IconButton
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => {
+                      onRefresh && onRefresh();
+                    }}
+                  >
                     <RefreshIcon />
                   </IconButton>
                   {!startTime && (
@@ -584,10 +766,39 @@ function TaskViewDetail({ task, onSubmit, isSubmitting }) {
                       loading={isSubmitting}
                       variant="contained"
                       type="submit"
-                      disabled={!isDirty || !isValid}
+                      disabled={!isDirty || !isValid || status === 'official'}
                     >
                       Save
                     </LoadingButton>
+                  )}
+                  {status === 'official' && paymentType === 'by-wallet' && (
+                    // <div id="paypal-container-element"></div>
+                    <>
+                      <Button
+                        variant="contained"
+                        onClick={(e) => handlePayment(e)}
+                      >
+                        {t('Thanh toán')}
+                      </Button>
+                      <Popover
+                        id={'simple-popover'}
+                        open={Boolean(anchorPayEl)}
+                        anchorEl={anchorPayEl}
+                        onClose={() => setAnchorPayEl(null)}
+                        anchorOrigin={{
+                          vertical: 'top',
+                          horizontal: 'center',
+                        }}
+                        transformOrigin={{
+                          vertical: 'bottom',
+                          horizontal: 'left',
+                        }}
+                      >
+                        <Box sx={{ p: 2 }}>
+                          <div id="paypal-container-element"></div>
+                        </Box>
+                      </Popover>
+                    </>
                   )}
                 </Stack>
               </Stack>

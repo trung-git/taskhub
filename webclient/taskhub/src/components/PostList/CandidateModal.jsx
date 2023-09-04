@@ -20,6 +20,7 @@ import MainCard from '../../base/component/MainCard';
 import { useTranslation } from 'react-i18next';
 import TaskerCard from '../Finding/TaskerCard';
 import ImagesList from '../../base/component/ImagesList';
+import { LoadingButton } from '@mui/lab';
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -57,7 +58,13 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   borderTop: '1px solid rgba(0, 0, 0, .125)',
 }));
 
-const CandidateModal = ({ candidateInfo, candidateList, onClose }) => {
+const CandidateModal = ({
+  candidateInfo,
+  candidateList,
+  onClose,
+  onSendInvitation,
+  isSendInvitation,
+}) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const [expanded, setExpanded] = useState();
@@ -138,16 +145,18 @@ const CandidateModal = ({ candidateInfo, candidateList, onClose }) => {
                   <Stack
                     sx={{ my: 2, justifyContent: 'flex-end', width: '100%' }}
                   >
-                    <Button
+                    <LoadingButton
+                      loading={isSendInvitation}
                       variant="contained"
                       color="primary"
-                      onClick={() => null}
                       sx={{ width: 'fit-content' }}
+                      onClick={() => {
+                        onSendInvitation && onSendInvitation(_candidate?.user);
+                      }}
                     >
                       {t('th_key_btn_send_invitation')}
-                    </Button>
+                    </LoadingButton>
                   </Stack>
-                  {/* <TaskerCard taskerData={_candidate?.user} /> */}
                   <Box
                     sx={{
                       width: '100%',

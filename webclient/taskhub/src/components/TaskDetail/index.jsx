@@ -2,6 +2,7 @@ import {
   Box,
   Container,
   Grid,
+  Skeleton,
   fabClasses,
   useMediaQuery,
   useTheme,
@@ -34,6 +35,7 @@ const TaskDetail = () => {
   };
 
   const fetchData = async (id) => {
+    setLoading(true);
     try {
       const response = await axios.get(
         `${API_URL}api/v1/contract/${id}`,
@@ -50,7 +52,6 @@ const TaskDetail = () => {
 
   useEffect(() => {
     if (id) {
-      setLoading(true);
       fetchData(id);
     }
   }, [id]);
@@ -99,28 +100,30 @@ const TaskDetail = () => {
       <Container maxWidth="lg" sx={{ mt: 3, height: 'calc(100vh - 116px)' }}>
         <Box sx={{ display: 'flex', height: '100%', width: '100%' }}>
           <Grid container sx={{ height: '100%', justifyContent: 'center' }}>
-            {taskData && (
-              <Grid item xs={12} md={6} xl={6} height={'100%'}>
-                {taskData && (
-                  <TaskViewDetail
-                    task={taskData}
-                    onSubmit={handleUpdateTask}
-                    isSubmitting={isSubmitting}
-                  />
-                )}
+            <Grid item xs={12} md={6} xl={6} height={'100%'}>
+              {taskData && (
+                <TaskViewDetail
+                  task={taskData}
+                  onSubmit={handleUpdateTask}
+                  isSubmitting={isSubmitting}
+                  onRefresh={() => fetchData(id)}
+                  isLoading={loading}
+                />
+              )}
+            </Grid>
+            {taskData && taskData?.status !== 'invitation' && (
+              <Grid item xs={12} md={6} xl={6} sx={{ height: '100%' }}>
+                <ChatScreen
+                  chatId={chatId}
+                  user={currentUser}
+                  otherUser={
+                    taskData?.finder?._id === currentUser?._id
+                      ? taskData?.tasker
+                      : taskData?.finder
+                  }
+                />
               </Grid>
             )}
-            <Grid item xs={12} md={6} xl={6} sx={{ height: '100%' }}>
-              <ChatScreen
-                chatId={chatId}
-                user={currentUser}
-                otherUser={
-                  taskData?.finder?._id === currentUser?._id
-                    ? taskData?.tasker
-                    : taskData?.finder
-                }
-              />
-            </Grid>
           </Grid>
         </Box>
       </Container>
