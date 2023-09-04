@@ -14,6 +14,7 @@ import {
   Popper,
   ClickAwayListener,
   Box,
+  Skeleton,
 } from '@mui/material';
 import MainCard from '../../base/component/MainCard';
 import dayjs from 'dayjs';
@@ -26,20 +27,54 @@ import useLogin from '../../hooks/useLogin';
 import SendIcon from '@mui/icons-material/Send';
 import ImageIcon from '@mui/icons-material/Image';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
-import Picker, { IEmojiData, SKIN_TONE_MEDIUM_DARK } from 'emoji-picker-react';
-import { toast } from 'react-toastify';
+import Picker from 'emoji-picker-react';
 import useToastify from '../../hooks/useToastify';
+
+const ChatSkeleton = () => {
+  return (
+    <Box sx={{ width: '100%' }}>
+      <Box
+        style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}
+      >
+        <Skeleton variant="circular" width={40} height={40} sx={{ mr: 2 }} />
+        <Skeleton variant="rounded" width={120} height={40} />
+      </Box>
+      <Box
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+        }}
+      >
+        <Skeleton variant="rounded" width={120} height={40} sx={{ mr: 2 }} />
+        <Skeleton variant="circular" width={40} height={40} />
+      </Box>
+      <Box
+        style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}
+      >
+        <Skeleton variant="circular" width={40} height={40} sx={{ mr: 2 }} />
+        <Skeleton variant="rounded" width={120} height={40} />
+      </Box>
+      <Box
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+        }}
+      >
+        <Skeleton variant="rounded" width={120} height={40} sx={{ mr: 2 }} />
+        <Skeleton variant="circular" width={40} height={40} />
+      </Box>
+    </Box>
+  );
+};
 
 function ChatScreen({ user, chatId, otherUser }) {
   const [messages, setMessages] = useState([]);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [newMessage, setNewMessage] = useState('');
-  const [loading, setLoading] = useState(false);
   const [lastChatId, setLastChatId] = useState('');
-  const [lastOldChatId, setOldLastChatId] = useState('');
 
   const [loadingChat, setLoadingChat] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
   const [isHasMore, setIsHasMore] = useState(true);
   const [message, setMessage] = useState('');
 
@@ -88,6 +123,7 @@ function ChatScreen({ user, chatId, otherUser }) {
   };
 
   const fetchChatData = async (id) => {
+    setLoadingChat(true);
     try {
       const response = await axios.get(
         `${API_URL}api/v1/chat/${id}/messages`,
@@ -114,7 +150,6 @@ function ChatScreen({ user, chatId, otherUser }) {
       const responseData = response.data.data;
       setIsScrollBottom(false);
       setMessages((prev) => [...prev, ...responseData]);
-      setOldLastChatId(lastChatId);
       setIsLoadingMore(false);
       if (response.data?.lenght < 20) {
         setIsHasMore(false);
@@ -127,7 +162,6 @@ function ChatScreen({ user, chatId, otherUser }) {
 
   useEffect(() => {
     if (chatId && chatId !== '') {
-      setLoadingChat(true);
       fetchChatData(chatId);
     }
   }, [chatId]);
@@ -229,7 +263,11 @@ function ChatScreen({ user, chatId, otherUser }) {
                             <Grid item xs={12}>
                               <Typography
                                 variant="h6"
-                                color={theme.palette.grey[0]}
+                                color={
+                                  theme.palette.mode === 'dark'
+                                    ? theme.palette.text.primary
+                                    : theme.palette.grey[0]
+                                }
                                 sx={{
                                   overflowWrap: 'anywhere',
                                   textAlign: 'left',
@@ -288,6 +326,7 @@ function ChatScreen({ user, chatId, otherUser }) {
                             <Typography
                               variant="h6"
                               color="textPrimary"
+                              // color={theme.palette.grey[0]}
                               sx={{
                                 overflowWrap: 'anywhere',
                                 textAlign: 'left',
@@ -334,30 +373,42 @@ function ChatScreen({ user, chatId, otherUser }) {
         direction="column"
         style={{ height: '100%', overflow: 'hidden', p: 2 }}
       >
-        <div
-          ref={chatContainerRef}
-          style={{
-            flex: 1,
-            overflowY: 'scroll',
-            display: 'flex',
-            flexDirection: 'column-reverse',
-            padding: '10px',
-          }}
-          onScroll={handleScroll}
-        >
-          <div ref={endRef} style={{ pt: 5 }} />
-          {RenderChatMemo}
-          {isLoadingMore && isHasMore && (
-            <Stack
-              direction={'row'}
-              justifyContent={'center'}
-              alignItems={'center'}
-              sx={{ width: '100%' }}
-            >
-              <CircularProgress />
-            </Stack>
-          )}
-        </div>
+        {loadingChat ? (
+          <Box
+            sx={{
+              flex: 1,
+              display: 'flex',
+              padding: '10px',
+            }}
+          >
+            <ChatSkeleton />
+          </Box>
+        ) : (
+          <div
+            ref={chatContainerRef}
+            style={{
+              flex: 1,
+              overflowY: 'scroll',
+              display: 'flex',
+              flexDirection: 'column-reverse',
+              padding: '10px',
+            }}
+            onScroll={handleScroll}
+          >
+            <div ref={endRef} style={{ pt: 5 }} />
+            {RenderChatMemo}
+            {isLoadingMore && isHasMore && (
+              <Stack
+                direction={'row'}
+                justifyContent={'center'}
+                alignItems={'center'}
+                sx={{ width: '100%' }}
+              >
+                <CircularProgress />
+              </Stack>
+            )}
+          </div>
+        )}
         <Stack
           spacing={1}
           direction={'row'}

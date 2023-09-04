@@ -9,23 +9,23 @@ const SortBy = ({ value, onChange }) => {
 
   const data = [
     {
-      label: 'Recommended',
+      label: 'th_key_task_sort_by_recommended',
       value: 1,
     },
     {
-      label: 'Price low to high',
+      label: 'th_key_task_sort_by_price_low_high',
       value: 2,
     },
     {
-      label: 'Price high to low',
+      label: 'th_key_task_sort_by_price_high_low',
       value: 3,
     },
     {
-      label: 'High rating',
+      label: 'th_key_task_sort_by_high_rating',
       value: 4,
     },
     {
-      label: 'Number of complete Task',
+      label: 'th_key_task_sort_by_task_complete',
       value: 6,
     },
   ];

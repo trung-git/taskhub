@@ -1,18 +1,18 @@
 import { Slider } from '@mui/material';
 import { useEffect, useState } from 'react';
 
-const minDistance = 10;
+const minDistance = 10000;
 const PriceSlider = ({ value, onChange }) => {
-  const [price, setPrice] = useState([1, 100]);
+  const [price, setPrice] = useState([20000, 200000]);
 
   const marks = [
     {
-      value: 1,
-      label: '$ 1',
+      value: 20000,
+      label: '20.000',
     },
     {
-      value: 100,
-      label: '$ 100',
+      value: 200000,
+      label: '200.000',
     },
   ];
 
@@ -20,7 +20,7 @@ const PriceSlider = ({ value, onChange }) => {
     if (value) {
       setPrice(value);
     } else {
-      setPrice([1, 100]);
+      setPrice([20000, 200000]);
     }
   }, [value]);
 
@@ -31,7 +31,7 @@ const PriceSlider = ({ value, onChange }) => {
 
     if (newValue[1] - newValue[0] < minDistance) {
       if (activeThumb === 0) {
-        const clamped = Math.min(newValue[0], 100 - minDistance);
+        const clamped = Math.min(newValue[0], 10000 - minDistance);
         setPrice([clamped, clamped + minDistance]);
       } else {
         const clamped = Math.max(newValue[1], minDistance);
@@ -49,7 +49,7 @@ const PriceSlider = ({ value, onChange }) => {
 
     if (newValue[1] - newValue[0] < minDistance) {
       if (activeThumb === 0) {
-        const clamped = Math.min(newValue[0], 100 - minDistance);
+        const clamped = Math.min(newValue[0], 10000 - minDistance);
         onChange && onChange([clamped, clamped + minDistance]);
       } else {
         const clamped = Math.max(newValue[1], minDistance);
@@ -65,9 +65,9 @@ const PriceSlider = ({ value, onChange }) => {
       value={price}
       onChange={handlePriceChange}
       onChangeCommitted={handleOnChange}
-      min={1}
-      step={1}
-      max={100}
+      min={20000}
+      step={1000}
+      max={200000}
       marks={marks}
       valueLabelDisplay="auto"
       disableSwap

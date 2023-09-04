@@ -261,7 +261,7 @@ const TaskerCard = ({ taskerData, onSelect }) => {
               <Typography fontSize={18} fontWeight={600}>
                 {t('Work photos')}:
               </Typography>
-              <ImagesList images={taskerData?.photos} />
+              <ImagesList imagesList={taskerData?.photos} />
             </Box>
           )}
           <Stack

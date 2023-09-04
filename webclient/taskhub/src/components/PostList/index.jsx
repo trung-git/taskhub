@@ -43,6 +43,7 @@ const PostList = () => {
   };
 
   const fetchPostListData = async (page) => {
+    setIsFetchingPostList(true);
     try {
       const response = await axios.get(
         `${API_URL}api/v1/post?pageNum=${page}`,
@@ -60,7 +61,6 @@ const PostList = () => {
   console.log('totalPage', totalPage);
 
   useEffect(() => {
-    setIsFetchingPostList(true);
     fetchPostListData(1);
   }, []);
 
@@ -70,7 +70,6 @@ const PostList = () => {
 
   useEffect(() => {
     if (pageNum) {
-      setIsFetchingPostList(true);
       fetchPostListData(pageNum);
     }
   }, [pageNum]);
@@ -116,6 +115,7 @@ const PostList = () => {
                   <PostCard
                     post={post}
                     onSelect={(post) => setSelectedPost(post)}
+                    onRefresh={() => fetchPostListData(1) }
                   />
                 </Grid>
               );
