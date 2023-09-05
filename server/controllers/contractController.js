@@ -5,6 +5,7 @@ const Post = require('../models/postModel');
 const Tasker = require('../models/taskerModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
+const Email = require('../utils/email');
 
 exports.createContract = catchAsync(async (req, res, next) => {
   const {
@@ -59,6 +60,11 @@ exports.createContract = catchAsync(async (req, res, next) => {
   const populatedContract = await Contract.populate(contract, {
     path: 'finder tasker taskTag workLocation',
   });
+  try {
+    await new Email(populatedContract.tasker).sendNewInvitation(populatedContract);
+  } catch (error) {
+    console.log(error);
+  }
 
   return res.status(200).json({
     status: 'success',
@@ -110,6 +116,14 @@ exports.createContractByPost = catchAsync(async (req, res, next) => {
   const populatedContract = await Contract.populate(contract, {
     path: 'finder tasker taskTag workLocation',
   });
+
+  try {
+    await new Email(populatedContract.tasker).sendNewInvitation(
+      populatedContract
+    );
+  } catch (error) {
+    console.log(error);
+  }
 
   return res.status(200).json({
     status: 'success',

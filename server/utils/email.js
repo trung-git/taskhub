@@ -59,4 +59,12 @@ module.exports = class Email {
   async sendVerifyEmailCode(code) {
     await this.send('sendVerifyEmailCode', 'Verify your Email {valid only 10 minutes}', code);
   }
+  
+  async sendNewInvitation(invitation) {
+    await this.send('newInvitation', "Taskhub: Bạn nhận được một lời mời hợp đồng", invitation);
+  }
+
+  async sendVerifyEmailSuccess() {
+    await this.send('verifyEmailSuccess', "Taskhub: Verify email successfully");
+  }
 };

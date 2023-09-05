@@ -118,6 +118,11 @@ exports.verifyEmail = catchAsync(async (req, res, next) => {
   user.verifyEmailExpired = undefined;
 
   await user.save();
+  try {
+    await new Email(user).sendVerifyEmailSuccess();
+  } catch (error) {
+    console.log(error);
+  }
   res.status(200).json({
     status: 'success',
   });
