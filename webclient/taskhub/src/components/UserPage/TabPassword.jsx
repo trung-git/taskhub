@@ -153,10 +153,10 @@ const TabPassword = () => {
                       sx={{ textAlign: 'start' }}
                       htmlFor="password-old"
                     >
-                      Old Password
+                      {t('th_key_user_pass_old_pass')}
                     </InputLabel>
                     <OutlinedInput
-                      placeholder="Enter Old Password"
+                      placeholder={t('th_key_user_pass_old_pass_place_holder')}
                       id="password-old"
                       type={showOldPassword ? 'text' : 'password'}
                       value={values.old}
@@ -196,10 +196,10 @@ const TabPassword = () => {
                       sx={{ textAlign: 'start' }}
                       htmlFor="password-password"
                     >
-                      New Password
+                      {t('th_key_user_pass_new_pass')}
                     </InputLabel>
                     <OutlinedInput
-                      placeholder="Enter New Password"
+                      placeholder={t('th_key_user_pass_new_pass_place_holder')}
                       id="password-password"
                       type={showNewPassword ? 'text' : 'password'}
                       value={values.password}
@@ -239,10 +239,12 @@ const TabPassword = () => {
                       sx={{ textAlign: 'start' }}
                       htmlFor="password-confirm"
                     >
-                      Confirm Password
+                      {t('th_key_user_pass_confirm_pass')}
                     </InputLabel>
                     <OutlinedInput
-                      placeholder="Enter Confirm Password"
+                      placeholder={t(
+                        'th_key_user_pass_confirm_pass_place_holder'
+                      )}
                       id="password-confirm"
                       type={showConfirmPassword ? 'text' : 'password'}
                       value={values.confirm}
@@ -280,7 +282,7 @@ const TabPassword = () => {
               <Grid item xs={12} sm={6}>
                 <Box sx={{ p: { xs: 0, sm: 2, md: 4, lg: 5 } }}>
                   <Typography variant="h5">
-                    New password must contain:
+                    {t('th_key_user_pass_new_require')}:
                   </Typography>
                   <List sx={{ p: 0, mt: 1 }}>
                     <ListItem divider>
@@ -297,7 +299,9 @@ const TabPassword = () => {
                           <HorizontalRuleOutlinedIcon />
                         )}
                       </ListItemIcon>
-                      <ListItemText primary="At least 8 characters" />
+                      <ListItemText
+                        primary={t('th_key_user_pass_rq_least_8_char')}
+                      />
                     </ListItem>
                     <ListItem divider>
                       <ListItemIcon
@@ -313,7 +317,9 @@ const TabPassword = () => {
                           <HorizontalRuleOutlinedIcon />
                         )}
                       </ListItemIcon>
-                      <ListItemText primary="At least 1 lower letter (a-z)" />
+                      <ListItemText
+                        primary={t('th_key_user_pass_rq_least_1_lower')}
+                      />
                     </ListItem>
                     <ListItem divider>
                       <ListItemIcon
@@ -329,7 +335,9 @@ const TabPassword = () => {
                           <HorizontalRuleOutlinedIcon />
                         )}
                       </ListItemIcon>
-                      <ListItemText primary="At least 1 uppercase letter (A-Z)" />
+                      <ListItemText
+                        primary={t('th_key_user_pass_rq_least_1_uppper')}
+                      />
                     </ListItem>
                     <ListItem divider>
                       <ListItemIcon
@@ -345,7 +353,9 @@ const TabPassword = () => {
                           <HorizontalRuleOutlinedIcon />
                         )}
                       </ListItemIcon>
-                      <ListItemText primary="At least 1 number (0-9)" />
+                      <ListItemText
+                        primary={t('th_key_user_pass_rq_least_1_number')}
+                      />
                     </ListItem>
                     <ListItem>
                       <ListItemIcon
@@ -361,7 +371,9 @@ const TabPassword = () => {
                           <HorizontalRuleOutlinedIcon />
                         )}
                       </ListItemIcon>
-                      <ListItemText primary="At least 1 special characters" />
+                      <ListItemText
+                        primary={t('th_key_user_pass_rq_least_spec_char')}
+                      />
                     </ListItem>
                   </List>
                 </Box>
@@ -379,7 +391,7 @@ const TabPassword = () => {
                     type="submit"
                     variant="contained"
                   >
-                    Save
+                    {t('th_key_btn_save')}
                   </LoadingButton>
                 </Stack>
               </Grid>

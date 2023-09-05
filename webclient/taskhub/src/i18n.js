@@ -151,6 +151,19 @@ const resources = {
       th_key_user_check_spam_email:
         'Did not receive the email? Check your spam filter, or',
       th_key_user_resend_email: 'Resend code',
+      //
+      th_key_user_pass_old_pass: 'Old Password',
+      th_key_user_pass_old_pass_place_holder: 'Enter Old Password',
+      th_key_user_pass_new_pass: 'New Password',
+      th_key_user_pass_new_pass_place_holder: 'Enter New Password',
+      th_key_user_pass_confirm_pass: 'Confirm Password',
+      th_key_user_pass_confirm_pass_place_holder: 'Enter Confirm Password',
+      th_key_user_pass_new_require: 'New password must contain',
+      th_key_user_pass_rq_least_8_char: 'At least 8 characters',
+      th_key_user_pass_rq_least_1_lower: 'At least 1 lower letter (a-z)',
+      th_key_user_pass_rq_least_1_uppper: 'At least 1 uppercase letter (A-Z)',
+      th_key_user_pass_rq_least_1_number: 'At least 1 number (0-9)',
+      th_key_user_pass_rq_least_spec_char: 'At least 1 special characters',
     },
   },
   vi: {
@@ -299,6 +312,19 @@ const resources = {
       th_key_user_check_spam_email:
         'Bạn không nhận được email? Kiểm tra hộp thư rác, hoặc',
       th_key_user_resend_email: 'Gửi lại',
+      //
+      th_key_user_pass_old_pass: 'Mật khẩu cũ',
+      th_key_user_pass_old_pass_place_holder: 'Nhập mật khẩu cũ',
+      th_key_user_pass_new_pass: 'Mật khẩu mới',
+      th_key_user_pass_new_pass_place_holder: 'Nhập mật khẩu mới',
+      th_key_user_pass_confirm_pass: 'Xác nhận mật khẩu',
+      th_key_user_pass_confirm_pass_place_holder: 'Nhập lại mật khẩu mới',
+      th_key_user_pass_new_require: 'Mật khẩu phải có',
+      th_key_user_pass_rq_least_8_char: 'Ít nhất 8 ký tự',
+      th_key_user_pass_rq_least_1_lower: 'Ít nhất 1 ký tự viết thường (a-z)',
+      th_key_user_pass_rq_least_1_uppper: 'Ít nhất 1 ký tự viết hoa (A-Z)',
+      th_key_user_pass_rq_least_1_number: 'Ít nhất 1 chữ số (0-9)',
+      th_key_user_pass_rq_least_spec_char: 'Ít nhất 1 ký tự đặc biệt',
     },
   },
 };
