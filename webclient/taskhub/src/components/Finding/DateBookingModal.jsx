@@ -21,6 +21,7 @@ import { TimePicker } from '@mui/x-date-pickers';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import 'dayjs/locale/vi';
 import { useTranslation } from 'react-i18next';
+import formatVietnameseCurrency from '../../utils/formatVietnameseCurrency';
 dayjs.extend(customParseFormat);
 
 const VietnameseDateComponent = (date) => {
@@ -272,9 +273,9 @@ const DateBookingModal = ({
                         fontWeight={600}
                         sx={{ color: '#4a4a4a' }}
                       >{`${userData?.firstName} ${userData?.lastName}`}</Typography>
-                      <Typography variant="h6">{`$${
+                      <Typography variant="h6">{`${formatVietnameseCurrency(
                         userData?.taskInfo?.price
-                      }/${t('th_key_hr')}`}</Typography>
+                      )}/${t('th_key_hr')}`}</Typography>
                     </Stack>
                   </Stack>
                 </Stack>
