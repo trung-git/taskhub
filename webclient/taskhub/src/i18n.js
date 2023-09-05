@@ -139,6 +139,18 @@ const resources = {
         'Are you sure to delete this account ?',
       th_key_setting_logout_message_affirm:
         'Are you sure to log out current account ?',
+      th_key_user_btn_send_verify: 'Send verify email',
+      th_key_user_email_verified: 'Email has been verified',
+      th_key_user_mail_already_send:
+        'We will send an email containing 6 digits to the email address you provided during registration for verification',
+      th_key_user_email_verify: 'Email verify',
+      th_key_user_enter_code_verify: 'Enter Verification Code',
+      th_key_user_enter_code_verify_sub: 'We send you on mail.',
+      th_key_user_enter_code_verify_title: 'We have send you code on',
+      th_key_user_btn_continue: 'Continue',
+      th_key_user_check_spam_email:
+        'Did not receive the email? Check your spam filter, or',
+      th_key_user_resend_email: 'Resend code',
     },
   },
   vi: {
@@ -274,6 +286,19 @@ const resources = {
         'Bạn có chắc muốn xóa tài khoản này ?',
       th_key_setting_logout_message_affirm:
         'Bạn có chắc muốn đăng xuất khỏi tài khoản hiện tại ?',
+      th_key_user_btn_send_verify: 'Gởi email xác thực',
+      th_key_user_email_verified: 'Email đã được xác thực',
+      th_key_user_mail_already_send:
+        'Chúng tôi sẽ gởi một email gồm 6 số đến tài khoản email mà bạn đã đăng ký để xác thực',
+      th_key_user_email_verify: 'Xác thực email',
+      th_key_user_enter_code_verify: 'Nhập mã xác thực',
+      th_key_user_enter_code_verify_sub: 'Chúng tôi đã gởi vào mail',
+      th_key_user_enter_code_verify_title:
+        'Chúng tôi đã gởi mail xác thực gồm 6 số vào địa chỉ',
+      th_key_user_btn_continue: 'Tiếp tục',
+      th_key_user_check_spam_email:
+        'Bạn không nhận được email? Kiểm tra hộp thư rác, hoặc',
+      th_key_user_resend_email: 'Gửi lại',
     },
   },
 };

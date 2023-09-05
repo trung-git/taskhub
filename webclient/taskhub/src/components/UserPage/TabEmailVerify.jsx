@@ -55,6 +55,7 @@ const TabEmailVerify = () => {
   const { getUserToken } = useLogin();
   const token = getUserToken();
   const { toastError, toastSuccess } = useToastify();
+  const [isRequestVerify, setIsRequestVerify] = useState(false);
 
   const theme = useTheme();
   const [otp, setOtp] = useState();
@@ -77,6 +78,7 @@ const TabEmailVerify = () => {
   }, [currentUser]);
 
   const handleSendVerifyEmail = (isReSend) => {
+    setIsRequestVerify(true);
     axios
       .post(
         `${API_URL}api/v1/user/generate-verify-email-token`,
@@ -92,6 +94,7 @@ const TabEmailVerify = () => {
         toastSuccess('Send email verify success');
         setOpenOTPConfirm(isReSend ? true : false);
         isReSend && setOtp('');
+        setIsRequestVerify(false);
       })
       .catch((error) => {
         console.error(error);
@@ -102,12 +105,14 @@ const TabEmailVerify = () => {
         // setOpenOTPConfirm(false);
         setOtp('');
         toastError(`Verify error, ${error.message}`);
+        setIsRequestVerify(false);
       });
   };
 
   const handleConFirmOTPVerifyEmail = (codeInput) => {
     const codeParams = {
-      code: codeInput,
+      otpCode: codeInput,
+      email: currentUser?.email,
     };
     setIsFetchSendOTPConfirm(true);
 
@@ -174,24 +179,25 @@ const TabEmailVerify = () => {
           <ListItemText
             id="switch-list-label-lc"
             primary={
-              <Typography variant="h5">{t('Xác thực email')}</Typography>
+              <Typography variant="h5">
+                {t('th_key_user_email_verify')}
+              </Typography>
             }
             secondary={
               isVerified
-                ? t('Email đã được xác thực')
-                : t(
-                    'Chúng tôi sẽ gởi một email gồm 6 số đến tài khoản email mà bạn đã đăng ký để xác thực'
-                  )
+                ? t('th_key_user_email_verified')
+                : t('th_key_user_mail_already_send')
             }
           />
           {!isVerified && (
-            <Button
+            <LoadingButton
+              loading={isRequestVerify}
               variant="outlined"
               disabled={isSendOTPConfirm}
               onClick={handleSendVerifyEmail}
             >
-              {t('Gởi email xác thực')}
-            </Button>
+              {t('th_key_user_btn_send_verify')}
+            </LoadingButton>
           )}
         </ListItem>
       </List>
@@ -205,15 +211,21 @@ const TabEmailVerify = () => {
           <Grid container spacing={3} sx={{ p: 3, maxWidth: 500 }}>
             <Grid item xs={12}>
               <Stack spacing={1}>
-                <Typography variant="h3">Enter Verification Code</Typography>
-                <Typography color="secondary">We send you on mail.</Typography>
+                <Typography variant="h3">
+                  {t('th_key_user_enter_code_verify')}
+                </Typography>
+                <Typography color="secondary">
+                  {t('th_key_user_enter_code_verify_sub')}
+                </Typography>
               </Stack>
             </Grid>
             <Grid item xs={12}>
               <Typography>
-                {`We've send you code on ${currentUser?.email
-                  .split('@')?.[0]
-                  ?.substring(0, 5)}****@${currentUser?.email.split('@')?.[1]}`}
+                {`${t(
+                  'th_key_user_enter_code_verify_title'
+                )} ${currentUser?.email.split('@')?.[0]?.substring(0, 5)}****@${
+                  currentUser?.email.split('@')?.[1]
+                }`}
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -252,7 +264,7 @@ const TabEmailVerify = () => {
                       variant="contained"
                       onClick={() => handleConFirmOTPVerifyEmail(otp)}
                     >
-                      Continue
+                      {t('th_key_user_btn_continue')}
                     </LoadingButton>
                   </AnimateButton>
                 </Grid>
@@ -262,14 +274,12 @@ const TabEmailVerify = () => {
                     justifyContent="space-between"
                     alignItems="baseline"
                   >
-                    <Typography>
-                      Did not receive the email? Check your spam filter, or
-                    </Typography>
+                    <Typography>{t('th_key_user_check_spam_email')}</Typography>
                     <Button
                       variant="text"
                       onClick={() => handleSendVerifyEmail(true)}
                     >
-                      Resend code
+                      {t('th_key_user_resend_email')}
                     </Button>
                     {/* <Typography
                       variant="body1"
