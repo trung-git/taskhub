@@ -6,7 +6,7 @@ const createSocketServer = (server) => {
   let onlineUsers = [];
   const io = new Server(server, {
     cors: {
-      origin: '*',
+      origin: ['http://localhost:3000', 'https://taskhub-pro.netlify.app', '192.168.137.112:8081'],
     },
   });
 
