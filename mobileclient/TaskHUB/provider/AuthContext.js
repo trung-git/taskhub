@@ -1,5 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL } from '../config/constans';
+import axios from 'axios';
 
 const AuthContext = createContext();
 
@@ -7,29 +9,60 @@ const AuthProvider = ({ children }) => {
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
   const [isFetchingUserData, setIsFetchingUserData] = useState(true);
+  const [lastAccess, setLastAccess] = useState();
 
-  const getData = async (key) => {
+  const getData = async () => {
     try {
-      const value = await AsyncStorage.getItem(key);
+      const value = await AsyncStorage.getItem('userData');
       if (value !== null) {
         const parseVal = JSON.parse(value);
-        setUserData(parseVal)
-        setLoggedIn(true)
-        setIsFetchingUserData(false)
+        setUserData(parseVal);
+        setLoggedIn(true);
+        setIsFetchingUserData(false);
         return value;
       } else {
-        setIsFetchingUserData(false)
+        setIsFetchingUserData(false);
         return;
       }
     } catch (error) {
       console.log('Error retrieving data:', error);
-      setIsFetchingUserData(false)
+      setIsFetchingUserData(false);
       return;
     }
   };
 
+  const handleLogOut = () => {
+    axios
+      .get(`${API_URL}/api/v1/user/logout`)
+      .then((response) => {
+        // removeData('userData');
+      })
+      .catch((error) => {
+        // console.log('error', error);
+      });
+  };
+
+  const handleCheckMe = () => {
+    axios
+      .get(`${API_URL}/api/v1/user/me`)
+      .then((response) => {
+        // console.log('responseCheckme', response);
+        getData();
+        // setIsFetchingUserData(false);
+      })
+      .catch((error) => {
+        // Hết hạn
+        // console.log('responseCheckmeError', error);
+        setLoggedIn(false);
+        removeData('userData');
+        setIsFetchingUserData(false);
+      });
+  };
+
   useEffect(() => {
-    getData('userData');
+    // setIsFetchingUserData(true);
+    handleCheckMe();
+    // getData();
   }, []);
 
   const storeData = async (key, value) => {
@@ -60,11 +93,20 @@ const AuthProvider = ({ children }) => {
     // Xử lý logic đăng xuất
     setLoggedIn(false);
     removeData('userData');
+    handleLogOut();
   };
 
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn, login, logout, userData, setUserData, isFetchingUserData }}>
+      value={{
+        isLoggedIn,
+        login,
+        logout,
+        userData,
+        setUserData,
+        isFetchingUserData,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
