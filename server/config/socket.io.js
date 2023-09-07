@@ -11,6 +11,7 @@ const createSocketServer = (server) => {
   });
 
   io.on('connection', (socket) => {
+    console.log(socket.id);
     socket.on('user-login', async (userId) => {
       try {
         onlineUsers = onlineUsers.filter((v) => v?.socketId !== socket.id);
