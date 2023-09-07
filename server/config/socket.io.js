@@ -14,6 +14,7 @@ const createSocketServer = (server) => {
     console.log(socket.id);
     socket.on('user-login', async (userId) => {
       try {
+        console.log({userId});
         onlineUsers = onlineUsers.filter((v) => v?.socketId !== socket.id);
         onlineUsers.push({ userId, socketId: socket.id });
         socket.broadcast.emit('get-users-online', onlineUsers);
