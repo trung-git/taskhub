@@ -11,39 +11,50 @@ const createSocketServer = (server) => {
   });
 
   io.on('connection', (socket) => {
-    console.log(socket.id);
+    console.log('Socket connect',socket.id);
     socket.on('user-login', async (userId) => {
       try {
-        console.log({userId});
         onlineUsers = onlineUsers.filter((v) => v?.socketId !== socket.id);
         onlineUsers.push({ userId, socketId: socket.id });
-        socket.broadcast.emit('get-users-online', onlineUsers);
+        io.sockets.emit('list-user-online', onlineUsers);
+        console.log('Login',{ userId, socketId: socket.id });
 
-        const chats = await Chat.find({
-          users: {
-            $elemMatch: {
-              user: mongoose.Types.ObjectId.createFromHexString(userId),
-            },
-          },
-        });
+        // const chats = await Chat.find({
+        //   users: {
+        //     $elemMatch: {
+        //       user: mongoose.Types.ObjectId.createFromHexString(userId),
+        //     },
+        //   },
+        // });
 
-        const chatIds = chats.map((chat) => chat._id);
-        chatIds.forEach((id) => {
-          socket.join(String(id));
-        });
+        // const chatIds = chats.map((chat) => chat._id);
+        // chatIds.forEach((id) => {
+        //   socket.join(String(id));
+        // })
       } catch (error) {
         console.log(error);
       }
     });
 
     socket.on('user-logout', (userId) => {
+      console.log('Logout', onlineUsers.filter((v) => v?.userId === userId));
       onlineUsers = onlineUsers.filter((v) => v?.userId !== userId);
-      socket.broadcast.emit('get-users-online', onlineUsers);
+      io.sockets.emit('list-user-online', onlineUsers);
     });
 
+    socket.on('user-send-message', (userReceiveMessageInfo, chatId, message, time) => {
+      const userReceiveMessageInOnlineList = onlineUsers.filter(v => v.userId === userReceiveMessageInfo.userId);
+      if (userReceiveMessageInOnlineList.length > 0) {
+        userReceiveMessageInOnlineList.forEach(u => {
+          io.to(u.socketId).emit('server-emit-message', userReceiveMessageInfo, chatId, message, time);
+        })
+      }
+    })
+
     socket.on('disconnect', () => {
+      console.log('Disconnect', onlineUsers.filter((v) => v?.socketId === socket.id));
       onlineUsers = onlineUsers.filter((v) => v?.socketId !== socket.id);
-      socket.broadcast.emit('get-users-online', onlineUsers);
+      io.sockets.emit('list-user-online', onlineUsers);
     });
   });
 };
