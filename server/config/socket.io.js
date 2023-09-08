@@ -42,11 +42,11 @@ const createSocketServer = (server) => {
       console.log('Logout - Online User', onlineUsers);
     });
 
-    socket.on('user-send-message', (userReceiveMessageInfo, chatId, message, time) => {
-      const userReceiveMessageInOnlineList = onlineUsers.filter(v => v.userId === userReceiveMessageInfo.userId);
+    socket.on('user-send-message', (userReceiveMessageInfo, messageInfo) => {
+      const userReceiveMessageInOnlineList = onlineUsers.filter(v => v.userId === userReceiveMessageInfo);
       if (userReceiveMessageInOnlineList.length > 0) {
         userReceiveMessageInOnlineList.forEach(u => {
-          io.to(u.socketId).emit('server-emit-message', userReceiveMessageInfo, chatId, message, time);
+          io.to(u.socketId).emit('server-emit-message', messageInfo);
         })
       }
     })
