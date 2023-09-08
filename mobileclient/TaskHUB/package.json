@@ -31,7 +31,9 @@
     "react-native-datepicker": "^1.7.2",
     "react-native-device-info": "^10.8.0",
     "react-native-elements": "^3.4.3",
-    "react-native-tab-view": "^3.5.2"
+    "react-native-tab-view": "^3.5.2",
+    "socket.io-client": "^4.7.2",
+    "socket.io-parser": "^4.2.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

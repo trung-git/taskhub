@@ -40,7 +40,6 @@ const TaskListPage = ({ onOpenChat, status }) => {
       const responseData = response.data.data;
       if (pageNum == 1) {
         setTask(responseData);
-        console.log('TotalOnPageNum1', response.data.totalRecords);
       } else {
         setTask([...task, ...responseData]);
       }
@@ -67,7 +66,6 @@ const TaskListPage = ({ onOpenChat, status }) => {
     fetchData(status, 1);
   };
 
-  console.log('totalRecords', totalRecords);
 
   const renderTaskItem = ({ item }) => {
     return (

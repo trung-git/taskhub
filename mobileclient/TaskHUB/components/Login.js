@@ -184,7 +184,7 @@ const LoginScreen = () => {
         setSignUpData(initSignUpData);
         setIsSigningUp(false);
 
-        // login(response.data.data.user);
+        login(response.data.data.user);
       })
       .catch((error) => {
         // Xử lý lỗi đăng nhập

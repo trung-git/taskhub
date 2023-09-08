@@ -17,6 +17,7 @@ import { Avatar } from 'react-native-elements';
 import axios from 'axios';
 import { API_URL } from '../config/constans';
 import dayjs from 'dayjs';
+import socket from '../config/socket';
 
 const ChatPage = ({ chatId, finder, taskDataVal }) => {
   const { userData } = useContext(AuthContext);
@@ -31,6 +32,14 @@ const ChatPage = ({ chatId, finder, taskDataVal }) => {
   useEffect(() => {
     setLastChatId(messages?.[messages?.length - 1]?._id);
   }, [messages]);
+
+  useEffect(() => {
+    socket.on('server-emit-message', (messageInfo) => {
+      if (chatId === messageInfo.chat) {
+        setMessages(prev => [messageInfo, ...prev]);
+      }
+    })
+  }, [])
 
   // console.log('messageChatData', finder);
 
@@ -81,7 +90,9 @@ const ChatPage = ({ chatId, finder, taskDataVal }) => {
         `${API_URL}/api/v1/chat/send`,
         messageData
       );
-      // const responseData = response.data.data;
+      const responseData = response.data.data;
+      const sendedMessage = responseData.message;
+      socket.emit('user-send-message', finder._id, sendedMessage);
       setMessages((prevState) => {
         return prevState?.map((_message) => {
           return {

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import {
   View,
   useWindowDimensions,
@@ -19,10 +19,12 @@ import ChatPage from './ChatPage';
 import ContractTabDetail from './ContractTabDetail';
 import { API_URL } from '../config/constans';
 import axios from 'axios';
+import { AuthContext } from '../provider/AuthContext';
 
 const FirstRoute = () => <View style={{ flex: 1, backgroundColor: 'white' }} />;
 
 const ContractDetail = ({ taskData, onClose }) => {
+  const { setIsInChat } = useContext(AuthContext);
   const layout = useWindowDimensions();
 
   const [taskDataVal, setTaskDataVal] = useState(taskData);
@@ -112,7 +114,10 @@ const ContractDetail = ({ taskData, onClose }) => {
             // color: 'white'
           }}
         >
-          <TouchableOpacity onPress={() => onClose()}>
+          <TouchableOpacity onPress={() => {
+            onClose();
+            setIsInChat(false);
+          }}>
             <Icon name="arrow-left" size={24} />
           </TouchableOpacity>
           <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
@@ -129,7 +134,14 @@ const ContractDetail = ({ taskData, onClose }) => {
         <TabView
           navigationState={{ index, routes }}
           renderScene={renderScene}
-          onIndexChange={setIndex}
+          onIndexChange={(index) => {
+            if (index === 1) {
+              setIsInChat(true);
+            } else {
+              setIsInChat(false);
+            }
+            setIndex(index);
+          }}
           initialLayout={{ width: layout.width }}
           renderTabBar={renderTabBar}
         />

@@ -1,7 +1,9 @@
 import React, { createContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { io } from 'socket.io-client';
 import { API_URL } from '../config/constans';
 import axios from 'axios';
+import socket from '../config/socket';
 
 const AuthContext = createContext();
 
@@ -9,7 +11,7 @@ const AuthProvider = ({ children }) => {
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
   const [isFetchingUserData, setIsFetchingUserData] = useState(true);
-  const [lastAccess, setLastAccess] = useState();
+  const [isInChat, setIsInChat] = useState(false);
 
   const getData = async () => {
     try {
@@ -17,6 +19,7 @@ const AuthProvider = ({ children }) => {
       if (value !== null) {
         const parseVal = JSON.parse(value);
         setUserData(parseVal);
+        socket.emit('user-login', parseVal._id);
         setLoggedIn(true);
         setIsFetchingUserData(false);
         return value;
@@ -87,12 +90,15 @@ const AuthProvider = ({ children }) => {
     setLoggedIn(true);
     setUserData(data);
     storeData('userData', data);
+
+    socket.emit('user-login', data._id);
   };
 
   const logout = () => {
     // Xử lý logic đăng xuất
     setLoggedIn(false);
     removeData('userData');
+    socket.emit('user-logout', userData._id);
     handleLogOut();
   };
 
@@ -105,6 +111,8 @@ const AuthProvider = ({ children }) => {
         userData,
         setUserData,
         isFetchingUserData,
+        isInChat,
+        setIsInChat,
       }}
     >
       {children}
