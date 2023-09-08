@@ -18,19 +18,6 @@ const createSocketServer = (server) => {
         onlineUsers.push({ userId, socketId: socket.id });
         io.sockets.emit('list-user-online', onlineUsers);
         console.log('Login - Online User', onlineUsers);
-
-        // const chats = await Chat.find({
-        //   users: {
-        //     $elemMatch: {
-        //       user: mongoose.Types.ObjectId.createFromHexString(userId),
-        //     },
-        //   },
-        // });
-
-        // const chatIds = chats.map((chat) => chat._id);
-        // chatIds.forEach((id) => {
-        //   socket.join(String(id));
-        // })
       } catch (error) {
         console.log(error);
       }
