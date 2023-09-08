@@ -17,7 +17,7 @@ const createSocketServer = (server) => {
         onlineUsers = onlineUsers.filter((v) => v?.socketId !== socket.id);
         onlineUsers.push({ userId, socketId: socket.id });
         io.sockets.emit('list-user-online', onlineUsers);
-        console.log('Login',{ userId, socketId: socket.id });
+        console.log('Login - Online User', onlineUsers);
 
         // const chats = await Chat.find({
         //   users: {
@@ -37,9 +37,9 @@ const createSocketServer = (server) => {
     });
 
     socket.on('user-logout', (userId) => {
-      console.log('Logout', onlineUsers.filter((v) => v?.userId === userId));
       onlineUsers = onlineUsers.filter((v) => v?.userId !== userId);
       io.sockets.emit('list-user-online', onlineUsers);
+      console.log('Logout - Online User', onlineUsers);
     });
 
     socket.on('user-send-message', (userReceiveMessageInfo, chatId, message, time) => {
@@ -52,9 +52,9 @@ const createSocketServer = (server) => {
     })
 
     socket.on('disconnect', () => {
-      console.log('Disconnect', onlineUsers.filter((v) => v?.socketId === socket.id));
       onlineUsers = onlineUsers.filter((v) => v?.socketId !== socket.id);
       io.sockets.emit('list-user-online', onlineUsers);
+      console.log('Disconnect - Online User', onlineUsers);
     });
   });
 };
