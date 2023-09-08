@@ -1,4 +1,11 @@
+import { useContext } from "react";
+import { LoginContext } from "../provider/LoginContext";
+import { SocketContext } from "../provider/SocketContext";
+
 const useLogin = () => {
+  const loginContext = useContext(LoginContext);
+  const socketContext = useContext(SocketContext);
+
   function getUserData() {
     const user =
       JSON.parse(localStorage.getItem('users_taskhub_app_value')) ?? null;
@@ -22,6 +29,8 @@ const useLogin = () => {
   function logOut() {
     localStorage.removeItem('users_taskhub_app_value');
     localStorage.removeItem('users_taskhub_app_token');
+
+    socketContext.emitUserLogout(loginContext.currentUser._id);
     //TODO nvigate tro login
   }
 

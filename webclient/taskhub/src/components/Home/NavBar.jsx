@@ -25,13 +25,11 @@ import useLogin from '../../hooks/useLogin';
 import { LoginContext } from '../../provider/LoginContext';
 import { useContext } from 'react';
 import ThemeModeSwitch from '../../base/component/ThemeModeSwitch';
-import { SocketContext } from '../../provider/SocketContext';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function NavBar({ isLogin = true }) {
-  const { emitUserLogout } = useContext(SocketContext);
   const { t } = useTranslation();
   const navigate = useNavigate();
   const theme = useTheme();
@@ -150,7 +148,6 @@ function NavBar({ isLogin = true }) {
     setAnchorEl(null);
     logincontext.setIsLogin(false);
     logOut();
-    emitUserLogout(logincontext.currentUser._id);
   };
 
   return (

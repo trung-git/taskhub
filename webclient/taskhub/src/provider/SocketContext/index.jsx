@@ -1,31 +1,25 @@
-import { createContext, useState } from 'react';
-import { io } from 'socket.io-client';
-import { SOCKET_SERVER } from '../../base/config';
+import { createContext } from 'react';
+import socket from '../../base/socket';
 
 const SocketContext = createContext();
 
 function SocketProvider({ children }) {
-  const [socket] = useState(
-    io(SOCKET_SERVER, {
-      autoConnect: false,
-    })
-  );
-
-  socket.connect();
-
   function emitUserLogin(userId) {
     socket.emit('user-login', userId);
   }
 
   function emitUserLogout(userId) {
-    console.log("LOGOUT");
     socket.emit('user-logout', userId);
   }
 
+  function emitUserSendMessage(userReceiveMessageInfo, messageInfo) {
+    socket.emit('user-send-message', userReceiveMessageInfo, messageInfo);
+  }
+
   const socketValue = {
-    socket: socket,
     emitUserLogin,
     emitUserLogout,
+    emitUserSendMessage
   };
 
   return (

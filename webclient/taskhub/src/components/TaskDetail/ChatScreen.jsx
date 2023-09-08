@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useContext } from 'react';
 import {
   Grid,
   TextField,
@@ -29,6 +29,8 @@ import ImageIcon from '@mui/icons-material/Image';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 import Picker from 'emoji-picker-react';
 import useToastify from '../../hooks/useToastify';
+import { SocketContext } from '../../provider/SocketContext';
+import socket from '../../base/socket';
 
 const ChatSkeleton = () => {
   return (
@@ -70,6 +72,8 @@ const ChatSkeleton = () => {
 };
 
 function ChatScreen({ user, chatId, otherUser }) {
+  const socketContext = useContext(SocketContext);
+
   const [messages, setMessages] = useState([]);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [lastChatId, setLastChatId] = useState('');
@@ -90,6 +94,14 @@ function ChatScreen({ user, chatId, otherUser }) {
     }
     setLastChatId(messages?.[messages?.length - 1]?._id);
   }, [messages, isScrollBottom]);
+
+  useEffect(() => {
+    socket.on('server-emit-message', (messageInfo) => {
+      if (chatId === messageInfo.chat) {
+        setMessages(prev => [messageInfo, ...prev]);
+      }
+    })
+  }, [])
 
   const scrollToBottom = () => {
     endRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -178,6 +190,9 @@ function ChatScreen({ user, chatId, otherUser }) {
         config
       );
       const responseData = response.data.data;
+      const sendedMessage = responseData.message;
+      socketContext.emitUserSendMessage(otherUser._id, sendedMessage);
+
       setMessages((prevState) => {
         return prevState?.map((_message) => {
           return {

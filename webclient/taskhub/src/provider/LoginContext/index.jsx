@@ -9,7 +9,7 @@ function LoginProvider({ children }) {
   const [currentID, setCurrentID] = useState();
   const [currentUser, setCurrentUser] = useState();
 
-  const { socket, emitUserLogin } = useContext(SocketContext);
+  const { emitUserLogin } = useContext(SocketContext);
 
   const { getUserData } = useLogin();
 
@@ -25,11 +25,6 @@ function LoginProvider({ children }) {
     }
   }, []);
 
-  useEffect(()=>{
-    socket.on("get-users-online", (data) => {
-      console.log("DATA userOnline :", data);
-    })
-  }, [])
   const loginValue = {
     isLogin,
     setIsLogin,
