@@ -44,6 +44,7 @@ const createSocketServer = (server) => {
 
     socket.on('user-send-message', (userReceiveMessageInfo, messageInfo) => {
       const userReceiveMessageInOnlineList = onlineUsers.filter(v => v.userId === userReceiveMessageInfo);
+      console.log('user-send-message', userReceiveMessageInOnlineList);
       if (userReceiveMessageInOnlineList.length > 0) {
         userReceiveMessageInOnlineList.forEach(u => {
           io.to(u.socketId).emit('server-emit-message', messageInfo);
