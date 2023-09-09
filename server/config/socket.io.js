@@ -30,11 +30,11 @@ const createSocketServer = (server) => {
     });
 
     socket.on('user-send-message', (userReceiveMessageInfo, messageInfo) => {
-      const userReceiveMessageInOnlineList = onlineUsers.filter(v => v.userId === userReceiveMessageInfo);
+      const userReceiveMessageInOnlineList = onlineUsers.filter(v => v.userId === userReceiveMessageInfo.id);
       console.log('user-send-message', userReceiveMessageInOnlineList);
       if (userReceiveMessageInOnlineList.length > 0) {
         userReceiveMessageInOnlineList.forEach(u => {
-          io.to(u.socketId).emit('server-emit-message', messageInfo);
+          io.to(u.socketId).emit('server-emit-message', messageInfo, userReceiveMessageInfo.name);
         })
       }
     })
