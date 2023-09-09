@@ -96,7 +96,7 @@ function ChatScreen({ user, chatId, otherUser }) {
   }, [messages, isScrollBottom]);
 
   useEffect(() => {
-    socket.on('server-emit-message', (messageInfo) => {
+    socket.on('server-emit-message', (messageInfo, _) => {
       if (chatId === messageInfo.chat) {
         setMessages(prev => [messageInfo, ...prev]);
       }
@@ -191,7 +191,7 @@ function ChatScreen({ user, chatId, otherUser }) {
       );
       const responseData = response.data.data;
       const sendedMessage = responseData.message;
-      socketContext.emitUserSendMessage(otherUser._id, sendedMessage);
+      socketContext.emitUserSendMessage({id: otherUser._id, name: user.firstName}, sendedMessage);
 
       setMessages((prevState) => {
         return prevState?.map((_message) => {
