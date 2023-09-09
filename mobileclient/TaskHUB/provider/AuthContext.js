@@ -1,6 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { io } from 'socket.io-client';
 import { API_URL } from '../config/constans';
 import axios from 'axios';
 import socket from '../config/socket';
@@ -11,7 +10,12 @@ const AuthProvider = ({ children }) => {
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
   const [isFetchingUserData, setIsFetchingUserData] = useState(true);
+  
   const [isInChat, setIsInChat] = useState(false);
+  const [currentTaskerInContract, setCurrentTaskerInContract] = useState('');
+
+  const [notifications, setNotifications] = useState([]);
+  const [shouldClearNotifications, setShouldClearNotifications] = useState(false);
 
   const getData = async () => {
     try {
@@ -67,7 +71,27 @@ const AuthProvider = ({ children }) => {
     handleCheckMe();
     // getData();
   }, []);
-
+  useEffect(() => {
+    socket.on('server-emit-message', (messageInfo, senderName) => {
+      setNotifications(prev => [...prev, {messageInfo, senderName}])
+    })
+  }, [])
+  useEffect(() => {
+    if (!isInChat || (isInChat && currentTaskerInContract !== userData._id)) {
+      // TODO Push notification
+      notifications.forEach(v => {
+        console.log(`Bạn nhận được một thông báo từ ${v.senderName} với nội dung là: ${v.messageInfo.content}`);
+      })
+    }
+    setShouldClearNotifications(true);
+  }, [notifications])
+  useEffect(() => {
+    if (shouldClearNotifications){
+      setNotifications([]);
+      setShouldClearNotifications(false);
+    }
+  }, [shouldClearNotifications])
+  
   const storeData = async (key, value) => {
     try {
       const stringVal = JSON.stringify(value);
@@ -113,6 +137,7 @@ const AuthProvider = ({ children }) => {
         isFetchingUserData,
         isInChat,
         setIsInChat,
+        setCurrentTaskerInContract
       }}
     >
       {children}

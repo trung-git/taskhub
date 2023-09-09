@@ -34,7 +34,7 @@ const ChatPage = ({ chatId, finder, taskDataVal }) => {
   }, [messages]);
 
   useEffect(() => {
-    socket.on('server-emit-message', (messageInfo) => {
+    socket.on('server-emit-message', (messageInfo, _) => {
       if (chatId === messageInfo.chat) {
         setMessages(prev => [messageInfo, ...prev]);
       }
@@ -92,7 +92,7 @@ const ChatPage = ({ chatId, finder, taskDataVal }) => {
       );
       const responseData = response.data.data;
       const sendedMessage = responseData.message;
-      socket.emit('user-send-message', finder._id, sendedMessage);
+      socket.emit('user-send-message', {id: finder._id, name: userData.firstName}, sendedMessage);
       setMessages((prevState) => {
         return prevState?.map((_message) => {
           return {

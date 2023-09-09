@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
   View,
   useWindowDimensions,
@@ -24,7 +24,7 @@ import { AuthContext } from '../provider/AuthContext';
 const FirstRoute = () => <View style={{ flex: 1, backgroundColor: 'white' }} />;
 
 const ContractDetail = ({ taskData, onClose }) => {
-  const { setIsInChat } = useContext(AuthContext);
+  const { setIsInChat, setCurrentTaskerInContract } = useContext(AuthContext);
   const layout = useWindowDimensions();
 
   const [taskDataVal, setTaskDataVal] = useState(taskData);
@@ -93,7 +93,9 @@ const ContractDetail = ({ taskData, onClose }) => {
       style={{ backgroundColor: 'green' }}
     />
   );
-
+  useEffect(() => {
+    taskDataVal?.tasker?._id && setCurrentTaskerInContract(taskDataVal?.tasker?._id);
+  }, [taskDataVal?.tasker?._id])
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
