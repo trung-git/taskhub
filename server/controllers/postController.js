@@ -253,7 +253,8 @@ const getPostsRelatedToTask = catchAsync(async (req, res, next) => {
   
   const posts = await Post.find( findCondition )
     .skip(recordsPerPage * (pageNum - 1))
-    .limit(recordsPerPage);
+    .limit(recordsPerPage)
+    .sort({ createdAt: 'desc' });
   const count = await Post.countDocuments(findCondition);
 
   return res.status(200).json({
