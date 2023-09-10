@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import {
   Avatar,
   Box,
@@ -29,6 +29,7 @@ import ResponseTime from '../../base/component/ResponseTime';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import vietnameseDayOfWeekFormatter from '../../utils/vietnameseDayOfWeekFormatter';
 import { useNavigate } from 'react-router';
+import { SocketContext } from '../../provider/SocketContext';
 dayjs.extend(customParseFormat);
 
 const validationSchema = yup.object({
@@ -54,6 +55,7 @@ const renderVietnamdate = (date) => {
 };
 
 const InvationDetail = ({ bookingData, isOpen, handleCloseBookingForm }) => {
+  const { emitFinderSendInvitation } = useContext(SocketContext);
   const { t } = useTranslation();
   const { toastError, toastSuccess } = useToastify();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -130,6 +132,7 @@ const InvationDetail = ({ bookingData, isOpen, handleCloseBookingForm }) => {
           },
         })
         .then((response) => {
+          emitFinderSendInvitation(response.data.data.tasker._id, response.data.data);
           console.log('postValueSucces', response);
           toastSuccess('Send invitation success');
           //TODO reset close append new posr

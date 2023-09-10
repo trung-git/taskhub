@@ -21,7 +21,7 @@ import {
   useTheme,
 } from '@mui/material';
 import MainCard from '../../base/component/MainCard';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import AccessAlarmOutlinedIcon from '@mui/icons-material/AccessAlarmOutlined';
 import RoomOutlinedIcon from '@mui/icons-material/RoomOutlined';
@@ -41,8 +41,10 @@ import useToastify from '../../hooks/useToastify';
 import axios from 'axios';
 import { API_URL } from '../../base/config';
 import useLogin from '../../hooks/useLogin';
+import { SocketContext } from '../../provider/SocketContext';
 
 const PostCard = ({ post, onSelect, onRefresh }) => {
+  const { emitFinderSendInvitation } = useContext(SocketContext);
   const {
     user,
     address,
@@ -110,6 +112,7 @@ const PostCard = ({ post, onSelect, onRefresh }) => {
           }
         )
         .then((response) => {
+          emitFinderSendInvitation(response.data.data.tasker._id, response.data.data);
           console.log('postValueSucces', response);
           toastSuccess('Send invitation success');
           //TODO reset close append new posr

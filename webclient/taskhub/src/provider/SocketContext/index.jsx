@@ -16,10 +16,15 @@ function SocketProvider({ children }) {
     socket.emit('user-send-message', userReceiveMessageInfo, messageInfo);
   }
 
+  function emitFinderSendInvitation(toUserId, contractDetail) {
+    socket.emit('finder-send-invitation', toUserId, contractDetail)
+  }
+
   const socketValue = {
     emitUserLogin,
     emitUserLogout,
-    emitUserSendMessage
+    emitUserSendMessage,
+    emitFinderSendInvitation
   };
 
   return (
