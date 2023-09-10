@@ -21,6 +21,7 @@ import axios from 'axios';
 import { API_URL } from '../config/constans';
 import { predictAmount } from '../config/predictAmount';
 import ContractRejectModal from './ContractRejectModal';
+import socket from '../config/socket';
 
 const ContractTabDetail = ({ taskData, onRefresh }) => {
   const [taskDataVal, setTaskDataVal] = useState(taskData);
@@ -172,6 +173,12 @@ const ContractTabDetail = ({ taskData, onRefresh }) => {
         taskUpdateValue
       );
       const responseData = response.data.data;
+      if (state === 'discuss' || state === 'rejected') {
+        socket.emit('tasker-send-action-invitation',responseData.finder._id, {
+          action: state,
+          contract: responseData
+        })
+      }
       setTaskDataVal(responseData);
       console.log('User updated successfully:', response);
       // setTaskData(responseData);
