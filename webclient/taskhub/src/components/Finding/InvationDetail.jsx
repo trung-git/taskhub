@@ -106,9 +106,14 @@ const InvationDetail = ({ bookingData, isOpen, handleCloseBookingForm }) => {
         }`
       ).unix();
       const to = dayjs(
-        `${dayjs(bookingData.workTime.date).format('YYYY-MM-DD')} ${
-          bookingData?.workTime?.to
-        }`
+        `${
+          bookingData?.workTime?.to?.split(':')?.[0] >
+          bookingData?.workTime?.from?.split(':')?.[0]
+            ? dayjs(bookingData.workTime.date).format('YYYY-MM-DD')
+            : dayjs(bookingData.workTime.date)
+                .add(1, 'day')
+                .format('YYYY-MM-DD')
+        } ${bookingData?.workTime?.to}`
       ).unix();
 
       const contractParams = {

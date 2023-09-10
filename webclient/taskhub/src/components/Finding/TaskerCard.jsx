@@ -14,6 +14,7 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { useTranslation } from 'react-i18next';
 import logo from '../../assets/img/logo/logo.png';
 import ImagesList from '../../base/component/ImagesList';
+import formatVietnameseCurrency from '../../utils/formatVietnameseCurrency';
 
 const TaskerCard = ({ taskerData, onSelect }) => {
   const [isOpenUserModal, setIsOpenUserModal] = useState(false);
@@ -92,9 +93,9 @@ const TaskerCard = ({ taskerData, onSelect }) => {
                 fontWeight={600}
                 sx={{ color: '#4a4a4a' }}
               >{`${taskerData?.firstName} ${taskerData?.lastName}`}</Typography>
-              <Typography variant="h5">{`$${taskerData?.taskInfo?.price}/${t(
-                'th_key_hr'
-              )}`}</Typography>
+              <Typography variant="h5">{`${formatVietnameseCurrency(
+                taskerData?.taskInfo?.price
+              )}/${t('th_key_hr')}`}</Typography>
             </Stack>
             <Stack direction={'row'} marginTop={1}>
               {/* <Typography sx={{ mr: 0.5 }}>
