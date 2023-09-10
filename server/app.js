@@ -4,11 +4,22 @@ const cookieParser = require('cookie-parser');
 const app = express();
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
+const rateLimit = require('express-rate-limit');
+const compression = require('compression');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
+const hpp = require('hpp');
+
 
 const corsOptions = {
   origin: '*',
   credentials: true,
 };
+const limiter = rateLimit({
+  max: 1000,
+  windowMs: 5 * 60 * 1000,
+  message: 'Too many request from this IP, please try again in an hour !',
+});
 
 //Set up
 app.use(express.static(path.join(__dirname, 'public')));
@@ -22,6 +33,12 @@ app.use(
     tempFileDir: '/tmp/',
   })
 );
+app.use(limiter);
+app.use(compression());
+app.use(mongoSanitize());
+app.use(xss());
+app.use(hpp());
+
 
 //Router
 const userRouter = require('./routes/userRoutes.js');
