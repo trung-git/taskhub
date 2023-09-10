@@ -158,12 +158,12 @@ const Finding = (props) => {
   const handleOnSelect = useCallback(
     (taskerData) => {
       console.log('handleOnSelect', isLogin, taskerData);
-      if (isLogin) {
+      if (!isLogin) {
+        setShowLoginForm(true);
+      } else {
         setSelectedTasker(taskerData);
         setshowDateBook(true);
         setActiveStep(2);
-      } else {
-        setShowLoginForm(true);
       }
     },
     [isLogin, taskerData]
@@ -452,7 +452,14 @@ const Finding = (props) => {
                 </Stack>
               </Grid>
               <Grid item xs={12}>
-                <AuthLogin />
+                <AuthLogin
+                  onSuccess={() => {
+                    setShowLoginForm(false);
+                    setSelectedTasker(taskerData);
+                    setshowDateBook(true);
+                    setActiveStep(2);
+                  }}
+                />
               </Grid>
             </Grid>
           </Box>

@@ -143,6 +143,7 @@ const TabPersonal = () => {
                   console.error(error?.request);
                   console.error(error?.response);
                   toastError(`Update error, ${error.message}`);
+                  window.dispatchEvent(new ErrorEvent('error', { error }));
                 });
               setStatus({ success: true });
               setSubmitting(false);

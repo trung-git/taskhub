@@ -46,6 +46,7 @@ const TaskDetail = () => {
       setChatId(responseData.chat);
       setLoading(false);
     } catch (error) {
+      window.dispatchEvent(new ErrorEvent('error', { error }));
       console.error('Error fetching data:', error);
     }
   };
@@ -90,6 +91,7 @@ const TaskDetail = () => {
     } catch (error) {
       console.error('Error updating user:', error);
       toastError(`Update task error, ${error.message}`);
+      window.dispatchEvent(new ErrorEvent('error', { error }));
       setIsSubmitting(false);
     }
   };

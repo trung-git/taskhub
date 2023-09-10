@@ -98,10 +98,10 @@ function ChatScreen({ user, chatId, otherUser }) {
   useEffect(() => {
     socket.on('server-emit-message', (messageInfo, _) => {
       if (chatId === messageInfo.chat) {
-        setMessages(prev => [messageInfo, ...prev]);
+        setMessages((prev) => [messageInfo, ...prev]);
       }
-    })
-  }, [])
+    });
+  }, []);
 
   const scrollToBottom = () => {
     endRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -149,6 +149,7 @@ function ChatScreen({ user, chatId, otherUser }) {
       }
       setIsScrollBottom(true);
     } catch (error) {
+      window.dispatchEvent(new ErrorEvent('error', { error }));
       console.error('Error fetching data:', error);
     }
   };
@@ -167,7 +168,8 @@ function ChatScreen({ user, chatId, otherUser }) {
         setIsHasMore(false);
       }
     } catch (error) {
-      console.error('Error fetching data:', error);
+      // console.error('Error fetching data:', error);
+      window.dispatchEvent(new ErrorEvent('error', { error }));
       setIsLoadingMore(false);
     }
   };
@@ -191,7 +193,10 @@ function ChatScreen({ user, chatId, otherUser }) {
       );
       const responseData = response.data.data;
       const sendedMessage = responseData.message;
-      socketContext.emitUserSendMessage({id: otherUser._id, name: user.firstName}, sendedMessage);
+      socketContext.emitUserSendMessage(
+        { id: otherUser._id, name: user.firstName },
+        sendedMessage
+      );
 
       setMessages((prevState) => {
         return prevState?.map((_message) => {
@@ -203,6 +208,7 @@ function ChatScreen({ user, chatId, otherUser }) {
       });
       endRef.current.scrollTo(0, 0);
     } catch (error) {
+      window.dispatchEvent(new ErrorEvent('error', { error }));
       console.error('Error fetching data:', error);
     }
   };

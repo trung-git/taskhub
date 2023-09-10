@@ -13,6 +13,8 @@ import { viVN } from '@mui/x-date-pickers/locales';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Navigate, Route } from 'react-router';
+import ErrorBoundary from './base/component/ErrorBoundary';
+import NotLogin from './base/component/NotLogin';
 
 function App() {
   return (
@@ -27,7 +29,9 @@ function App() {
           <CssBaseline />
           <Box className="App">
             <Scrolltop>
-              <Routes />
+              <ErrorBoundary>
+                <Routes />
+              </ErrorBoundary>
             </Scrolltop>
           </Box>
           <ToastContainer />

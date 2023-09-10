@@ -185,12 +185,13 @@ const PostModal = ({ type, value = {}, open, onClose, onCreateSuccess }) => {
           // resetForm();
         })
         .catch((error) => {
-          console.error(error);
-          console.error('Error:', Object.keys(error), error.message);
-          console.error(error?.config);
-          console.error(error?.request);
-          console.error(error?.response);
-          toastError(`Update error, ${error.message}`);
+          // console.error(error);
+          // console.error('Error:', Object.keys(error), error.message);
+          // console.error(error?.config);
+          // console.error(error?.request);
+          // console.error(error?.response);
+          // toastError(`Update error, ${error.message}`);
+          window.dispatchEvent(new ErrorEvent('error', { error }));
           setIsSubmitting(false);
         });
     } else {

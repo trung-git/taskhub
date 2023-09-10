@@ -16,6 +16,7 @@ import TaskDetail from '../components/TaskDetail';
 import PostList from '../components/PostList';
 import { Navigate } from 'react-router';
 import Error404 from '../base/component/Error404';
+import NotLogin from '../base/component/NotLogin';
 
 const UserTabPersonal = Loadable(
   lazy(() => import('../components/UserPage/TabPersonal'))
@@ -57,29 +58,41 @@ const MainRoutes = {
       path: '/reset-password/:token',
       element: <AuthResetPassword />,
     },
-    // {
-    //   path: 'chat',
-    //   element: <Chat />,
-    // },
     {
       path: 'find/:id',
       element: <Finding />,
     },
     {
       path: 'tasklist',
-      element: <TaskList />,
+      element: (
+        <NotLogin>
+          <TaskList />
+        </NotLogin>
+      ),
     },
     {
       path: 'tasklist/:id',
-      element: <TaskDetail />,
+      element: (
+        <NotLogin>
+          <TaskDetail />
+        </NotLogin>
+      ),
     },
     {
       path: 'post',
-      element: <PostList />,
+      element: (
+        <NotLogin>
+          <PostList />
+        </NotLogin>
+      ),
     },
     {
       path: 'profile',
-      element: <UserPage />,
+      element: (
+        <NotLogin>
+          <UserPage />
+        </NotLogin>
+      ),
       children: [
         {
           path: 'personal',

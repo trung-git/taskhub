@@ -67,8 +67,8 @@ const ProfileTab = () => {
     setOpenLogoutDialog(false);
     logOut();
     setTimeout(() => {
-      navigate('/login');
-    }, 1000);
+      navigate('/');
+    }, 200);
   };
 
   return (

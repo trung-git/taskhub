@@ -97,14 +97,15 @@ const TabEmailVerify = () => {
         setIsRequestVerify(false);
       })
       .catch((error) => {
-        console.error(error);
-        console.error('Error:', Object.keys(error), error.message);
-        console.error(error?.config);
-        console.error(error?.request);
-        console.error(error?.response);
+        // console.error(error);
+        // console.error('Error:', Object.keys(error), error.message);
+        // console.error(error?.config);
+        // console.error(error?.request);
+        // console.error(error?.response);
         // setOpenOTPConfirm(false);
         setOtp('');
         toastError(`Verify error, ${error.message}`);
+        window.dispatchEvent(new ErrorEvent('error', { error }));
         setIsRequestVerify(false);
       });
   };
@@ -136,12 +137,13 @@ const TabEmailVerify = () => {
         });
       })
       .catch((error) => {
-        console.error(error);
-        console.error('Error:', Object.keys(error), error.message);
-        console.error(error?.config);
-        console.error(error?.request);
-        console.error(error?.response);
+        // console.error(error);
+        // console.error('Error:', Object.keys(error), error.message);
+        // console.error(error?.config);
+        // console.error(error?.request);
+        // console.error(error?.response);
         toastError(`Verify error, ${error.message}`);
+        window.dispatchEvent(new ErrorEvent('error', { error }));
         setOtp('');
         setIsFetchSendOTPConfirm(false);
       });

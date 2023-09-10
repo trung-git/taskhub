@@ -54,7 +54,8 @@ const PostList = () => {
       setIsFetchingPostList(false);
       setTotalPage(response.data.totalPage);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      // console.error('Error fetching data:', error);
+      window.dispatchEvent(new ErrorEvent('error', { error }));
     }
   };
 
@@ -115,7 +116,7 @@ const PostList = () => {
                   <PostCard
                     post={post}
                     onSelect={(post) => setSelectedPost(post)}
-                    onRefresh={() => fetchPostListData(1) }
+                    onRefresh={() => fetchPostListData(1)}
                   />
                 </Grid>
               );

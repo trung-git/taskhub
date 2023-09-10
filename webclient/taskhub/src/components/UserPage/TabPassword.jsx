@@ -125,6 +125,7 @@ const TabPassword = () => {
                 console.error(error?.request);
                 console.error(error?.response);
                 toastError(`Update password error, ${error.message}`);
+                window.dispatchEvent(new ErrorEvent('error', { error }));
                 setIsSubmitting(false);
                 resetForm();
               });

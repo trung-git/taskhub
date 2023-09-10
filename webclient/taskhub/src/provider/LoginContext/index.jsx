@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import useLogin from '../../hooks/useLogin';
 import { SocketContext } from '../SocketContext';
+import axios from 'axios';
+import { API_URL } from '../../base/config';
 
 const LoginContext = createContext();
 
@@ -11,9 +13,25 @@ function LoginProvider({ children }) {
 
   const { emitUserLogin } = useContext(SocketContext);
 
-  const { getUserData } = useLogin();
+  const { getUserData, logOut } = useLogin();
 
-  useEffect(() => {
+  const handleCheckMe = () => {
+    axios
+      .get(`${API_URL}api/v1/user/me`)
+      .then((response) => {
+        // console.log('responseCheckme', response);
+        initAuth();
+        // setIsFetchingUserData(false);
+      })
+      .catch((error) => {
+        // Hết hạn
+        // console.log('responseCheckmeError', error);
+        setIsLogin(false);
+        logOut();
+      });
+  };
+
+  const initAuth = () => {
     const userData = getUserData();
     if (userData) {
       setIsLogin(true);
@@ -23,6 +41,10 @@ function LoginProvider({ children }) {
     } else {
       setIsLogin(false);
     }
+  };
+
+  useEffect(() => {
+    handleCheckMe();
   }, []);
 
   const loginValue = {

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // material-ui
 import { Grid, Stack, Typography } from '@mui/material';
@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 
 const Login = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   return (
     <AuthWrapper>
       <Grid container spacing={3}>
@@ -35,7 +36,7 @@ const Login = () => {
           </Stack>
         </Grid>
         <Grid item xs={12}>
-          <AuthLogin />
+          <AuthLogin onSuccess={() => navigate('/')} />
         </Grid>
       </Grid>
     </AuthWrapper>

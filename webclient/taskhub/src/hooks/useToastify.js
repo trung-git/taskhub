@@ -1,4 +1,5 @@
 import { useTheme } from '@mui/material';
+import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const useToastify = () => {
@@ -27,6 +28,24 @@ const useToastify = () => {
       progress: undefined,
       theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
     });
+  }
+
+  function toastLinkInfo(message, link) {
+    toast.info(
+      <div>
+        <Link to={link}>{message}</Link>
+      </div>,
+      {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
+      }
+    );
   }
 
   function toastSuccess(message) {

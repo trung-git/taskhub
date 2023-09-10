@@ -112,7 +112,10 @@ const PostCard = ({ post, onSelect, onRefresh }) => {
           }
         )
         .then((response) => {
-          emitFinderSendInvitation(response.data.data.tasker._id, response.data.data);
+          emitFinderSendInvitation(
+            response.data.data.tasker._id,
+            response.data.data
+          );
           console.log('postValueSucces', response);
           toastSuccess('Send invitation success');
           //TODO reset close append new posr
@@ -123,12 +126,13 @@ const PostCard = ({ post, onSelect, onRefresh }) => {
           setIsSendInvitation(false);
         })
         .catch((error) => {
-          console.error(error);
-          console.error('Error:', Object.keys(error), error.message);
-          console.error(error?.config);
-          console.error(error?.request);
-          console.error(error?.response);
-          toastError(`Update error, ${error.message}`);
+          // console.error(error);
+          // console.error('Error:', Object.keys(error), error.message);
+          // console.error(error?.config);
+          // console.error(error?.request);
+          // console.error(error?.response);
+          // toastError(`Update error, ${error.message}`);
+          window.dispatchEvent(new ErrorEvent('error', { error }));
           setIsSendInvitation(false);
         });
     } else {

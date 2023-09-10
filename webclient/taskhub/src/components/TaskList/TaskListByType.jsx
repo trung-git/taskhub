@@ -44,6 +44,7 @@ const TaskListByType = ({ type }) => {
       setIsFetchingTaskList(false);
     } catch (error) {
       console.error('Error fetching data:', error);
+      window.dispatchEvent(new ErrorEvent('error', { error }));
     }
   };
 

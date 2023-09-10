@@ -40,11 +40,10 @@ import { SocketContext } from '../../../provider/SocketContext';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
-const AuthLogin = () => {
+const AuthLogin = ({ onSuccess }) => {
   const { emitUserLogin } = useContext(SocketContext);
   const [checked, setChecked] = React.useState(false);
   const logincontext = useContext(LoginContext);
-  const navigate = useNavigate();
   const { t } = useTranslation();
 
   const { setUserData, setUserToken } = useLogin();
@@ -76,9 +75,9 @@ const AuthLogin = () => {
         setStatus({ success: true });
         logincontext.setIsLogin(true);
         logincontext.setCurrentUser(response?.data?.data?.user);
-        navigate('/');
         response?.data?.data?.user._id &&
           emitUserLogin(response?.data?.data?.user._id);
+        onSuccess && onSuccess();
       })
       .catch((error) => {
         // Handle error

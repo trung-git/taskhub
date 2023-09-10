@@ -30,6 +30,7 @@ import { DateTimePicker } from '@mui/x-date-pickers';
 import vietnameseDayOfWeekFormatter from '../../utils/vietnameseDayOfWeekFormatter';
 import { useNavigate } from 'react-router';
 import { SocketContext } from '../../provider/SocketContext';
+import { LoadingButton } from '@mui/lab';
 dayjs.extend(customParseFormat);
 
 const validationSchema = yup.object({
@@ -96,6 +97,8 @@ const InvationDetail = ({ bookingData, isOpen, handleCloseBookingForm }) => {
   console.log('formData', watch());
 
   const onSubmitHandler = (data) => {
+    setIsSubmitting(true);
+
     if (data) {
       const from = dayjs(
         `${dayjs(bookingData.workTime.date).format('YYYY-MM-DD')} ${
@@ -132,12 +135,17 @@ const InvationDetail = ({ bookingData, isOpen, handleCloseBookingForm }) => {
           },
         })
         .then((response) => {
-          emitFinderSendInvitation(response.data.data.tasker._id, response.data.data);
+          emitFinderSendInvitation(
+            response.data.data.tasker._id,
+            response.data.data
+          );
           console.log('postValueSucces', response);
           toastSuccess('Send invitation success');
           //TODO reset close append new posr
           // resetForm();
+
           setTimeout(() => {
+            setIsSubmitting(false);
             navigate(`/tasklist/${response?.data?.data?._id}`);
           }, 2000);
         })
@@ -147,7 +155,9 @@ const InvationDetail = ({ bookingData, isOpen, handleCloseBookingForm }) => {
           console.error(error?.config);
           console.error(error?.request);
           console.error(error?.response);
-          toastError(`Update error, ${error.message}`);
+          // toastError(`Update error, ${error.message}`);
+          window.dispatchEvent(new ErrorEvent('error', { error }));
+          setIsSubmitting(false);
         });
     } else {
       setIsSubmitting(false);
@@ -504,14 +514,15 @@ const InvationDetail = ({ bookingData, isOpen, handleCloseBookingForm }) => {
                 mt: 3,
               }}
             >
-              <Button
+              <LoadingButton
                 type="submit"
                 variant="contained"
                 sx={{ textTransform: 'unset' }}
                 disabled={!isValid}
+                loading={isSubmitting}
               >
                 {t('th_key_btn_send_invitation')}
-              </Button>
+              </LoadingButton>
             </Box>
           </Stack>
         </form>

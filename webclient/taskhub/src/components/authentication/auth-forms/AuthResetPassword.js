@@ -92,7 +92,8 @@ const AuthResetPassword = () => {
       })
       .catch((error) => {
         console.log('userDataerror', error);
-        toastError(`Reset password error, ${error.message}`);
+        // toastError(`Reset password error, ${error.message}`);
+        window.dispatchEvent(new ErrorEvent('error', { error }));
         setIsSubmitting(false);
       });
   };

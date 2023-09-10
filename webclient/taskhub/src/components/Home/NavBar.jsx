@@ -111,13 +111,13 @@ function NavBar({ isLogin = true }) {
       },
       auth: false,
     },
-    {
-      languageKey: 'th_key_navbar_becometasker',
-      onClick: () => {
-        navigate('/becometasker');
-      },
-      auth: false,
-    },
+    // {
+    //   languageKey: 'th_key_navbar_becometasker',
+    //   onClick: () => {
+    //     navigate('/becometasker');
+    //   },
+    //   auth: false,
+    // },
   ];
 
   const handleOpenNavMenu = (event) => {
@@ -260,11 +260,11 @@ function NavBar({ isLogin = true }) {
                 )
               )}
           </Box>
-          {!isLogin && (
+          {/* {!isLogin && (
             <Button sx={{ display: { xs: 'none', md: 'block' } }}>
               {t('th_key_navbar_becometasker')}
             </Button>
-          )}
+          )} */}
           {isLogin && (
             <div>
               <Button

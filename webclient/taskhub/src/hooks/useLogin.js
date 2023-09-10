@@ -1,6 +1,6 @@
-import { useContext } from "react";
-import { LoginContext } from "../provider/LoginContext";
-import { SocketContext } from "../provider/SocketContext";
+import { useContext } from 'react';
+import { LoginContext } from '../provider/LoginContext';
+import { SocketContext } from '../provider/SocketContext';
 
 const useLogin = () => {
   const loginContext = useContext(LoginContext);
@@ -32,6 +32,8 @@ const useLogin = () => {
 
     socketContext.emitUserLogout(loginContext.currentUser._id);
     //TODO nvigate tro login
+    loginContext.setCurrentUser(null);
+    loginContext.setIsLogin(false);
   }
 
   return { getUserData, setUserData, logOut, setUserToken, getUserToken };

@@ -57,6 +57,7 @@ const resources = {
       th_key_home_popular_task: 'Popular task',
       th_key_home_finding_now: 'Get help',
       th_key_home_avg_price: 'AVG Price',
+      th_key_back_to_home: 'Back To HomePage',
       //
       th_key_finding_step_describe: 'Describe your task',
       th_key_finding_step_taskerlist: 'Browse Taskers & prices',
@@ -216,6 +217,7 @@ const resources = {
       th_key_home_popular_task: 'Các công việc phổ biến',
       th_key_home_finding_now: 'Tìm ngay',
       th_key_home_avg_price: 'Giá trung bình',
+      th_key_back_to_home: 'Quay về trang chủ',
       //
       th_key_finding_step_describe: 'Mô tả công việc',
       th_key_finding_step_taskerlist: 'Duyệt người nhận việc',
