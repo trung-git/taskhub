@@ -76,14 +76,17 @@ const AuthProvider = ({ children }) => {
       setNotifications(prev => [...prev, {messageInfo, senderName}])
     })
   }, [])
+
   useEffect(() => {
-    if (!isInChat || (isInChat && currentTaskerInContract !== userData._id)) {
-      // TODO Push notification
-      notifications.forEach(v => {
-        console.log(`Bạn nhận được một thông báo từ ${v.senderName} với nội dung là: ${v.messageInfo.content}`);
-      })
+    if (notifications.length > 0) {
+      if (!isInChat || (isInChat && currentTaskerInContract !== userData._id)) {
+        // TODO Push notification
+        notifications.forEach(v => {
+          console.log(`Bạn nhận được một thông báo từ ${v.senderName} với nội dung là: ${v.messageInfo.content}`);
+        });
+      }
+      setShouldClearNotifications(true);
     }
-    setShouldClearNotifications(true);
   }, [notifications])
   useEffect(() => {
     if (shouldClearNotifications){
