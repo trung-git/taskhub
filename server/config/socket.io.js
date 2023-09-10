@@ -39,6 +39,15 @@ const createSocketServer = (server) => {
       }
     })
 
+    socket.on('finder-send-invitation', (toUserId, contractDetail) => {
+      const userReceive = onlineUsers.filter(v => v.userId === toUserId);
+      if (userReceive.length > 0) {
+        userReceive.forEach(u => {
+          io.to(u.socketId).emit('server-emit-invitation-to-tasker', contractDetail);
+        })
+      }
+    })
+
     socket.on('disconnect', () => {
       onlineUsers = onlineUsers.filter((v) => v?.socketId !== socket.id);
       io.sockets.emit('list-user-online', onlineUsers);
