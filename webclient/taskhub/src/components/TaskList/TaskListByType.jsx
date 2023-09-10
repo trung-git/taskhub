@@ -14,9 +14,11 @@ import { useCookies } from 'react-cookie';
 import useLogin from '../../hooks/useLogin';
 import FeedbackIcon from '@mui/icons-material/Feedback';
 import Nodata from '../../base/component/Nodata';
+import socket from '../../base/socket';
 
 const TaskListByType = ({ type }) => {
   const [taskList, setTaskList] = useState([]);
+  const [triggerFetchTaskList, setTriggerFetchTaskList] = useState(false);
   const { getUserToken } = useLogin();
   const token = getUserToken();
 
@@ -53,6 +55,15 @@ const TaskListByType = ({ type }) => {
       fetchTaskListData(type, pageNum);
     }
   }, [type, pageNum]);
+
+  useEffect(() => {
+    socket.on('server-emit-action-invitation-to-finder', (_) => {
+      setTriggerFetchTaskList(prev => !prev);
+    })
+  }, []);
+  useEffect(() => {
+    fetchTaskListData(type, pageNum);
+  }, [triggerFetchTaskList])
 
   // useEffect(() => {
   //   if (pageNum) {

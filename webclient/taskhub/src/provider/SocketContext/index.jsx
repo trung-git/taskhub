@@ -1,9 +1,21 @@
-import { createContext } from 'react';
+import { createContext, useEffect } from 'react';
 import socket from '../../base/socket';
 
 const SocketContext = createContext();
 
 function SocketProvider({ children }) {
+  useEffect(() => {
+    socket.on('server-emit-action-invitation-to-finder', (actionDetail) => {
+      // TODO Push notification
+      if (actionDetail?.action === 'discuss') {
+        console.log(`${actionDetail.contract.tasker.firstName} đã chấp nhận lời mời cho công việc ${actionDetail.contract.taskTag.title}`);
+      }
+      else if (actionDetail?.action === 'rejected') {
+        console.log(`${actionDetail.contract.tasker.firstName} đã từ chối lời mời cho công việc ${actionDetail.contract.taskTag.title}`);
+      }
+    })
+  }, []);
+
   function emitUserLogin(userId) {
     socket.emit('user-login', userId);
   }
