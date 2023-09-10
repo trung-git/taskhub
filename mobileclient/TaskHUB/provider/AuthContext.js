@@ -95,6 +95,12 @@ const AuthProvider = ({ children }) => {
     }
   }, [shouldClearNotifications])
   
+  useEffect(() => {
+    socket.on('server-emit-invitation-to-tasker', (contractDetail) => {
+      // TODO Push notification
+      console.log(`Bạn nhận được một lời mời làm mới: công việc là ${contractDetail.taskTag.title}, người mời là ${contractDetail.finder.firstName}`);
+    })
+  }, [])
   const storeData = async (key, value) => {
     try {
       const stringVal = JSON.stringify(value);
