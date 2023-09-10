@@ -30,7 +30,7 @@ const useLogin = () => {
     localStorage.removeItem('users_taskhub_app_value');
     localStorage.removeItem('users_taskhub_app_token');
 
-    socketContext.emitUserLogout(loginContext.currentUser._id);
+    socketContext.emitUserLogout(loginContext?.currentUser?._id);
     //TODO nvigate tro login
     loginContext.setCurrentUser(null);
     loginContext.setIsLogin(false);

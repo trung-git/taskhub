@@ -26,7 +26,7 @@ function LoginProvider({ children }) {
       .catch((error) => {
         // Hết hạn
         // console.log('responseCheckmeError', error);
-        setIsLogin(false);
+        // setIsLogin(false);
         logOut();
       });
   };

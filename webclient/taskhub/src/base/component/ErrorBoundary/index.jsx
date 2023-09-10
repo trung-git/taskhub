@@ -25,12 +25,7 @@ function ErrorBoundary({ children }) {
         error.error.response.status === 500 &&
         error.error.response.data.message === 'jwt expired'
       ) {
-        // Xử lý lỗi Axios 401 ở đây
-        // Bạn có thể chuyển hướng người dùng đến trang đăng nhập hoặc hiển thị một thông báo
-        console.log('Lỗi Axios 401 đã xảy ra');
-        // Bạn có thể muốn chuyển hướng đến trang đăng nhập hoặc hiển thị thông báo cho người dùng
-        // setIsLogin(false);
-        // setCurrentUser(null);
+        console.log('expiretoken');
         logOut();
       }
 
