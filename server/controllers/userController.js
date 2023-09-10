@@ -46,6 +46,14 @@ exports.getTaskers = catchAsync(async (req, res, next) => {
       },
     },
     {
+      $lookup: {
+        from: 'contracts', 
+        localField: 'contracts',
+        foreignField: '_id',
+        as: 'contractInfos',
+      },
+    },
+    {
       $project: {
         username: 1,
         firstName: 1,
@@ -75,6 +83,16 @@ exports.getTaskers = catchAsync(async (req, res, next) => {
           photo: '$taskInfo.photo',
           price: '$taskInfo.price.price',
         },
+        contractInfos: 1,
+        completeContractCount: {
+          $size: {
+            $filter: {
+              input: '$contractInfos',
+              as: 'contractInfo',
+              cond: { $eq: ['$$contractInfo.status', 'finish'] }
+            }
+          }
+        }
       },
     },
     {
@@ -149,6 +167,8 @@ exports.getTaskers = catchAsync(async (req, res, next) => {
     case 4:
       aggregatePipeline.push({ $sort: { averageRating: -1 } });
       break;
+    case 5: 
+      aggregatePipeline.push({ $sort: { completeContractCount: -1 } });
     default:
       break;
   }
