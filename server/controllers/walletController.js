@@ -57,8 +57,37 @@ exports.getMyWallet = catchAsync(async (req, res, next) => {
   const { wallet: id } = req.user;
   const wallet = await Wallet.findById(id);
 
+  const contracts = await Contract.find({
+    tasker: req.user._id,
+    status: 'finish'
+  });
+
+  let byCast = 0;
+  let byWallet = 0;
+
+  [...contracts].forEach(v => {
+    if (v.paymentType === "by-wallet") {
+      if (v.paymentPlan === "one-time") {
+        byWallet = byWallet + v.price;
+      }
+      else {
+        byWallet = byWallet + v.price * ((v.workTime.to - v.workTime.from) / 1000 / 60 / 60);
+      }
+    } else {
+      if (v.paymentPlan === "one-time") {
+        byCast = byCast + v.price;
+      }
+      else {
+        byCast = byCast + v.price * ((v.workTime.to - v.workTime.from) / 1000 / 60 / 60);
+      }
+    }
+  });
+
   res.status(200).json({
     status: 'success',
     data: wallet,
+    byCast,
+    byWallet,
+    total: byCast + byWallet
   });
 });
