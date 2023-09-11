@@ -144,11 +144,11 @@ function NavBar({ isLogin = true }) {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    setAnchorEl(null);
-    logincontext.setIsLogin(false);
-    logOut();
-  };
+  // const handleLogout = () => {
+  //   setAnchorEl(null);
+  //   logincontext.setIsLogin(false);
+  //   logOut();
+  // };
 
   return (
     <AppBar

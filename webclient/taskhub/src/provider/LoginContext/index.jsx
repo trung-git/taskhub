@@ -13,20 +13,21 @@ function LoginProvider({ children }) {
 
   const { emitUserLogin } = useContext(SocketContext);
 
-  const { getUserData, logOut } = useLogin();
+  const { getUserData, logOut, getUserToken } = useLogin();
+
+  const token = getUserToken();
+
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
 
   const handleCheckMe = () => {
     axios
-      .get(`${API_URL}api/v1/user/me`)
+      .get(`${API_URL}api/v1/user/me`, config)
       .then((response) => {
-        // console.log('responseCheckme', response);
         initAuth();
-        // setIsFetchingUserData(false);
       })
       .catch((error) => {
-        // Hết hạn
-        // console.log('responseCheckmeError', error);
-        // setIsLogin(false);
         logOut();
       });
   };
