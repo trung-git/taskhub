@@ -20,6 +20,7 @@ import ContractTabDetail from './ContractTabDetail';
 import { API_URL } from '../config/constans';
 import axios from 'axios';
 import { AuthContext } from '../provider/AuthContext';
+import socket from '../config/socket';
 
 const FirstRoute = () => <View style={{ flex: 1, backgroundColor: 'white' }} />;
 
@@ -96,6 +97,13 @@ const ContractDetail = ({ taskData, onClose }) => {
   useEffect(() => {
     taskDataVal?.tasker?._id && setCurrentTaskerInContract(taskDataVal?.tasker?._id);
   }, [taskDataVal?.tasker?._id])
+  useEffect(() => {
+    socket.on('server-emit-update-contract', (contractDetail) => {
+      if (String(contractDetail._id) === String(taskDataVal._id)) {
+        refreshTaskData();
+      }
+    })
+  }, [])
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
