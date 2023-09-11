@@ -30,6 +30,10 @@ import formatVietnameseCurrency from '../../utils/formatVietnameseCurrency';
 import { LoadingButton } from '@mui/lab';
 import { loadScript } from '@paypal/paypal-js';
 import { useNavigate } from 'react-router';
+import axios from 'axios';
+import { API_URL } from '../../base/config';
+import useLogin from '../../hooks/useLogin';
+import useToastify from '../../hooks/useToastify';
 
 const validationSchema = yup.object({
   address: yup.string().required('Address is required'),
@@ -43,6 +47,7 @@ function TaskViewDetail({
   isSubmitting,
   onRefresh,
   isLoading,
+  setIsSubmitting,
 }) {
   const {
     taskTag,
@@ -57,6 +62,8 @@ function TaskViewDetail({
     startTime,
     endTime,
     updatedAt,
+    _id: taskId,
+    isPaid,
   } = task;
   const { t } = useTranslation();
   const theme = useTheme();
@@ -157,11 +164,19 @@ function TaskViewDetail({
   const workTimeToValue = watch('workTimeTo');
   const priceValue = watch('price');
   const paymentPlanValue = watch('paymentPlan');
+  const { toastError, toastSuccess } = useToastify();
 
   const [predictAmount, setPredictAmount] = useState(0);
   const [isRenderPaypalButton, setIsRenderPaypalButton] = useState(false);
+  const { getUserToken } = useLogin();
+  const token = getUserToken();
+
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
 
   const [anchorPayEl, setAnchorPayEl] = useState(null);
+  const id = Boolean(anchorPayEl) ? 'simple-popover' : undefined;
 
   const handlePayment = (e) => {
     setAnchorPayEl(e.currentTarget);
@@ -213,6 +228,28 @@ function TaskViewDetail({
       });
   };
 
+  const handlePaid = async () => {
+    setIsSubmitting(true);
+    try {
+      const response = await axios.patch(
+        `${API_URL}api/v1/contract/${taskId}`,
+        { isPaid: true },
+        config
+      );
+      const responseData = response.data.data;
+      console.log('Paying successfully!');
+      // setTaskData(responseData);
+      toastSuccess('Update task success');
+      setIsSubmitting(false);
+      onRefresh && onRefresh();
+    } catch (error) {
+      console.error('Error updating user:', error);
+      toastError(`Update task error, ${error.message}`);
+      window.dispatchEvent(new ErrorEvent('error', { error }));
+      setIsSubmitting(false);
+    }
+  };
+
   const renderPaypalBtn = (item) => {
     const value = Math.round(item.value / 23);
     return {
@@ -230,21 +267,13 @@ function TaskViewDetail({
       },
       onCancel: onCancelHandler,
       onApprove: function (data, actions) {
-        // const value = Math.round(data.value / 23);
-        console.log('dataOnApprove', data, actions);
         return actions.order.capture().then(function (orderData) {
           console.log('orderData', orderData);
           var transaction = orderData.purchase_units[0].payments.captures[0];
           if (transaction.status === 'COMPLETED') {
-            // TODO Call api update thanh toan thành công
-            // updateOrder(orderId)
-            //   .then((data) => {
-            //     if (data.isPaid) {
-            //       updateStateAfterOrder(data.paidAt);
-            //     }
-            //   })
-            //   .catch((er) => console.log(er));
             console.log('Thanh toán thành công');
+            setAnchorPayEl(null);
+            handlePaid();
           }
         });
       },
@@ -713,11 +742,20 @@ function TaskViewDetail({
                       placement="top"
                       arrow
                     >
-                      <InputLabel htmlFor="email" sx={{ textAlign: 'start' }}>
+                      <InputLabel sx={{ textAlign: 'start' }}>
                         {`(*)`} {t('th_key_predict_amount')}:{' '}
                         {formatVietnameseCurrency(predictAmount)}
                       </InputLabel>
                     </Tooltip>
+                  </Stack>
+                </Grid>
+                <Grid item xs={12} sx={{ mb: 3 }}>
+                  <Stack spacing={1}>
+                    <InputLabel sx={{ textAlign: 'start' }}>
+                      {`Trạng thái thanh toán: ${
+                        isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'
+                      }`}
+                    </InputLabel>
                   </Stack>
                 </Grid>
               </Grid>
@@ -771,35 +809,37 @@ function TaskViewDetail({
                       Save
                     </LoadingButton>
                   )}
-                  {status === 'official' && paymentType === 'by-wallet' && (
-                    // <div id="paypal-container-element"></div>
-                    <>
-                      <Button
-                        variant="contained"
-                        onClick={(e) => handlePayment(e)}
-                      >
-                        {t('Thanh toán')}
-                      </Button>
-                      <Popover
-                        id={'simple-popover'}
-                        open={Boolean(anchorPayEl)}
-                        anchorEl={anchorPayEl}
-                        onClose={() => setAnchorPayEl(null)}
-                        anchorOrigin={{
-                          vertical: 'top',
-                          horizontal: 'center',
-                        }}
-                        transformOrigin={{
-                          vertical: 'bottom',
-                          horizontal: 'left',
-                        }}
-                      >
-                        <Box sx={{ p: 2 }}>
-                          <div id="paypal-container-element"></div>
-                        </Box>
-                      </Popover>
-                    </>
-                  )}
+                  {status === 'official' &&
+                    paymentType === 'by-wallet' &&
+                    !isPaid && (
+                      <>
+                        <Button
+                          aria-describedby={id}
+                          variant="contained"
+                          onClick={(e) => handlePayment(e)}
+                        >
+                          {t('Thanh toán')}
+                        </Button>
+                        <Popover
+                          id={id}
+                          open={Boolean(anchorPayEl)}
+                          anchorEl={anchorPayEl}
+                          onClose={() => setAnchorPayEl(null)}
+                          anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'center',
+                          }}
+                          transformOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                          }}
+                        >
+                          <Box sx={{ p: 2 }}>
+                            <div id="paypal-container-element"></div>
+                          </Box>
+                        </Popover>
+                      </>
+                    )}
                 </Stack>
               </Stack>
             </Stack>

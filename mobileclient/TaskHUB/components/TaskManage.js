@@ -54,12 +54,58 @@ const TaskManage = () => {
     }
   };
 
+  const getTabColorByState = (state) => {
+    switch (state) {
+      case 0:
+        return {
+          indicatorStyle: 'black',
+          labelColor: 'black',
+          backgroundColor: '#d9d9d9',
+        };
+      case 1:
+        return {
+          indicatorStyle: 'black',
+          labelColor: 'black',
+          backgroundColor: '#dda705',
+        };
+      case 2:
+        return {
+          indicatorStyle: 'white',
+          labelColor: 'white',
+          backgroundColor: '#058e98',
+        };
+      case 3:
+        return {
+          indicatorStyle: 'white',
+          labelColor: 'white',
+          backgroundColor: '#068e44',
+        };
+      default:
+        return {
+          indicatorStyle: 'black',
+          labelColor: 'black',
+          backgroundColor: '#dda705',
+        };
+    }
+  };
+
   const renderTabBar = (props) => (
     <TabBar
       {...props}
-      indicatorStyle={{ backgroundColor: 'white' }}
-      labelStyle={{ fontWeight: 600 }}
-      style={{ backgroundColor: 'green' }}
+      // indicatorStyle={{ backgroundColor: 'white' }}
+      // labelStyle={{ fontWeight: 600 }}
+      // style={{ backgroundColor: 'green' }}
+      indicatorStyle={{
+        backgroundColor: getTabColorByState(index)?.indicatorStyle || 'black',
+      }}
+      labelStyle={{
+        fontWeight: 600,
+        color: getTabColorByState(index)?.labelColor || 'black',
+      }}
+      style={{
+        backgroundColor:
+          getTabColorByState(index)?.backgroundColor || '#dda705',
+      }}
     />
   );
 

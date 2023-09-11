@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   RefreshControl,
+  Alert,
 } from 'react-native';
 
 import TextUpdate from './TextUpdate';
@@ -156,7 +157,33 @@ const ContractTabDetail = ({ taskData, onRefresh }) => {
     }
   };
 
-  const handleOnReject = (reason) => {};
+  // const handleOnReject = (reason) => {};
+
+  const handleOnReject = () => {
+    Alert.alert('Xác nhận', 'Bạn có chắc muốn từ chối công việc này?', [
+      {
+        text: 'Hủy',
+        style: 'cancel',
+      },
+      {
+        text: 'Xác nhận',
+        onPress: () => handleUpdateTaskState('rejected'),
+      },
+    ]);
+  };
+
+  const handleOnCancel = () => {
+    Alert.alert('Xác nhận', 'Bạn có chắc muốn hủy công việc này?', [
+      {
+        text: 'Hủy',
+        style: 'cancel',
+      },
+      {
+        text: 'Xác nhận',
+        onPress: () => handleUpdateTaskState('cancel'),
+      },
+    ]);
+  };
 
   const handleUpdateTaskState = async (state) => {
     // setIsSubmitting(true);
@@ -174,10 +201,10 @@ const ContractTabDetail = ({ taskData, onRefresh }) => {
       );
       const responseData = response.data.data;
       if (state === 'discuss' || state === 'rejected') {
-        socket.emit('tasker-send-action-invitation',responseData.finder._id, {
+        socket.emit('tasker-send-action-invitation', responseData.finder._id, {
           action: state,
-          contract: responseData
-        })
+          contract: responseData,
+        });
       }
       setTaskDataVal(responseData);
       console.log('User updated successfully:', response);
@@ -294,7 +321,7 @@ const ContractTabDetail = ({ taskData, onRefresh }) => {
               styles.btncancel,
               refreshing && styles.btnDisable,
             ]}
-            onPress={() => setOpenReject(true)}
+            onPress={() => handleOnReject()}
           >
             <Text
               style={{
@@ -434,14 +461,14 @@ const ContractTabDetail = ({ taskData, onRefresh }) => {
           onClose={() => setSelectedField(null)}
         />
       )}
-      {openReject && (
+      {/* {openReject && (
         <ContractRejectModal
           isRejectOpen={openReject}
           closeReject={() => setOpenReject(false)}
           taskId={taskDataVal?._id}
           onReject={(reason) => handleOnReject(reason)}
         />
-      )}
+      )} */}
     </View>
   );
 };

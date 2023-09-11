@@ -235,9 +235,12 @@ const Post = ({
             Địa chỉ làm việc:{' '}
           </Text>
           <Text
-            numberOfLines={3}
-            ellipsizeMode="tail"
-            style={{ marginBottom: 6, fontSize: 16 }}
+            style={{
+              flex: 1,
+              marginBottom: 6,
+              fontSize: 16,
+              flexWrap: 'nowrap',
+            }}
           >{`${address}, ${locToString(workLocation, false)}`}</Text>
         </View>
         <View style={{ display: 'flex', flexDirection: 'row' }}>

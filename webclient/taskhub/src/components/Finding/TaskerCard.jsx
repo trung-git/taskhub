@@ -204,9 +204,12 @@ const TaskerCard = ({ taskerData, onSelect }) => {
                   fontWeight={600}
                   sx={{ color: '#4a4a4a' }}
                 >{`${taskerData?.firstName} ${taskerData?.lastName}`}</Typography>
-                <Typography variant="h5">{`$${taskerData?.taskInfo?.price}/${t(
+                {/* <Typography variant="h5">{`$${taskerData?.taskInfo?.price}/${t(
                   'th_key_hr'
-                )}`}</Typography>
+                )}`}</Typography> */}
+                <Typography variant="h5">{`${formatVietnameseCurrency(
+                  taskerData?.taskInfo?.price
+                )}/${t('th_key_hr')}`}</Typography>
               </Stack>
               <Stack direction={'row'} marginTop={1}>
                 <Typography
@@ -260,11 +263,25 @@ const TaskerCard = ({ taskerData, onSelect }) => {
               }}
             >
               <Typography fontSize={18} fontWeight={600}>
-                {t('Work photos')}:
+                {t('th_key_workphotos')}:
               </Typography>
               <ImagesList imagesList={taskerData?.photos} />
             </Box>
           )}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              mt: 1,
+              alignItems: 'flex-start',
+              width: '100%',
+            }}
+          >
+            <Typography fontSize={18} fontWeight={600}>
+              {t('th_key_review')}:
+            </Typography>
+            <ImagesList imagesList={taskerData?.photos} />
+          </Box>
           <Stack
             direction={'row'}
             alignItems={'center'}

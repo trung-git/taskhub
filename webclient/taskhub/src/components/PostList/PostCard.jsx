@@ -42,6 +42,7 @@ import axios from 'axios';
 import { API_URL } from '../../base/config';
 import useLogin from '../../hooks/useLogin';
 import { SocketContext } from '../../provider/SocketContext';
+import ConfirmDialog from '../../base/component/ConfirmDialog';
 
 const PostCard = ({ post, onSelect, onRefresh }) => {
   const { emitFinderSendInvitation } = useContext(SocketContext);
@@ -70,6 +71,7 @@ const PostCard = ({ post, onSelect, onRefresh }) => {
   const { getUserToken } = useLogin();
   const token = getUserToken();
   const [isSendInvitation, setIsSendInvitation] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const handleClickOpen = () => {
     setOpenCandidateModal(true);
@@ -126,12 +128,6 @@ const PostCard = ({ post, onSelect, onRefresh }) => {
           setIsSendInvitation(false);
         })
         .catch((error) => {
-          // console.error(error);
-          // console.error('Error:', Object.keys(error), error.message);
-          // console.error(error?.config);
-          // console.error(error?.request);
-          // console.error(error?.response);
-          // toastError(`Update error, ${error.message}`);
           window.dispatchEvent(new ErrorEvent('error', { error }));
           setIsSendInvitation(false);
         });
@@ -154,6 +150,8 @@ const PostCard = ({ post, onSelect, onRefresh }) => {
       console.error('Error fetching data:', error);
     }
   };
+
+  const handleDeletePost = () => {};
 
   return (
     <div>
@@ -233,7 +231,7 @@ const PostCard = ({ post, onSelect, onRefresh }) => {
               </MenuItem>
               <MenuItem
                 onClick={() => {
-                  deletePost();
+                  setOpenDeleteDialog(true);
                   handleMenuClose();
                 }}
                 sx={{ color: theme.palette.error.main }}
@@ -408,6 +406,15 @@ const PostCard = ({ post, onSelect, onRefresh }) => {
             setOpenPostModal(false);
             handleMenuClose();
           }}
+        />
+      )}
+      {openDeleteDialog && (
+        <ConfirmDialog
+          isOpenDialog={openDeleteDialog}
+          onClose={() => setOpenDeleteDialog(false)}
+          onAgree={() => deletePost()}
+          title="th_post_delete_post"
+          content="th_post_delete_post_confirm"
         />
       )}
     </div>
