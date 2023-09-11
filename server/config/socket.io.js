@@ -57,6 +57,15 @@ const createSocketServer = (server) => {
       }
     })
 
+    socket.on('finder-update-contract', (toUserId, contractDetail) => {
+      const userReceive = onlineUsers.filter(v => v.userId === toUserId);
+      if (userReceive.length > 0) {
+        userReceive.forEach(u => {
+          io.to(u.socketId).emit('server-emit-update-contract', contractDetail);
+        })
+      }
+    })
+
     socket.on('disconnect', () => {
       onlineUsers = onlineUsers.filter((v) => v?.socketId !== socket.id);
       io.sockets.emit('list-user-online', onlineUsers);
