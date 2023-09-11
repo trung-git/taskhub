@@ -101,6 +101,7 @@ const TaskDetail = () => {
       const responseData = response.data.data;
       console.log('User updated successfully:', response);
       console.log('testProps', diffProperties(taskData, responseData));
+      socket.emit('finder-update-contract', responseData.tasker._id, responseData);
       setTaskData(responseData);
       toastSuccess('Update task success');
       setIsSubmitting(false);
