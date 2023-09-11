@@ -37,7 +37,7 @@ const useToastify = () => {
       </div>,
       {
         position: 'top-right',
-        autoClose: 2000,
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -74,7 +74,7 @@ const useToastify = () => {
     });
   }
 
-  return { toastError, toastInfo, toastSuccess, toastWarning };
+  return { toastError, toastInfo, toastSuccess, toastWarning, toastLinkInfo };
 };
 
 export default useToastify;

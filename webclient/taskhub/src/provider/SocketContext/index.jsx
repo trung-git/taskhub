@@ -1,17 +1,21 @@
 import { createContext, useEffect } from 'react';
 import socket from '../../base/socket';
+import useToastify from '../../hooks/useToastify';
 
 const SocketContext = createContext();
 
 function SocketProvider({ children }) {
+  const { toastLinkInfo } = useToastify();
   useEffect(() => {
     socket.on('server-emit-action-invitation-to-finder', (actionDetail) => {
       // TODO Push notification
       if (actionDetail?.action === 'discuss') {
-        console.log(`${actionDetail.contract.tasker.firstName} đã chấp nhận lời mời cho công việc ${actionDetail.contract.taskTag.title}`);
+        const message = `${actionDetail.contract.tasker.firstName} đã chấp nhận lời mời cho công việc ${actionDetail.contract.taskTag.title}`;
+        toastLinkInfo(message, `/tasklist/${actionDetail.contract._id}`);
       }
       else if (actionDetail?.action === 'rejected') {
-        console.log(`${actionDetail.contract.tasker.firstName} đã từ chối lời mời cho công việc ${actionDetail.contract.taskTag.title}`);
+        const message = `${actionDetail.contract.tasker.firstName} đã từ chối lời mời cho công việc ${actionDetail.contract.taskTag.title}`;
+        toastLinkInfo(message, `/tasklist/${actionDetail.contract._id}`);
       }
     })
   }, []);
