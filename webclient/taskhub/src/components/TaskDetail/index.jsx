@@ -7,7 +7,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import NavBar from '../Home/NavBar';
 import { useContext, useEffect, useState } from 'react';
 import { LoginContext } from '../../provider/LoginContext';
@@ -18,8 +18,10 @@ import ChatScreen from './ChatScreen';
 import useToastify from '../../hooks/useToastify';
 import TaskViewDetail from './TaskViewDetail';
 import diffProperties from '../../utils/diffProperties';
+import socket from '../../base/socket';
 
 const TaskDetail = () => {
+  const navigate = useNavigate();
   const { isLogin, currentUser } = useContext(LoginContext);
   const params = useParams();
   const id = params?.id;
@@ -29,6 +31,8 @@ const TaskDetail = () => {
   const token = getUserToken();
   const { toastError, toastSuccess } = useToastify();
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [triggerFetchData, setTriggerFetchData] = useState(false);
 
   const config = {
     headers: { Authorization: `Bearer ${token}` },
@@ -55,7 +59,19 @@ const TaskDetail = () => {
     if (id) {
       fetchData(id);
     }
-  }, [id]);
+  }, [id, triggerFetchData]);
+  useEffect(() => {
+    socket.on('server-emit-action-invitation-to-finder', (actionDetail) => {
+      if (String(actionDetail.contract._id) === String(id)) {
+        if (actionDetail?.action === 'discuss') {
+          setTriggerFetchData(prev => !prev);
+        }
+        else if (actionDetail?.action === 'rejected') {
+          navigate('/tasklist');
+        }
+      }
+    })
+  }, []);
 
   const theme = useTheme();
 
