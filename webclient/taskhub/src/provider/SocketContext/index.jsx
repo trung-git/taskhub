@@ -8,7 +8,6 @@ function SocketProvider({ children }) {
   const { toastLinkInfo } = useToastify();
   useEffect(() => {
     socket.on('server-emit-action-invitation-to-finder', (actionDetail) => {
-      // TODO Push notification
       if (actionDetail?.action === 'discuss') {
         const message = `${actionDetail.contract.tasker.firstName} đã chấp nhận lời mời cho công việc ${actionDetail.contract.taskTag.title}`;
         toastLinkInfo(message, `/tasklist/${actionDetail.contract._id}`);

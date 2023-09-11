@@ -47,9 +47,33 @@ exports.getTaskers = catchAsync(async (req, res, next) => {
     },
     {
       $lookup: {
-        from: 'contracts', 
-        localField: 'contracts',
+        from: 'reviews',
+        localField: 'reviews',
         foreignField: '_id',
+        as: 'reviewsInfo',
+      },
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'reviewsInfo.user',
+        foreignField: '_id',
+        as: 'reviewUserInfo',
+      },
+    },
+    {
+      $lookup: {
+        from: 'task tags',
+        localField: 'reviewsInfo.taskTag',
+        foreignField: '_id',
+        as: 'reviewTaskTagInfo',
+      },
+    },
+    {
+      $lookup: {
+        from: 'contracts', 
+        localField: '_id',
+        foreignField: 'tasker',
         as: 'contractInfos',
       },
     },
@@ -69,7 +93,6 @@ exports.getTaskers = catchAsync(async (req, res, next) => {
         skillAndExperience: 1,
         photos: 1,
         vehicle: 1,
-        contracts: 1,
         averageRating: 1,
         unavailableTime: 1,
         isVerified: 1,
@@ -92,7 +115,10 @@ exports.getTaskers = catchAsync(async (req, res, next) => {
               cond: { $eq: ['$$contractInfo.status', 'finish'] }
             }
           }
-        }
+        },
+        reviewsInfo: 1,
+        reviewUserInfo: 1,
+        reviewTaskTagInfo:  1
       },
     },
     {
