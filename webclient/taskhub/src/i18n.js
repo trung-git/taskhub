@@ -116,6 +116,7 @@ const resources = {
       th_key_task_status_official: 'Official',
       th_key_task_status_cancel: 'Cancel',
       th_key_task_status_finish: 'Finish',
+      th_key_review: 'Review',
       //
       th_post_btn_view_candidate: 'List of candidate',
       th_post_candidate_list: 'List of candidate',
@@ -124,6 +125,8 @@ const resources = {
       th_key_not_reated_yet: 'Not reated yet',
       th_post_add_new_post: 'Create new post',
       th_post_edit_post: 'Update post',
+      th_post_delete_post: 'Delete post',
+      th_post_delete_post_confirm: 'Do you want to delete this post?',
       //
       th_key_tooltip_explain_pricing:
         'The cost of the task is the price calculated by multiplying the proposed price with the working time for hourly wage payment method or the proposed price for one-time payment cases.',
@@ -277,6 +280,7 @@ const resources = {
       th_key_task_status_official: 'Chính thức',
       th_key_task_status_cancel: 'Hủy',
       th_key_task_status_finish: 'Kết thúc',
+      th_key_review: 'Đánh giá',
       //
       th_post_btn_view_candidate: 'Xem danh sách ứng viên',
       th_post_candidate_list: 'Danh sách ứng viên',
@@ -285,6 +289,8 @@ const resources = {
       th_key_not_reated_yet: 'Chưa có đánh giá',
       th_post_add_new_post: 'Tạo bài đăng',
       th_post_edit_post: 'Chỉnh sửa bài đăng',
+      th_post_delete_post: 'Xóa bài đăng',
+      th_post_delete_post_confirm: 'Bạn có chắc muốn xóa bài đăng này?',
       //
       th_key_tooltip_explain_pricing:
         'Chi phí công việc là giá được tính bằng giá đề xuất nhân với thời gian làm việc đối với hình thức trã lương theo giờ hoặc là giá đề xuất đối với trường hợp trã lương một lần',

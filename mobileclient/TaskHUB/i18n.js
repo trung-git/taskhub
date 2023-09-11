@@ -54,6 +54,7 @@ const resources = {
       th_key_tasklist_btn_view_detail: 'View detail',
       th_key_payment_perhour: 'Hourly Wage',
       th_key_payment_onetime: 'Salary',
+      th_key_review: 'Review',
       //
       th_key_task: 'Task',
       th_key_worklocation: 'Work Location',
@@ -122,6 +123,7 @@ const resources = {
       th_key_tasklist_btn_view_detail: 'Xem chi tiết',
       th_key_payment_perhour: 'Theo giờ',
       th_key_payment_onetime: 'Một lần',
+      th_key_review: 'Đánh giá',
       //
       th_key_task: 'Công việc',
       th_key_worklocation: 'Khu vực',

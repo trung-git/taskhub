@@ -127,6 +127,7 @@ const TaskDetail = () => {
                   isSubmitting={isSubmitting}
                   onRefresh={() => fetchData(id)}
                   isLoading={loading}
+                  setIsSubmitting={setIsSubmitting}
                 />
               )}
             </Grid>

@@ -3,6 +3,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_URL } from '../config/constans';
 import axios from 'axios';
 import socket from '../config/socket';
+import { schedulePushNotification } from '../hooks/useNotification';
+import { useTranslation } from 'react-i18next';
+import dayjs from 'dayjs';
+import locToString from '../config/locToString';
 
 const AuthContext = createContext();
 
@@ -10,12 +14,14 @@ const AuthProvider = ({ children }) => {
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
   const [isFetchingUserData, setIsFetchingUserData] = useState(true);
-  
+
   const [isInChat, setIsInChat] = useState(false);
   const [currentTaskerInContract, setCurrentTaskerInContract] = useState('');
 
   const [notifications, setNotifications] = useState([]);
-  const [shouldClearNotifications, setShouldClearNotifications] = useState(false);
+  const [shouldClearNotifications, setShouldClearNotifications] =
+    useState(false);
+  const { t } = useTranslation();
 
   const getData = async () => {
     try {
@@ -73,34 +79,47 @@ const AuthProvider = ({ children }) => {
   }, []);
   useEffect(() => {
     socket.on('server-emit-message', (messageInfo, senderName) => {
-      setNotifications(prev => [...prev, {messageInfo, senderName}])
-    })
-  }, [])
+      setNotifications((prev) => [...prev, { messageInfo, senderName }]);
+    });
+  }, []);
 
   useEffect(() => {
     if (notifications.length > 0) {
       if (!isInChat || (isInChat && currentTaskerInContract !== userData._id)) {
         // TODO Push notification
-        notifications.forEach(v => {
-          console.log(`Bạn nhận được một thông báo từ ${v.senderName} với nội dung là: ${v.messageInfo.content}`);
+        notifications.forEach((v) => {
+          // console.log(`Bạn nhận được một thông báo từ ${v.senderName} với nội dung là: ${v.messageInfo.content}`);
+          // schedulePushNotification
+          schedulePushNotification(
+            `[${v.senderName}] - Tin nhắn mới`,
+            `${v.messageInfo.content}`
+          );
         });
       }
       setShouldClearNotifications(true);
     }
-  }, [notifications])
+  }, [notifications]);
   useEffect(() => {
-    if (shouldClearNotifications){
+    if (shouldClearNotifications) {
       setNotifications([]);
       setShouldClearNotifications(false);
     }
-  }, [shouldClearNotifications])
-  
+  }, [shouldClearNotifications]);
+
   useEffect(() => {
     socket.on('server-emit-invitation-to-tasker', (contractDetail) => {
       // TODO Push notification
-      console.log(`Bạn nhận được một lời mời làm mới: công việc là ${contractDetail.taskTag.title}, người mời là ${contractDetail.finder.firstName}`);
-    })
-  }, [])
+      // console.log(
+      //   `Bạn nhận được một lời mời làm mới: công việc là ${contractDetail.taskTag.title}, người mời là ${contractDetail.finder.firstName}`
+      // );
+      schedulePushNotification(
+        `[${t(contractDetail.taskTag.langKey)}] - Lời mời mới`,
+        `${locToString(contractDetail.workLocation, false)} ${dayjs(
+          contractDetail.workTime.from
+        ).format('HH:mm DD-MM-YYYY')}`
+      );
+    });
+  }, []);
   const storeData = async (key, value) => {
     try {
       const stringVal = JSON.stringify(value);
@@ -146,7 +165,7 @@ const AuthProvider = ({ children }) => {
         isFetchingUserData,
         isInChat,
         setIsInChat,
-        setCurrentTaskerInContract
+        setCurrentTaskerInContract,
       }}
     >
       {children}

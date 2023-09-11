@@ -31,6 +31,41 @@ const ContractDetail = ({ taskData, onClose }) => {
   const [taskDataVal, setTaskDataVal] = useState(taskData);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
+  const getTabColorByState = (state) => {
+    switch (state) {
+      case 'invitation':
+        return {
+          indicatorStyle: 'black',
+          labelColor: 'black',
+          backgroundColor: '#d9d9d9',
+        };
+      case 'discuss':
+        return {
+          indicatorStyle: 'black',
+          labelColor: 'black',
+          backgroundColor: '#dda705',
+        };
+      case 'official':
+        return {
+          indicatorStyle: 'white',
+          labelColor: 'white',
+          backgroundColor: '#058e98',
+        };
+      case 'finish':
+        return {
+          indicatorStyle: 'white',
+          labelColor: 'white',
+          backgroundColor: '#068e44',
+        };
+      default:
+        return {
+          indicatorStyle: 'black',
+          labelColor: 'black',
+          backgroundColor: '#dda705',
+        };
+    }
+  };
+
   const [index, setIndex] = useState(0);
   const [routes] = React.useState([
     { key: 'first', title: 'Chi tiết' },
@@ -46,18 +81,25 @@ const ContractDetail = ({ taskData, onClose }) => {
           />
         );
       case 'second':
-        return taskDataVal?.status === 'invitation' ? (
+        return taskDataVal?.status === 'invitation' ||
+          taskDataVal?.status === 'cancel' ||
+          taskDataVal?.status === 'rejected' ? (
           <View
-            styles={{
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: 'red',
-            }}
+            styles={
+              {
+                // height: '100%',
+                // display: 'flex',
+                // flexDirection: 'column',
+                // justifyContent: 'center',
+                // alignItems: 'center',
+                // width: '100%',
+                // marginTop: '50px',
+              }
+            }
           >
-            <Text>Bạn có thể trau đổi sau khi đã chấp nhận lời mời này</Text>
+            <Text style={{ fontSize: 16, marginTop: 50 }}>
+              Bạn có thể trau đổi sau khi đã chấp nhận lời mời này
+            </Text>
           </View>
         ) : (
           <ChatPage
@@ -89,9 +131,18 @@ const ContractDetail = ({ taskData, onClose }) => {
   const renderTabBar = (props) => (
     <TabBar
       {...props}
-      indicatorStyle={{ backgroundColor: 'white' }}
-      labelStyle={{ fontWeight: 600 }}
-      style={{ backgroundColor: 'green' }}
+      indicatorStyle={{
+        backgroundColor:
+          getTabColorByState(taskDataVal?.status)?.indicatorStyle || 'black',
+      }}
+      labelStyle={{
+        fontWeight: 600,
+        color: getTabColorByState(taskDataVal?.status)?.labelColor || 'black',
+      }}
+      style={{
+        backgroundColor:
+          getTabColorByState(taskDataVal?.status)?.backgroundColor || '#dda705',
+      }}
     />
   );
   useEffect(() => {
@@ -124,10 +175,12 @@ const ContractDetail = ({ taskData, onClose }) => {
             // color: 'white'
           }}
         >
-          <TouchableOpacity onPress={() => {
-            onClose();
-            setIsInChat(false);
-          }}>
+          <TouchableOpacity
+            onPress={() => {
+              onClose();
+              setIsInChat(false);
+            }}
+          >
             <Icon name="arrow-left" size={24} />
           </TouchableOpacity>
           <Text style={{ fontWeight: 'bold', fontSize: 16 }}>
