@@ -21,6 +21,7 @@ import PostCard from './PostCard';
 import FeedbackIcon from '@mui/icons-material/Feedback';
 import Nodata from '../../base/component/Nodata';
 import PostModal from './PostModal';
+import socket from '../../base/socket';
 
 const PostList = () => {
   const { t } = useTranslation();
@@ -31,6 +32,7 @@ const PostList = () => {
   const [totalPage, setTotalPage] = useState(1);
   const [selectedPost, setSelectedPost] = useState(null);
   const [openPostModal, setOpenPostModal] = useState(false);
+  const [triggerFetchData, setTriggerFetchData] = useState(false);
 
   const { getUserToken } = useLogin();
   const token = getUserToken();
@@ -42,8 +44,8 @@ const PostList = () => {
     headers: { Authorization: `Bearer ${token}` },
   };
 
-  const fetchPostListData = async (page) => {
-    setIsFetchingPostList(true);
+  const fetchPostListData = async (page, isLoading = true) => {
+    isLoading && setIsFetchingPostList(true);
     try {
       const response = await axios.get(
         `${API_URL}api/v1/post?pageNum=${page}`,
@@ -51,7 +53,7 @@ const PostList = () => {
       );
       const responseData = response.data.data;
       setPostList(responseData);
-      setIsFetchingPostList(false);
+      isLoading && setIsFetchingPostList(false);
       setTotalPage(response.data.totalPage);
     } catch (error) {
       // console.error('Error fetching data:', error);
@@ -71,10 +73,14 @@ const PostList = () => {
 
   useEffect(() => {
     if (pageNum) {
-      fetchPostListData(pageNum);
+      fetchPostListData(pageNum, false);
     }
-  }, [pageNum]);
-
+  }, [pageNum, triggerFetchData]);
+  useEffect(() => {
+    socket.on('server-emit-reload-post', () => {
+      setTriggerFetchData(prev => !prev);
+    })
+  }, [])
   const handlePageChange = (event, value) => {
     setPageNum(value);
   };
