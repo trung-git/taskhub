@@ -64,6 +64,10 @@ const TaskListPage = ({ onOpenChat, status }) => {
     socket.on('server-emit-reload-task-list', () =>{
       handleRefresh();
     })
+
+    socket.on('server-emit-update-contract', () => {
+      handleRefresh();
+    })
   }, [])
   const handleLoadMore = () => {
     if (!refreshing && !loading) {
