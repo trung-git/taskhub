@@ -262,7 +262,7 @@ const Finding = (props) => {
                 spacing={2}
                 sx={{ mt: 10, height: 'calc(100vh - 148px)' }}
               >
-                <Grid item xs={4}>
+                <Grid item xs={12} md={4} lg={4}>
                   <Box
                     sx={{
                       // height: 200,
@@ -300,7 +300,9 @@ const Finding = (props) => {
                 {taskerData?.length > 0 ? (
                   <Grid
                     item
-                    xs={8}
+                    xs={12}
+                    md={8}
+                    lg={8}
                     sx={{ height: '100%', overflowY: 'scroll', pb: 10 }}
                   >
                     {loadingTasker ? (

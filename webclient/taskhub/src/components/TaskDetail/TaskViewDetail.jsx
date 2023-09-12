@@ -63,15 +63,19 @@ function TaskViewDetail({
     startTime,
     endTime,
     review,
+    confirmComplete,
     updatedAt,
     _id: taskId,
     isPaid,
+    tasker,
   } = task;
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
   const isCancel = status === 'cancel';
   const isOfficial = status === 'official';
+  const isFinish = status === 'finish';
+  const walletId = tasker?.wallet;
 
   const {
     handleSubmit,
@@ -244,7 +248,7 @@ function TaskViewDetail({
         'finder-update-contract',
         responseData.tasker._id,
         responseData
-      );      
+      );
       console.log('Paying successfully!');
       // setTaskData(responseData);
       toastSuccess('Update task success');
@@ -295,6 +299,65 @@ function TaskViewDetail({
 
   const onErrorHandler = function (err) {
     console.log('error');
+  };
+
+  const handlePayingForTasker = async (amount) => {
+    setIsSubmitting(true);
+    try {
+      const response = await axios.post(
+        `${API_URL}api/v1/wallet`,
+        {
+          amount: amount,
+          action: 'deposit',
+          contract: taskId,
+          walletId: walletId,
+        },
+        config
+      );
+      const responseData = response.data.data;
+      // socket.emit(
+      //   'finder-update-contract',
+      //   responseData.tasker._id,
+      //   responseData
+      // );
+      console.log('Paying successfully!');
+      // setTaskData(responseData);
+      toastSuccess('Update task success');
+      setIsSubmitting(false);
+      onRefresh && onRefresh();
+    } catch (error) {
+      console.error('Error updating user:', error);
+      toastError(`Update task error, ${error.message}`);
+      window.dispatchEvent(new ErrorEvent('error', { error }));
+      setIsSubmitting(false);
+    }
+  };
+
+  const finishConfirm = async () => {
+    setIsSubmitting(true);
+    try {
+      const response = await axios.patch(
+        `${API_URL}api/v1/contract/${taskId}`,
+        { confirmComplete: true, status: 'finish' },
+        config
+      );
+      const responseData = response.data.data;
+      socket.emit(
+        'finder-update-contract',
+        responseData.tasker._id,
+        responseData
+      );
+      // setTaskData(responseData);
+      toastSuccess('Update task success');
+      setIsSubmitting(false);
+      // onRefresh && onRefresh();
+      handlePayingForTasker(predictAmount);
+    } catch (error) {
+      console.error('Error updating user:', error);
+      toastError(`Update task error, ${error.message}`);
+      window.dispatchEvent(new ErrorEvent('error', { error }));
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -399,7 +462,7 @@ function TaskViewDetail({
                             id="taskTag"
                             {...field}
                             value={t(field.value.langKey)}
-                            disabled={isCancel || isOfficial}
+                            disabled={isCancel || isOfficial || isFinish}
                           />
                         )}
                       />
@@ -435,7 +498,7 @@ function TaskViewDetail({
                               id="workLocation"
                               {...field}
                               value={locToString(field.value)}
-                              disabled={isCancel || isOfficial}
+                              disabled={isCancel || isOfficial || isFinish}
                             />
                           );
                         }}
@@ -470,7 +533,7 @@ function TaskViewDetail({
                             helperText={
                               errors.address && errors.address.message
                             }
-                            disabled={isCancel || isOfficial}
+                            disabled={isCancel || isOfficial || isFinish}
                           />
                         )}
                       />
@@ -498,7 +561,7 @@ function TaskViewDetail({
                         value={dayjs(getValues('workTimeFrom')).format(
                           'DD-MM-YYYY'
                         )}
-                        disabled={isCancel || isOfficial}
+                        disabled={isCancel || isOfficial || isFinish}
                       />
                     )}
                   </Stack>
@@ -547,7 +610,7 @@ function TaskViewDetail({
                                   padding: '8px 16px',
                                 },
                               }}
-                              disabled={isCancel || isOfficial}
+                              disabled={isCancel || isOfficial || isFinish}
                             />
                           )}
                         />
@@ -591,7 +654,7 @@ function TaskViewDetail({
                                 },
                               }}
                               error={false}
-                              disabled={isCancel || isOfficial}
+                              disabled={isCancel || isOfficial || isFinish}
                             />
                           )}
                         />
@@ -627,7 +690,7 @@ function TaskViewDetail({
                             InputProps={{ inputProps: { min: 1 } }}
                             error={Boolean(errors.price)}
                             helperText={errors.price && errors.price.message}
-                            disabled={isCancel || isOfficial}
+                            disabled={isCancel || isOfficial || isFinish}
                           />
                         )}
                       />
@@ -663,7 +726,7 @@ function TaskViewDetail({
                             //     setValue('paymentPlan', e.target.value)
                             //   }
                             {...field}
-                            disabled={isCancel || isOfficial}
+                            disabled={isCancel || isOfficial || isFinish}
                           >
                             <MenuItem value={'per-hour'}>
                               {t('th_key_payment_perhour')}
@@ -703,7 +766,7 @@ function TaskViewDetail({
                             //     setValue('paymentType', e.target.value)
                             //   }
                             {...field}
-                            disabled={isCancel || isOfficial}
+                            disabled={isCancel || isOfficial || isFinish}
                           >
                             <MenuItem value={'by-cash'}>
                               {t('th_key_payment_type_cash')}
@@ -745,7 +808,7 @@ function TaskViewDetail({
                             helperText={
                               errors.description && errors.description.message
                             }
-                            disabled={isCancel || isOfficial}
+                            disabled={isCancel || isOfficial || isFinish}
                           />
                         )}
                       />
@@ -828,11 +891,23 @@ function TaskViewDetail({
                         Save
                       </LoadingButton>
                     )}
+                  {!confirmComplete &&
+                    status === 'official' &&
+                    startTime &&
+                    endTime && (
+                      <LoadingButton
+                        loading={isSubmitting}
+                        variant="contained"
+                        onClick={() => finishConfirm()}
+                      >
+                        Xác nhận hoàn thành
+                      </LoadingButton>
+                    )}
                   {!review && status === 'finish' && (
                     <LoadingButton
                       loading={isSubmitting}
                       variant="contained"
-                      disabled={!isDirty || !isValid || status === 'official'}
+                      disabled={Boolean(review)}
                     >
                       Đánh giá
                     </LoadingButton>

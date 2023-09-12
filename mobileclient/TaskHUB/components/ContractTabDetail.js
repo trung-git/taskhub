@@ -23,6 +23,7 @@ import { API_URL } from '../config/constans';
 import { predictAmount } from '../config/predictAmount';
 import ContractRejectModal from './ContractRejectModal';
 import socket from '../config/socket';
+import formatVietnameseCurrency from '../config/formatVietnameseCurrency';
 
 const ContractTabDetail = ({ taskData, onRefresh }) => {
   const [taskDataVal, setTaskDataVal] = useState(taskData);
@@ -98,11 +99,13 @@ const ContractTabDetail = ({ taskData, onRefresh }) => {
     },
     {
       name: 'price',
-      value: predictAmount(
-        taskDataVal?.workTime?.from,
-        taskDataVal?.workTime?.to,
-        taskDataVal?.price,
-        taskDataVal?.paymentPlan
+      value: formatVietnameseCurrency(
+        predictAmount(
+          taskDataVal?.workTime?.from,
+          taskDataVal?.workTime?.to,
+          taskDataVal?.price,
+          taskDataVal?.paymentPlan
+        )
       ),
       label: 'Thu nhập ước tính',
       component: TextUpdate,
@@ -464,10 +467,10 @@ const ContractTabDetail = ({ taskData, onRefresh }) => {
               style={[
                 styles.button,
                 styles.btnsuccess,
-                refreshing ||
+                (refreshing ||
                   (taskDataVal?.paymentType === 'by-wallet' &&
-                    !taskDataVal?.isPaid &&
-                    styles.btnDisable),
+                    !taskDataVal?.isPaid)) &&
+                  styles.btnDisable,
               ]}
               disabled={
                 taskDataVal?.paymentType === 'by-wallet' && !taskDataVal?.isPaid
@@ -478,10 +481,10 @@ const ContractTabDetail = ({ taskData, onRefresh }) => {
                 style={{
                   color: 'white',
                   fontSize: 18,
-                  ...(refreshing ||
+                  ...((refreshing ||
                     (taskDataVal?.paymentType === 'by-wallet' &&
-                      !taskDataVal?.isPaid &&
-                      styles.textDisable)),
+                      !taskDataVal?.isPaid)) &&
+                    styles.textDisable),
                 }}
               >
                 Bắt đầu

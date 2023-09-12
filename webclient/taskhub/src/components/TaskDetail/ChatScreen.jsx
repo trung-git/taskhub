@@ -516,9 +516,9 @@ function ChatScreen({ user, chatId, otherUser, hiddenChat, hiddenReason }) {
                 }}
               >
                 <Typography variant="h5">{hiddenReason}</Typography>
-                <Typography>
+                {/* <Typography>
                   {'Nếu đã thanh toán, bạn sẽ được hoàn tiền'}
-                </Typography>
+                </Typography> */}
               </Box>
             </Stack>
           </Grid>

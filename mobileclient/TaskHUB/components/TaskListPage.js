@@ -18,6 +18,8 @@ import locToString from '../config/locToString';
 import moment from 'moment';
 import 'moment/locale/vi'; // Import the Vietnamese locale
 import socket from '../config/socket';
+import { predictAmount } from '../config/predictAmount';
+import formatVietnameseCurrency from '../config/formatVietnameseCurrency';
 
 moment.locale('vi');
 
@@ -57,18 +59,18 @@ const TaskListPage = ({ onOpenChat, status }) => {
     fetchData(status, pageNum);
   }, [status, pageNum]);
   useEffect(() => {
-    socket.on('server-emit-invitation-to-tasker', () =>{
+    socket.on('server-emit-invitation-to-tasker', () => {
       handleRefresh();
-    })
+    });
 
-    socket.on('server-emit-reload-task-list', () =>{
+    socket.on('server-emit-reload-task-list', () => {
       handleRefresh();
-    })
+    });
 
     socket.on('server-emit-update-contract', () => {
       handleRefresh();
-    })
-  }, [])
+    });
+  }, []);
   const handleLoadMore = () => {
     if (!refreshing && !loading) {
       setLoading(true);
@@ -110,6 +112,25 @@ const TaskListPage = ({ onOpenChat, status }) => {
                 alignItems: 'center',
               }}
             >
+              <Ionicons name="cash-outline" size={24} color="green" />
+              <Text style={{ fontSize: 16 }}>
+                {formatVietnameseCurrency(
+                  predictAmount(
+                    item?.workTime?.from,
+                    item?.workTime?.to,
+                    item?.price,
+                    item?.paymentPlan
+                  )
+                )}
+              </Text>
+            </View>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+            >
               <Ionicons name="calendar" size={24} color="green" />
               <Text style={{ fontSize: 16 }}>
                 {dayjs(item?.workTime?.from).format('DD-MM-YYYY')}
@@ -142,6 +163,16 @@ const TaskListPage = ({ onOpenChat, status }) => {
               <Text style={{ fontSize: 16 }}>
                 {locToString(item?.workLocation)}
               </Text>
+            </View>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+            >
+              <Ionicons name="alert-circle-outline" size={24} color="green" />
+              <Text style={{ fontSize: 16 }}>{item?.description}</Text>
             </View>
 
             {item?.status === 'invitation' && (

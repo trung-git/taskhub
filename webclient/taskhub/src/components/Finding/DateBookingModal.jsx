@@ -155,7 +155,7 @@ const DateBookingModal = ({
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          width: 750,
+          width: { xs: '70%', lg: 750, md: 750, sm: 600 },
           bgcolor: 'background.paper',
           border: '1px solid #f0f0f0',
           borderRadius: 4,
@@ -168,7 +168,7 @@ const DateBookingModal = ({
             {t('Chọn ngày và giờ thực hiện công việc này')}
           </Typography>
           <Grid container>
-            <Grid item xs={7} sx={{ mt: 3 }}>
+            <Grid item xs={12} md={7} sx={{ mt: 3 }}>
               <Stack direction={'column'} spacing={1}>
                 <StaticDatePicker
                   disablePast={true}
@@ -245,7 +245,7 @@ const DateBookingModal = ({
                 />
               </Stack>
             </Grid>
-            <Grid item xs={5} sx={{ mt: 3 }}>
+            <Grid item xs={12} md={5} sx={{ mt: 3 }}>
               <Stack direction={'column'} spacing={0.5} height={'100%'}>
                 <Stack
                   direction={'row'}

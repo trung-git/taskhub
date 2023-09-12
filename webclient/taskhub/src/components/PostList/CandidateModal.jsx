@@ -71,6 +71,11 @@ const CandidateModal = ({
   const [expanded, setExpanded] = useState();
 
   console.log('candidateList', candidateList);
+  console.log('candidateInfo', candidateInfo);
+
+  const getInfoById = (id) => {
+    return candidateInfo?.find((ele) => ele?._id === id);
+  };
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
@@ -110,14 +115,14 @@ const CandidateModal = ({
                 >
                   <Stack direction={'row'} alignItems={'center'} spacing={2}>
                     <Avatar
-                      alt={candidateInfo[index]?.username}
-                      src={candidateInfo[index]?.image}
+                      alt={getInfoById(_candidate?.user)?.username}
+                      src={getInfoById(_candidate?.user)?.image}
                       sx={{ width: 50, height: 50 }}
                     />
                     <Typography fontWeight={'bold'}>
                       {[
-                        candidateInfo[index]?.firstName,
-                        candidateInfo[index]?.lastName,
+                        getInfoById(_candidate?.user)?.firstName,
+                        getInfoById(_candidate?.user)?.lastName,
                       ].join(' ')}
                     </Typography>
                   </Stack>
@@ -171,8 +176,8 @@ const CandidateModal = ({
                   >
                     <Stack direction={'row'}>
                       <Avatar
-                        alt={candidateInfo[index]?.username}
-                        src={candidateInfo[index]?.image}
+                        alt={getInfoById(_candidate?.user)?.username}
+                        src={getInfoById(_candidate?.user)?.image}
                         sx={{ width: 80, height: 80 }}
                       />
                       <Stack
@@ -190,7 +195,9 @@ const CandidateModal = ({
                             fontWeight={600}
                             sx={{ color: '#4a4a4a' }}
                           >
-                            {`${candidateInfo[index]?.firstName} ${candidateInfo[index]?.lastName}`}
+                            {`${getInfoById(_candidate?.user)?.firstName} ${
+                              getInfoById(_candidate?.user)?.lastName
+                            }`}
                           </Typography>
                         </Stack>
                         <Stack
@@ -198,10 +205,10 @@ const CandidateModal = ({
                           marginTop={1}
                           alignItems={'center'}
                         >
-                          {candidateInfo[index]?.averageRating ? (
-                            <Typography
-                              sx={{ mr: 0.5 }}
-                            >{`(${candidateInfo[index]?.averageRating})`}</Typography>
+                          {getInfoById(_candidate?.user)?.averageRating ? (
+                            <Typography sx={{ mr: 0.5 }}>{`(${
+                              getInfoById(_candidate?.user)?.averageRating
+                            })`}</Typography>
                           ) : (
                             <Typography sx={{ mr: 0.5 }}>{`(${t(
                               'th_key_not_reated_yet'
@@ -209,7 +216,7 @@ const CandidateModal = ({
                           )}
                           <Rating
                             name="tasker-rating"
-                            value={candidateInfo[index]?.averageRating}
+                            value={getInfoById(_candidate?.user)?.averageRating}
                             readOnly
                             precision={0.1}
                             sx={{
@@ -234,17 +241,17 @@ const CandidateModal = ({
                         {t('th_key_about_me')}:
                       </Typography>
                       <Typography fontSize={14} textAlign={'justify'}>
-                        {candidateInfo[index]?.aboutMe}
+                        {getInfoById(_candidate?.user)?.aboutMe}
                       </Typography>
 
                       <Typography fontSize={18} fontWeight={600} mt={1}>
                         {t('th_key_how_i_can_help')}:
                       </Typography>
                       <Typography fontSize={14} textAlign={'justify'}>
-                        {candidateInfo[index]?.skillAndExperience}
+                        {getInfoById(_candidate?.user)?.skillAndExperience}
                       </Typography>
                     </Box>
-                    {candidateInfo[index]?.photos?.length > 0 && (
+                    {getInfoById(_candidate?.user)?.photos?.length > 0 && (
                       <>
                         <Typography
                           fontSize={18}
@@ -254,7 +261,9 @@ const CandidateModal = ({
                         >
                           {t('th_key_workphotos')}:
                         </Typography>
-                        <ImagesList imagesList={candidateInfo[index]?.photos} />
+                        <ImagesList
+                          imagesList={getInfoById(_candidate?.user)?.photos}
+                        />
                       </>
                     )}
                   </Box>

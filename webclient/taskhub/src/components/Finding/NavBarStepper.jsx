@@ -52,7 +52,9 @@ function NavBarStepper({ curStep }) {
     >
       <Container maxWidth="lg" sx={{ height: '100%' }}>
         <Toolbar disableGutters sx={{ height: '100%' }}>
-          <TaskHubLogo />
+          <Box sx={{ display: { sm: 'block', xs: 'none' } }}>
+            <TaskHubLogo />
+          </Box>
 
           <Box
             sx={{

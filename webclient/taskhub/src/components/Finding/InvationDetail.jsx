@@ -182,7 +182,7 @@ const InvationDetail = ({ bookingData, isOpen, handleCloseBookingForm }) => {
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          width: 750,
+          width: { xs: '70%', lg: 750, md: 750, sm: 600 },
           bgcolor: 'background.paper',
           border: '2px solid #f0f0f0',
           borderRadius: 4,

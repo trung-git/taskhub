@@ -45,7 +45,9 @@ const Header = () => {
           />
         </TouchableOpacity>
       </View>
-      <TouchableOpacity onPress={() => setModalVisible(true)}>
+      <TouchableOpacity
+      // onPress={() => setModalVisible(true)}
+      >
         <Ionicons
           name="notifications-outline"
           size={24}

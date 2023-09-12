@@ -158,10 +158,15 @@ const TaskDetail = () => {
                       ? taskData?.tasker
                       : taskData?.finder
                   }
-                  hiddenChat={taskData?.status === 'cancel'}
+                  hiddenChat={
+                    taskData?.status === 'cancel' ||
+                    taskData?.status === 'finish'
+                  }
                   hiddenReason={
                     taskData?.status === 'cancel'
                       ? 'Người dùng đã hủy công việc này'
+                      : taskData?.status === 'finish'
+                      ? 'Công việc đã kết thúc'
                       : undefined
                   }
                 />

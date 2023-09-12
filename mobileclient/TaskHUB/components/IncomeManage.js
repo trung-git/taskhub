@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView } from 'react-native';
+import { RefreshControl, ScrollView } from 'react-native';
 import {
   View,
   Text,
@@ -20,6 +20,7 @@ const IncomeManage = () => {
   const [withdrawModalVisible, setWithdrawModalVisible] = useState(false);
   const [withdrawAmount, setWithdrawAmount] = useState('');
   const [errorText, setErrorText] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const [transactionHistory, setTransactionHistory] = useState([
     { type: 'deposit', amount: 100000, timestamp: new Date() },
@@ -46,6 +47,7 @@ const IncomeManage = () => {
   ]);
 
   const fetchData = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get(`${API_URL}/api/v1/wallet`);
       const responseData = response.data;
@@ -53,10 +55,19 @@ const IncomeManage = () => {
       setOnlineIncome(responseData?.byWallet);
       setCashIncome(responseData?.byCast);
       setBalance(responseData?.data?.amount);
-      // return responseData;
+      setTransactionHistory(
+        responseData?.data?.paymentHistory?.map((_item) => {
+          return {
+            type: _item?.action,
+            amount: _item?.amount,
+            timestamp: new Date(_item?.createdAt),
+          };
+        })
+      );
+      setIsLoading(false);
     } catch (error) {
       console.error('Error fetching data:', error);
-      // return [];
+      setIsLoading(false);
     }
   };
 
@@ -106,25 +117,47 @@ const IncomeManage = () => {
     setWithdrawAmount('');
     setWithdrawModalVisible(true);
   };
+  const withdrawAction = async (amount) => {
+    const withdrawData = {
+      amount: amount,
+      action: 'withdraw',
+    };
+    try {
+      const response = await axios.post(
+        `${API_URL}/api/v1/wallet`,
+        withdrawData
+      );
+      const responseData = response.data;
+      console.log('responseDataInCom', responseData);
+      setBalance(responseData?.data?.amount);
+      setTransactionHistory(
+        responseData?.data?.paymentHistory?.map((_item) => {
+          return {
+            type: _item?.action,
+            amount: _item?.amount,
+            timestamp: new Date(_item?.createdAt),
+          };
+        })
+      );
+      setWithdrawModalVisible(false);
+      setWithdrawAmount('');
+      schedulePushNotification(
+        '[TaskHUB] - Rút tiền',
+        `${amount.toLocaleString('vi-VN')} ₫`
+      );
+      setErrorText('');
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      // return [];
+    }
+  };
 
   const handleWithdraw = () => {
     if (withdrawAmount !== '' && !isNaN(withdrawAmount)) {
       const withdrawalAmount = parseFloat(withdrawAmount);
       if (withdrawalAmount <= balance && withdrawalAmount !== 0) {
-        setBalance(balance - withdrawalAmount);
-        setWithdrawModalVisible(false);
-        setWithdrawAmount('');
-        schedulePushNotification(
-          '[TaskHUB] - Rút tiền',
-          `${withdrawAmount.toLocaleString('vi-VN')} ₫`
-        );
-        setErrorText('');
-        setTransactionHistory((prev) => [
-          { type: 'withdraw', amount: withdrawalAmount, timestamp: new Date() },
-          ...prev,
-        ]);
+        withdrawAction(withdrawAmount);
       } else {
-        s;
         if (withdrawalAmount === 0) {
           setErrorText('Vui lòng nhập số tiền cần rút');
         } else {
@@ -132,14 +165,24 @@ const IncomeManage = () => {
         }
       }
     } else {
-      // Xử lý thông báo nhập số tiền hợp lệ
       setErrorText('Vui lòng nhập số tiền hợp lệ');
     }
   };
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView
+        onScroll={({ nativeEvent }) => {
+          const { contentOffset } = nativeEvent;
+          if (contentOffset.y < -100 && !isLoading) {
+            fetchData();
+          }
+        }}
+        scrollEventThrottle={400}
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={fetchData} />
+        }
+      >
         <View style={styles.card}>
           <Text style={styles.balance}>
             Số dư:{' '}
