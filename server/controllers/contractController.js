@@ -273,3 +273,35 @@ exports.updateContract = catchAsync(async (req, res, next) => {
     data: populatedContract,
   });
 });
+
+
+exports.officialContractByPost = catchAsync(async (req, res, next) => {
+  const { contractId, postId } = req.query;
+
+  const post = await Post.findById(postId);
+  const contract = await Contract.findOne({
+    _id: contractId,
+    tasker: req.user._id,
+    fromPost: postId,
+  });
+
+  if (!post) {
+    return next(new AppError('Invalid post', 400));
+  }
+  if (!contract) {
+    return next(new AppError('Invalid contract', 400));
+  }
+
+  contract.status = 'official';
+  await post.remove();
+
+  const updatedContract = await contract.save();
+  const populatedContract = await Contract.populate(updatedContract, {
+    path: 'finder tasker taskTag workLocation review',
+  });
+
+  return res.status(200).json({
+    status: 'success',
+    data: populatedContract,
+  });
+});
