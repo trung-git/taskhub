@@ -57,15 +57,18 @@ const TaskListPage = ({ onOpenChat, status }) => {
   }, [status, pageNum]);
 
   const handleLoadMore = () => {
-    setLoading(true);
-    setPageNum((prev) => Number(prev) + 1);
+    if (!refreshing && !loading) {
+      setLoading(true);
+      setPageNum((prev) => Number(prev) + 1);
+    }
   };
 
   const handleRefresh = () => {
-    setRefreshing(true);
-    fetchData(status, 1);
+    if (!refreshing && !loading) {
+      setRefreshing(true);
+      fetchData(status, 1);
+    }
   };
-
 
   const renderTaskItem = ({ item }) => {
     return (

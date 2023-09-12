@@ -9,6 +9,7 @@ import {
   Platform,
   Keyboard,
   Image,
+  RefreshControl,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
@@ -61,6 +62,10 @@ const ChatPage = ({ chatId, finder, taskDataVal }) => {
     setIsFetching(true);
     fetchData(chatId);
   }, [chatId, taskDataVal]);
+
+  const handleRefresh = () => {
+    fetchData(chatId);
+  };
 
   const handleSend = () => {
     if (inputText.trim() !== '') {
@@ -183,6 +188,9 @@ const ChatPage = ({ chatId, finder, taskDataVal }) => {
         ref={flatListRef}
         onEndReached={() => fetchLoadOldChat(chatId, lastChatId)} // Triggered when scrolling to the top
         onEndReachedThreshold={0.2}
+        refreshControl={
+          <RefreshControl refreshing={isFetching} onRefresh={handleRefresh} />
+        }
       />
       <View
         style={{

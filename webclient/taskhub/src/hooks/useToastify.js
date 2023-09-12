@@ -1,4 +1,4 @@
-import { useTheme } from '@mui/material';
+import { Typography, useTheme } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -32,9 +32,9 @@ const useToastify = () => {
 
   function toastLinkInfo(message, link) {
     toast.info(
-      <div>
-        <Link to={link}>{message}</Link>
-      </div>,
+      <Typography component={Link} to={link} sx={{ textDecoration: 'none' }}>
+        {message}
+      </Typography>,
       {
         position: 'top-right',
         autoClose: 3000,

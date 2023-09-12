@@ -61,6 +61,7 @@ function TaskViewDetail({
     status,
     startTime,
     endTime,
+    review,
     updatedAt,
     _id: taskId,
     isPaid,
@@ -81,15 +82,15 @@ function TaskViewDetail({
   } = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: {
-      taskTag: taskTag,
-      workLocation: workLocation,
-      address: address,
-      workTimeFrom: workTime.from,
-      workTimeTo: workTime.to,
-      price: price,
-      paymentPlan: paymentPlan,
-      description: description,
-      paymentType: paymentType,
+      taskTag: taskTag || '',
+      workLocation: workLocation || '',
+      address: address || '',
+      workTimeFrom: workTime.from || '',
+      workTimeTo: workTime.to || '',
+      price: price || '',
+      paymentPlan: paymentPlan || '',
+      description: description || '',
+      paymentType: paymentType || '',
     },
   });
 
@@ -799,14 +800,24 @@ function TaskViewDetail({
                   >
                     <RefreshIcon />
                   </IconButton>
-                  {!startTime && (
+                  {!startTime &&
+                    (status === 'invitation' || status === 'discuss') && (
+                      <LoadingButton
+                        loading={isSubmitting}
+                        variant="contained"
+                        type="submit"
+                        disabled={!isDirty || !isValid || status === 'official'}
+                      >
+                        Save
+                      </LoadingButton>
+                    )}
+                  {!review && status === 'finish' && (
                     <LoadingButton
                       loading={isSubmitting}
                       variant="contained"
-                      type="submit"
                       disabled={!isDirty || !isValid || status === 'official'}
                     >
-                      Save
+                      Đánh giá
                     </LoadingButton>
                   )}
                   {status === 'official' &&

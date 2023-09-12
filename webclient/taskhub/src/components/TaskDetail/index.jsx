@@ -64,19 +64,18 @@ const TaskDetail = () => {
     socket.on('server-emit-action-invitation-to-finder', (actionDetail) => {
       if (String(actionDetail.contract._id) === String(id)) {
         if (actionDetail?.action === 'discuss') {
-          setTriggerFetchData(prev => !prev);
-        }
-        else if (actionDetail?.action === 'rejected') {
+          setTriggerFetchData((prev) => !prev);
+        } else if (actionDetail?.action === 'rejected') {
           navigate('/tasklist');
         }
       }
-    })
+    });
 
     socket.on('server-emit-update-contract-state', (contractDetail) => {
       if (String(contractDetail._id) === String(id)) {
-        setTriggerFetchData(prev => !prev);
+        setTriggerFetchData((prev) => !prev);
       }
-    })
+    });
   }, []);
 
   const theme = useTheme();
@@ -107,7 +106,11 @@ const TaskDetail = () => {
       const responseData = response.data.data;
       console.log('User updated successfully:', response);
       console.log('testProps', diffProperties(taskData, responseData));
-      socket.emit('finder-update-contract', responseData.tasker._id, responseData);
+      socket.emit(
+        'finder-update-contract',
+        responseData.tasker._id,
+        responseData
+      );
       setTaskData(responseData);
       toastSuccess('Update task success');
       setIsSubmitting(false);
@@ -126,7 +129,7 @@ const TaskDetail = () => {
         <Box sx={{ display: 'flex', height: '100%', width: '100%' }}>
           <Grid container sx={{ height: '100%', justifyContent: 'center' }}>
             <Grid item xs={12} md={6} xl={6} height={'100%'}>
-              {taskData && (
+              {/* {taskData && (
                 <TaskViewDetail
                   task={taskData}
                   onSubmit={handleUpdateTask}
@@ -135,7 +138,15 @@ const TaskDetail = () => {
                   isLoading={loading}
                   setIsSubmitting={setIsSubmitting}
                 />
-              )}
+              )} */}
+              <TaskViewDetail
+                task={taskData}
+                onSubmit={handleUpdateTask}
+                isSubmitting={isSubmitting}
+                onRefresh={() => fetchData(id)}
+                isLoading={loading}
+                setIsSubmitting={setIsSubmitting}
+              />
             </Grid>
             {taskData && taskData?.status !== 'invitation' && (
               <Grid item xs={12} md={6} xl={6} sx={{ height: '100%' }}>
@@ -146,6 +157,12 @@ const TaskDetail = () => {
                     taskData?.finder?._id === currentUser?._id
                       ? taskData?.tasker
                       : taskData?.finder
+                  }
+                  hiddenChat={taskData?.status === 'cancel'}
+                  hiddenReason={
+                    taskData?.status === 'cancel'
+                      ? 'Người dùng đã hủy công việc này'
+                      : undefined
                   }
                 />
               </Grid>

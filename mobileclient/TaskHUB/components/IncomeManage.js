@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView } from 'react-native';
 import {
   View,
@@ -10,12 +10,13 @@ import {
   TextInput,
 } from 'react-native';
 import { schedulePushNotification } from '../hooks/useNotification';
-// import { schedulePushNotification } from '../config/pushnoti';
+import { API_URL } from '../config/constans';
+import axios from 'axios';
 
 const IncomeManage = () => {
-  const [balance, setBalance] = useState(5000000); // Số dư ban đầu
-  const [onlineIncome, setOnlineIncome] = useState(5000000); // Số dư thu nhập online
-  const [cashIncome, setCashIncome] = useState(5000000); // Số dư thu nhập tiền mặt
+  const [balance, setBalance] = useState(0); // Số dư ban đầu
+  const [onlineIncome, setOnlineIncome] = useState(0); // Số dư thu nhập online
+  const [cashIncome, setCashIncome] = useState(0); // Số dư thu nhập tiền mặt
   const [withdrawModalVisible, setWithdrawModalVisible] = useState(false);
   const [withdrawAmount, setWithdrawAmount] = useState('');
   const [errorText, setErrorText] = useState('');
@@ -43,6 +44,25 @@ const IncomeManage = () => {
     { type: 'withdraw', amount: 50000, timestamp: new Date() },
     // ... Các giao dịch khác
   ]);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/v1/wallet`);
+      const responseData = response.data;
+      console.log('responseDataInCom', responseData);
+      setOnlineIncome(responseData?.byWallet);
+      setCashIncome(responseData?.byCast);
+      setBalance(responseData?.data?.amount);
+      // return responseData;
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      // return [];
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const renderTransactionItem = ({ item }) => {
     const transactionTypeBackgroundColor =
@@ -90,9 +110,8 @@ const IncomeManage = () => {
   const handleWithdraw = () => {
     if (withdrawAmount !== '' && !isNaN(withdrawAmount)) {
       const withdrawalAmount = parseFloat(withdrawAmount);
-      if (withdrawalAmount <= balance) {
+      if (withdrawalAmount <= balance && withdrawalAmount !== 0) {
         setBalance(balance - withdrawalAmount);
-        // setCashIncome(cashIncome - withdrawalAmount);
         setWithdrawModalVisible(false);
         setWithdrawAmount('');
         schedulePushNotification(
@@ -105,8 +124,12 @@ const IncomeManage = () => {
           ...prev,
         ]);
       } else {
-        // Xử lý thông báo không đủ số dư
-        setErrorText('Số tiền vượt quá số dư');
+        s;
+        if (withdrawalAmount === 0) {
+          setErrorText('Vui lòng nhập số tiền cần rút');
+        } else {
+          setErrorText('Số tiền vượt quá số dư');
+        }
       }
     } else {
       // Xử lý thông báo nhập số tiền hợp lệ

@@ -364,6 +364,7 @@ const ContractTabDetail = ({ taskData, onRefresh }) => {
               styles.btncancel,
               refreshing && styles.btnDisable,
             ]}
+            onPress={() => handleOnCancel()}
           >
             <Text
               style={{
@@ -403,6 +404,7 @@ const ContractTabDetail = ({ taskData, onRefresh }) => {
               styles.btncancel,
               refreshing && styles.btnDisable,
             ]}
+            onPress={() => handleOnCancel()}
           >
             <Text
               style={{

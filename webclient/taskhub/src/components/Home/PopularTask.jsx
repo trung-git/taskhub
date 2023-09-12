@@ -117,11 +117,11 @@ const PopularTask = () => {
                   <CardMedia
                     sx={{ height: 200, backgroundSize: 'contain' }}
                     image={tag?.photo}
-                    title={tag?.title}
+                    title={t(tag?.langKey)}
                   />
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
-                      {tag?.title}
+                      {t(tag?.langKey)}
                     </Typography>
                     <Stack
                       direction={'row'}

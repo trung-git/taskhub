@@ -41,6 +41,7 @@ const TaskCard = ({ task }) => {
     price,
     _id: id,
     expireAt,
+    confirmComplete,
   } = task;
   const { t } = useTranslation();
   // const [open, setOpen] = useState(false);
@@ -91,15 +92,24 @@ const TaskCard = ({ task }) => {
               <ListItemText
                 primary={
                   <Typography variant="subtitle1">
-                    {`${tasker?.firstName} ${tasker?.lastName}`}
+                    {t(taskTag?.langKey || '')}
                   </Typography>
                 }
                 secondary={
                   <Typography variant="caption" color="secondary">
-                    {t(taskTag?.langKey || '')}
+                    {`${tasker?.firstName} ${tasker?.lastName}`}
                   </Typography>
                 }
               />
+              {task?.status === 'official' && !task?.startTime && (
+                <Chip label="Chưa bắt đầu" color="warning" />
+              )}
+              {task?.status === 'official' &&
+                task?.startTime &&
+                !task?.endTime && <Chip label="Đã bắt đầu" color="info" />}
+              {task?.status === 'official' && task?.endTime && (
+                <Chip label="Đã hoàn tất" color="primary" />
+              )}
             </ListItem>
           </List>
         </Grid>
@@ -191,14 +201,24 @@ const TaskCard = ({ task }) => {
         sx={{ mt: 'auto', mb: 0, pt: 2.25 }}
       >
         <Stack direction={'column'} sx={{ alignItems: 'flex-start' }}>
-          <Typography variant="caption" color="secondary">
-            Ngày tạo {dayjs(createdAt).format('DD/MM/YYYY HH:mm')}
-          </Typography>
-          {expireAt && (
+          {task?.status === 'official' && !task?.endTime && (
+            <Typography variant="caption" color="secondary">
+              Ngày tạo: {dayjs(createdAt).format('DD/MM/YYYY HH:mm')}
+            </Typography>
+          )}
+          {/* <Typography variant="caption" color="secondary">
+            Ngày tạo: {dayjs(createdAt).format('DD/MM/YYYY HH:mm')}
+          </Typography> */}
+          {task?.status === 'invitation' && expireAt && (
             <Typography variant="caption" color="secondary">
               {`${t('Thời hạn phản hồi')} : ${dayjs(expireAt).format(
                 'DD/MM/YYYY HH:mm'
               )}`}
+            </Typography>
+          )}
+          {task?.status === 'official' && task?.endTime && (
+            <Typography variant="caption" color="secondary">
+              Vui lòng xác nhận hoàn thành
             </Typography>
           )}
         </Stack>

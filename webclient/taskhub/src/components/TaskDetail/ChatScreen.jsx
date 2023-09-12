@@ -71,7 +71,7 @@ const ChatSkeleton = () => {
   );
 };
 
-function ChatScreen({ user, chatId, otherUser }) {
+function ChatScreen({ user, chatId, otherUser, hiddenChat, hiddenReason }) {
   const socketContext = useContext(SocketContext);
 
   const [messages, setMessages] = useState([]);
@@ -252,7 +252,7 @@ function ChatScreen({ user, chatId, otherUser }) {
       messages?.length > 0 &&
       messages?.map((_message, index) => {
         return (
-          <Grid item xs={12} key={index}>
+          <Grid item xs={12} key={index} sx={{ maxHeight: 66 }}>
             {_message.sender === user._id ? (
               <Stack spacing={1.25} direction="row">
                 <Grid container spacing={1} justifyContent="flex-end">
@@ -387,6 +387,7 @@ function ChatScreen({ user, chatId, otherUser }) {
         borderRadius: '0 4px 4px 0',
         borderRight: '0px',
         height: '100%',
+        position: 'relative',
       }}
     >
       <Grid
@@ -437,7 +438,7 @@ function ChatScreen({ user, chatId, otherUser }) {
           alignItems="center"
           sx={{ pt: 2 }}
         >
-          <IconButton>
+          <IconButton disabled={hiddenChat}>
             <ImageIcon />
           </IconButton>
           <Grid item>
@@ -445,6 +446,7 @@ function ChatScreen({ user, chatId, otherUser }) {
               ref={anchorElEmoji}
               aria-describedby={emojiId}
               onClick={(e) => handleOnEmojiButtonClick(e)}
+              disabled={hiddenChat}
             >
               <SentimentSatisfiedAltIcon />
             </IconButton>
@@ -475,12 +477,53 @@ function ChatScreen({ user, chatId, otherUser }) {
                 borderRadius: 32,
               },
             }}
+            disabled={hiddenChat}
           />
-          <IconButton onClick={handleOnSend}>
+          <IconButton disabled={hiddenChat} onClick={handleOnSend}>
             <SendIcon />
           </IconButton>
         </Stack>
       </Grid>
+      {hiddenChat && (
+        <Grid
+          container
+          direction="column"
+          style={{
+            height: '100%',
+            overflow: 'hidden',
+            p: 2,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: '#000000ba',
+          }}
+        >
+          <Grid item xs={12} sx={{ height: '100%' }}>
+            <Stack
+              direction={'column'}
+              alignItems={'center'}
+              justifyContent={'center'}
+              sx={{ height: '100%' }}
+            >
+              <Box
+                sx={{
+                  backgroundColor: theme.palette.background.paper,
+                  width: 300,
+                  p: 1.5,
+                  borderRadius: 1,
+                }}
+              >
+                <Typography variant="h5">{hiddenReason}</Typography>
+                <Typography>
+                  {'Nếu đã thanh toán, bạn sẽ được hoàn tiền'}
+                </Typography>
+              </Box>
+            </Stack>
+          </Grid>
+        </Grid>
+      )}
     </MainCard>
   );
 }

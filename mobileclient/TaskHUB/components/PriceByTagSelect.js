@@ -36,7 +36,7 @@ const PriceByTagSelect = ({ value, onChange }) => {
   const handleAddLoc = () => {
     const newLoc = {
       taskInfo: {},
-      price: 7,
+      price: 0,
     };
     setPriceByTag((prev) => [...prev, newLoc]);
   };
@@ -122,12 +122,13 @@ const PriceByTagSelect = ({ value, onChange }) => {
               </View>
               <TouchableOpacity
                 onPress={() => onLocDelete(index)}
-                disabled={index == 0}
+                // disabled={index == 0}
+                disabled={priceByTag?.length === 1}
               >
                 <Ionicons
                   name="trash-outline"
                   size={32}
-                  color={index == 0 ? 'gray' : 'red'}
+                  color={priceByTag?.length === 1 ? 'gray' : 'red'}
                 />
               </TouchableOpacity>
             </View>
