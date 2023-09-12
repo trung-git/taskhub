@@ -209,6 +209,7 @@ const ContractTabDetail = ({ taskData, onRefresh }) => {
       else {
         socket.emit('tasker-update-contract-state', responseData.finder._id, responseData);
       }
+      socket.emit('tasker-reload-task-list');
       setTaskDataVal(responseData);
       console.log('User updated successfully:', response);
       // setTaskData(responseData);
@@ -233,6 +234,7 @@ const ContractTabDetail = ({ taskData, onRefresh }) => {
       );
       const responseData = response.data.data;
       socket.emit('tasker-update-contract-state', responseData.finder._id, responseData);
+      socket.emit('tasker-reload-task-list');
       setTaskDataVal(responseData);
       console.log('User updated successfully:', response);
       // setTaskData(responseData);
