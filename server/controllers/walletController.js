@@ -43,7 +43,7 @@ exports.action = catchAsync(async (req, res, next) => {
     }
     wallet.amount -= amount;
   }
-  wallet.paymentHistory = [...wallet.paymentHistory].push(payment);
+  wallet.paymentHistory = [...wallet.paymentHistory, payment];
 
   const savedWallet = await wallet.save();
 
