@@ -249,7 +249,7 @@ const getPostsRelatedToTask = catchAsync(async (req, res, next) => {
   const recordsPerPage = Number(process.env.RECORDS_PER_PAGE);
 
   const taskTagArr = req.user.taskTag.map(v => v.taskInfo);
-  const findCondition = { taskTag : {$in: taskTagArr }, closeRegisterAt: {$lt: Date.now()}};
+  const findCondition = { taskTag : {$in: taskTagArr }, closeRegisterAt: {$gt: Date.now()}};
   
   const posts = await Post.find( findCondition )
     .skip(recordsPerPage * (pageNum - 1))
