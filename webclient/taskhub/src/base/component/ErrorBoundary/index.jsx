@@ -4,6 +4,7 @@ import { LoginContext } from '../../../provider/LoginContext';
 import useToastify from '../../../hooks/useToastify';
 import { Button } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 function ErrorBoundary({ children }) {
   const [hasError, setHasError] = useState(false);
@@ -13,6 +14,7 @@ function ErrorBoundary({ children }) {
   const { setIsLogin, setCurrentUser } = useContext(LoginContext);
   const { toastError } = useToastify();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const handleError = (error, errorInfo) => {
@@ -32,7 +34,6 @@ function ErrorBoundary({ children }) {
       setHasError(true);
       setError(error);
       setErrorInfo(errorInfo);
-      toastError(`Phiên đăng nhập đã hết hạn vui lòng đăng nhập lại`);
     };
 
     window.addEventListener('error', handleError);
@@ -53,7 +54,7 @@ function ErrorBoundary({ children }) {
           }}
           variant="contained"
         >
-          Back To Home
+          {t('th_key_back_to_home')}
         </Button>
       </div>
     );

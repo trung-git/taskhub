@@ -129,7 +129,7 @@ const TaskDetail = () => {
         <Box sx={{ display: 'flex', height: '100%', width: '100%' }}>
           <Grid container sx={{ height: '100%', justifyContent: 'center' }}>
             <Grid item xs={12} md={6} xl={6} height={'100%'}>
-              {/* {taskData && (
+              {taskData && (
                 <TaskViewDetail
                   task={taskData}
                   onSubmit={handleUpdateTask}
@@ -138,15 +138,15 @@ const TaskDetail = () => {
                   isLoading={loading}
                   setIsSubmitting={setIsSubmitting}
                 />
-              )} */}
-              <TaskViewDetail
+              )}
+              {/* <TaskViewDetail
                 task={taskData}
                 onSubmit={handleUpdateTask}
                 isSubmitting={isSubmitting}
                 onRefresh={() => fetchData(id)}
                 isLoading={loading}
                 setIsSubmitting={setIsSubmitting}
-              />
+              /> */}
             </Grid>
             {taskData && taskData?.status !== 'invitation' && (
               <Grid item xs={12} md={6} xl={6} sx={{ height: '100%' }}>

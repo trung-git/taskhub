@@ -32,7 +32,7 @@ const ContractTabDetail = ({ taskData, onRefresh }) => {
   const [openReject, setOpenReject] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
-  const fields = [
+  let fields = [
     {
       name: 'lastName',
       value: t(taskDataVal?.taskTag?.langKey),
@@ -77,7 +77,7 @@ const ContractTabDetail = ({ taskData, onRefresh }) => {
       value: taskDataVal?.price || '',
       label: 'Giá',
       component: TextUpdate,
-      canUpdate: true,
+      canUpdate: false,
     },
     {
       name: 'price',
@@ -116,6 +116,26 @@ const ContractTabDetail = ({ taskData, onRefresh }) => {
       canUpdate: false,
     },
   ];
+
+  if (
+    taskData?.status === 'official' &&
+    taskData?.paymentType === 'by-wallet'
+  ) {
+    fields.push({
+      name: 'description',
+      value: taskDataVal?.isPaid
+        ? predictAmount(
+            taskDataVal?.workTime?.from,
+            taskDataVal?.workTime?.to,
+            taskDataVal?.price,
+            taskDataVal?.paymentPlan
+          )
+        : 'Chưa (Chỉ có thể bắt đầu khi đã thanh toán)',
+      label: 'Đã thanh toán',
+      component: TextUpdate,
+      canUpdate: false,
+    });
+  }
 
   const handleFieldSelect = (field) => {
     console.log(
@@ -205,9 +225,12 @@ const ContractTabDetail = ({ taskData, onRefresh }) => {
           action: state,
           contract: responseData,
         });
-      }
-      else {
-        socket.emit('tasker-update-contract-state', responseData.finder._id, responseData);
+      } else {
+        socket.emit(
+          'tasker-update-contract-state',
+          responseData.finder._id,
+          responseData
+        );
       }
       socket.emit('tasker-reload-task-list');
       setTaskDataVal(responseData);
@@ -233,7 +256,11 @@ const ContractTabDetail = ({ taskData, onRefresh }) => {
           : { endTime: dayjs(new Date()).toISOString() }
       );
       const responseData = response.data.data;
-      socket.emit('tasker-update-contract-state', responseData.finder._id, responseData);
+      socket.emit(
+        'tasker-update-contract-state',
+        responseData.finder._id,
+        responseData
+      );
       socket.emit('tasker-reload-task-list');
       setTaskDataVal(responseData);
       console.log('User updated successfully:', response);
@@ -246,6 +273,19 @@ const ContractTabDetail = ({ taskData, onRefresh }) => {
       console.error('Error updating user:', error);
       setRefreshing(false);
     }
+  };
+
+  const handleStart = () => {
+    Alert.alert('Xác nhận', 'Bạn đang bắt đầu công việc này?', [
+      {
+        text: 'Hủy',
+        style: 'cancel',
+      },
+      {
+        text: 'Xác nhận',
+        onPress: () => handleUpdateTaskTime('start'),
+      },
+    ]);
   };
 
   return (
@@ -424,16 +464,24 @@ const ContractTabDetail = ({ taskData, onRefresh }) => {
               style={[
                 styles.button,
                 styles.btnsuccess,
-                refreshing && styles.btnDisable,
+                refreshing ||
+                  (taskDataVal?.paymentType === 'by-wallet' &&
+                    !taskDataVal?.isPaid &&
+                    styles.btnDisable),
               ]}
-              disabled={taskDataVal?.startTime}
-              onPress={() => handleUpdateTaskTime('start')}
+              disabled={
+                taskDataVal?.paymentType === 'by-wallet' && !taskDataVal?.isPaid
+              }
+              onPress={() => handleStart()}
             >
               <Text
                 style={{
                   color: 'white',
                   fontSize: 18,
-                  ...(refreshing && styles.textDisable),
+                  ...(refreshing ||
+                    (taskDataVal?.paymentType === 'by-wallet' &&
+                      !taskDataVal?.isPaid &&
+                      styles.textDisable)),
                 }}
               >
                 Bắt đầu

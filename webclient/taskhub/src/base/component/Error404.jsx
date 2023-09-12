@@ -6,8 +6,10 @@ import { Box, Button, Grid, Stack, Typography } from '@mui/material';
 // assets
 import error404 from '../../assets/img/maintance/Error404.png';
 import TwoCone from '../../assets/img/maintance/TwoCone.png';
+import { useTranslation } from 'react-i18next';
 
 function Error404() {
+  const { t } = useTranslation();
   return (
     <>
       <Grid
@@ -65,7 +67,7 @@ function Error404() {
               never exist!
             </Typography>
             <Button component={Link} to={'/'} variant="contained">
-              Back To Home
+              {t('th_key_back_to_home')}
             </Button>
           </Stack>
         </Grid>

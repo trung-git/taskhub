@@ -70,7 +70,8 @@ function TaskViewDetail({
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const isDone = status === 'cancel' || status === 'finish';
+  const isCancel = status === 'cancel';
+  const isOfficial = status === 'official';
 
   const {
     handleSubmit,
@@ -83,15 +84,15 @@ function TaskViewDetail({
   } = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: {
-      taskTag: taskTag || '',
-      workLocation: workLocation || '',
-      address: address || '',
-      workTimeFrom: workTime.from || '',
-      workTimeTo: workTime.to || '',
-      price: price || '',
-      paymentPlan: paymentPlan || '',
-      description: description || '',
-      paymentType: paymentType || '',
+      taskTag: taskTag,
+      workLocation: workLocation,
+      address: address,
+      workTimeFrom: workTime.from,
+      workTimeTo: workTime.to,
+      price: price,
+      paymentPlan: paymentPlan,
+      description: description,
+      paymentType: paymentType,
     },
   });
 
@@ -398,6 +399,7 @@ function TaskViewDetail({
                             id="taskTag"
                             {...field}
                             value={t(field.value.langKey)}
+                            disabled={isCancel || isOfficial}
                           />
                         )}
                       />
@@ -433,6 +435,7 @@ function TaskViewDetail({
                               id="workLocation"
                               {...field}
                               value={locToString(field.value)}
+                              disabled={isCancel || isOfficial}
                             />
                           );
                         }}
@@ -467,6 +470,7 @@ function TaskViewDetail({
                             helperText={
                               errors.address && errors.address.message
                             }
+                            disabled={isCancel || isOfficial}
                           />
                         )}
                       />
@@ -494,6 +498,7 @@ function TaskViewDetail({
                         value={dayjs(getValues('workTimeFrom')).format(
                           'DD-MM-YYYY'
                         )}
+                        disabled={isCancel || isOfficial}
                       />
                     )}
                   </Stack>
@@ -542,6 +547,7 @@ function TaskViewDetail({
                                   padding: '8px 16px',
                                 },
                               }}
+                              disabled={isCancel || isOfficial}
                             />
                           )}
                         />
@@ -585,6 +591,7 @@ function TaskViewDetail({
                                 },
                               }}
                               error={false}
+                              disabled={isCancel || isOfficial}
                             />
                           )}
                         />
@@ -620,6 +627,7 @@ function TaskViewDetail({
                             InputProps={{ inputProps: { min: 1 } }}
                             error={Boolean(errors.price)}
                             helperText={errors.price && errors.price.message}
+                            disabled={isCancel || isOfficial}
                           />
                         )}
                       />
@@ -655,6 +663,7 @@ function TaskViewDetail({
                             //     setValue('paymentPlan', e.target.value)
                             //   }
                             {...field}
+                            disabled={isCancel || isOfficial}
                           >
                             <MenuItem value={'per-hour'}>
                               {t('th_key_payment_perhour')}
@@ -694,6 +703,7 @@ function TaskViewDetail({
                             //     setValue('paymentType', e.target.value)
                             //   }
                             {...field}
+                            disabled={isCancel || isOfficial}
                           >
                             <MenuItem value={'by-cash'}>
                               {t('th_key_payment_type_cash')}
@@ -735,6 +745,7 @@ function TaskViewDetail({
                             helperText={
                               errors.description && errors.description.message
                             }
+                            disabled={isCancel || isOfficial}
                           />
                         )}
                       />
