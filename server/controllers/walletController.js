@@ -59,7 +59,8 @@ exports.getMyWallet = catchAsync(async (req, res, next) => {
 
   const contracts = await Contract.find({
     tasker: req.user._id,
-    status: 'finish'
+    status: 'finish',
+    isPaid: true
   });
 
   let byCast = 0;
