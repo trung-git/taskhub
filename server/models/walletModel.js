@@ -18,6 +18,10 @@ const walletSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'Contract',
       },
+      createdAt: {
+        type: Date,
+        default: Date.now()
+      }
     },
   ],
 });
