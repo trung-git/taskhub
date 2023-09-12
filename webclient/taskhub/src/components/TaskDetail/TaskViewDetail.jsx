@@ -34,6 +34,7 @@ import axios from 'axios';
 import { API_URL } from '../../base/config';
 import useLogin from '../../hooks/useLogin';
 import useToastify from '../../hooks/useToastify';
+import socket from '../../base/socket';
 
 const validationSchema = yup.object({
   address: yup.string().required('Address is required'),
@@ -238,6 +239,11 @@ function TaskViewDetail({
         config
       );
       const responseData = response.data.data;
+      socket.emit(
+        'finder-update-contract',
+        responseData.tasker._id,
+        responseData
+      );      
       console.log('Paying successfully!');
       // setTaskData(responseData);
       toastSuccess('Update task success');
