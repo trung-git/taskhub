@@ -79,6 +79,15 @@ const createSocketServer = (server) => {
       socket.emit('server-emit-reload-task-list');
     })
 
+    socket.on('tasker-action-to-post', (toUserId)=>{
+      const userReceive = onlineUsers.filter(v => v.userId === toUserId);
+      if (userReceive.length > 0) {
+        userReceive.forEach(u => {
+          io.to(u.socketId).emit('server-emit-reload-post');
+        })
+      }
+    })
+
     socket.on('disconnect', () => {
       onlineUsers = onlineUsers.filter((v) => v?.socketId !== socket.id);
       io.sockets.emit('list-user-online', onlineUsers);
