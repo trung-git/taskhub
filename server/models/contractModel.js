@@ -44,6 +44,10 @@ const contractModel = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    confirmComplete: {
+      type: Boolean,
+      default: false,
+    },
     startTime: {
       type: Date,
     },
