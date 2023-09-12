@@ -295,6 +295,16 @@ exports.officialContractByPost = catchAsync(async (req, res, next) => {
   contract.status = 'official';
   await post.remove();
 
+  const otherContractsFromPost = await Contract.find({
+    fromPost: postId,
+    _id: {$ne: contract._id}
+  })
+
+  otherContractsFromPost.forEach(async o => {
+    o.status = 'cancel';
+    await o.save();
+  })
+  
   const updatedContract = await contract.save();
   const populatedContract = await Contract.populate(updatedContract, {
     path: 'finder tasker taskTag workLocation review',
