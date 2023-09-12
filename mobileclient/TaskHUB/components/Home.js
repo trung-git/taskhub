@@ -120,6 +120,7 @@ const MainScreen = () => {
               cityInfo={item?.cityInfo}
               address={item?.address}
               paymentPlan={item?.paymentPlan}
+              userId={item?.user?._id}
             />
           ))}
         {posts?.length <= 0 && !fetchingPost && (

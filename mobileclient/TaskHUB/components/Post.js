@@ -25,6 +25,7 @@ import { API_URL } from '../config/constans';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import locToString from '../config/locToString';
+import socket from '../config/socket';
 
 const Post = ({
   avatar,
@@ -39,6 +40,7 @@ const Post = ({
   paymentPlan,
   workLocation,
   address,
+  userId
 }) => {
   const { userData } = useContext(AuthContext);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -70,6 +72,7 @@ const Post = ({
       .then((response) => {
         console.log('onCancelRegistersuccess', response);
         setApply(false);
+        socket.emit('tasker-action-to-post', userId);
       })
       .catch((error) => {
         // Xử lý lỗi đăng nhập
@@ -93,6 +96,7 @@ const Post = ({
         console.log('onRegistersuccess', response);
         setModalVisible(false);
         setApply(true);
+        socket.emit('tasker-action-to-post', userId);
       })
       .catch((error) => {
         // Xử lý lỗi đăng nhập
