@@ -71,6 +71,12 @@ const TaskDetail = () => {
         }
       }
     })
+
+    socket.on('server-emit-update-contract-state', (contractDetail) => {
+      if (String(contractDetail._id) === String(id)) {
+        setTriggerFetchData(prev => !prev);
+      }
+    })
   }, []);
 
   const theme = useTheme();

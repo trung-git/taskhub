@@ -61,6 +61,9 @@ const TaskListByType = ({ type }) => {
     socket.on('server-emit-action-invitation-to-finder', (_) => {
       setTriggerFetchTaskList(prev => !prev);
     })
+    socket.on('server-emit-update-contract-state', (_) => {
+      setTriggerFetchTaskList(prev => !prev);
+    })
   }, []);
   useEffect(() => {
     fetchTaskListData(type, pageNum);
