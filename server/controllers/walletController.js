@@ -4,8 +4,8 @@ const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const ACTIONS = ['withdraw', 'deposit'];
 exports.action = catchAsync(async (req, res, next) => {
-  const { wallet: walletId, _id } = req.user;
-  const { amount, action, contract: contractId } = req.body;
+  const { _id } = req.user;
+  const { walletId, amount, action, contract: contractId } = req.body;
 
   const wallet = await Wallet.findById(walletId);
   if (!wallet) {
