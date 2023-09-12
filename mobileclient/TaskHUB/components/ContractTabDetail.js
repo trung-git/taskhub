@@ -232,6 +232,7 @@ const ContractTabDetail = ({ taskData, onRefresh }) => {
           : { endTime: dayjs(new Date()).toISOString() }
       );
       const responseData = response.data.data;
+      socket.emit('tasker-update-contract-state', responseData.finder._id, responseData);
       setTaskDataVal(responseData);
       console.log('User updated successfully:', response);
       // setTaskData(responseData);

@@ -108,10 +108,6 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     socket.on('server-emit-invitation-to-tasker', (contractDetail) => {
-      // TODO Push notification
-      // console.log(
-      //   `Bạn nhận được một lời mời làm mới: công việc là ${contractDetail.taskTag.title}, người mời là ${contractDetail.finder.firstName}`
-      // );
       schedulePushNotification(
         `[${t(contractDetail.taskTag.langKey)}] - Lời mời mới`,
         `${locToString(contractDetail.workLocation, false)} ${dayjs(

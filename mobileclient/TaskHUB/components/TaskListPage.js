@@ -17,6 +17,7 @@ import { RefreshControl } from 'react-native';
 import locToString from '../config/locToString';
 import moment from 'moment';
 import 'moment/locale/vi'; // Import the Vietnamese locale
+import socket from '../config/socket';
 
 moment.locale('vi');
 
@@ -55,7 +56,11 @@ const TaskListPage = ({ onOpenChat, status }) => {
     setLoading(true);
     fetchData(status, pageNum);
   }, [status, pageNum]);
-
+  useEffect(() => {
+    socket.on('server-emit-invitation-to-tasker', () =>{
+      handleRefresh();
+    })
+  }, [])
   const handleLoadMore = () => {
     if (!refreshing && !loading) {
       setLoading(true);
