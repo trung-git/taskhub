@@ -75,6 +75,10 @@ const createSocketServer = (server) => {
       }
     })
 
+    socket.on('tasker-reload-task-list', () => {
+      socket.emit('server-emit-reload-task-list');
+    })
+
     socket.on('disconnect', () => {
       onlineUsers = onlineUsers.filter((v) => v?.socketId !== socket.id);
       io.sockets.emit('list-user-online', onlineUsers);
