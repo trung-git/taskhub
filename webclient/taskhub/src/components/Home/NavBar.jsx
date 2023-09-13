@@ -282,7 +282,7 @@ function NavBar({ isLogin = true }) {
                 }
               >
                 {' '}
-                Xin chào {logincontext?.currentUser?.firstName}{' '}
+                {t('th_key_hello')} {logincontext?.currentUser?.firstName}{' '}
                 {logincontext?.currentUser?.lastName} !
               </Button>
             </div>

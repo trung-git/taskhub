@@ -351,7 +351,10 @@ function TaskViewDetail({
       toastSuccess('Update task success');
       setIsSubmitting(false);
       // onRefresh && onRefresh();
-      handlePayingForTasker(predictAmount);
+      paymentType === 'by-wallet' && handlePayingForTasker(predictAmount);
+      if (paymentType !== 'by-wallet') {
+        onRefresh && onRefresh();
+      }
     } catch (error) {
       console.error('Error updating user:', error);
       toastError(`Update task error, ${error.message}`);

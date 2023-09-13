@@ -338,13 +338,14 @@ const PostCard = ({ post, onSelect, onRefresh }) => {
         >
           <Stack direction={'column'} sx={{ alignItems: 'flex-start' }}>
             <Typography variant="caption" color="secondary">
-              Cập nhật lần cuối {dayjs(updatedAt).format('DD/MM/YYYY HH:mm')}
+              {t('th_key_task_lasted_update_at')}:{' '}
+              {dayjs(updatedAt).format('DD/MM/YYYY HH:mm')}
             </Typography>
             {closeRegisterAt && (
               <Typography variant="caption" color="secondary">
-                {`${t('Thời hạn phản hồi')} : ${dayjs(closeRegisterAt).format(
-                  'DD/MM/YYYY HH:mm'
-                )}`}
+                {`${t('th_key_response_deadline')} : ${dayjs(
+                  closeRegisterAt
+                ).format('DD/MM/YYYY HH:mm')}`}
               </Typography>
             )}
           </Stack>

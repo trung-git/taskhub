@@ -31,6 +31,7 @@ import vietnameseDayOfWeekFormatter from '../../utils/vietnameseDayOfWeekFormatt
 import { useNavigate } from 'react-router';
 import { SocketContext } from '../../provider/SocketContext';
 import { LoadingButton } from '@mui/lab';
+import locToString from '../../utils/locToString';
 dayjs.extend(customParseFormat);
 
 const validationSchema = yup.object({
@@ -279,7 +280,7 @@ const InvationDetail = ({ bookingData, isOpen, handleCloseBookingForm }) => {
                 <Grid item xs={8}>
                   <TextField
                     fullWidth
-                    value={`Tp. Hồ Chí Minh, Quận 1`}
+                    value={locToString(bookingData?.district)}
                     variant="standard"
                     InputProps={{
                       readOnly: true,
@@ -332,6 +333,7 @@ const InvationDetail = ({ bookingData, isOpen, handleCloseBookingForm }) => {
                         {...field}
                         InputProps={{ inputProps: { spellCheck: 'false' } }}
                         error={Boolean(errors.description)}
+                        autoComplete="off"
                         helperText={
                           errors.description && errors.description.message
                         }
@@ -455,12 +457,6 @@ const InvationDetail = ({ bookingData, isOpen, handleCloseBookingForm }) => {
                     name="expireAt"
                     control={control}
                     render={({ field }) => (
-                      // <ResponseTime
-                      // value={field.value}
-                      //   maxDate={dayjs(bookingData.workTime.date)}
-                      //   minTime={dayjs(new Date()).add(1, 'hour')}
-                      //   onChange={(val) => setValue('expireAt', val)}
-                      // />
                       <FormControl fullWidth variant="standard">
                         <DateTimePicker
                           {...field}

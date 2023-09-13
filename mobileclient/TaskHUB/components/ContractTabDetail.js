@@ -216,6 +216,9 @@ const ContractTabDetail = ({ taskData, onRefresh }) => {
     if (state === 'discuss') {
       taskUpdateValue.updateExpires = true;
     }
+    if (state === 'official') {
+      taskUpdateValue.updateExpires = true;
+    }
     setRefreshing(true);
     try {
       const response = await axios.patch(
@@ -448,7 +451,7 @@ const ContractTabDetail = ({ taskData, onRefresh }) => {
             style={[
               styles.button,
               styles.btncancel,
-              refreshing && styles.btnDisable,
+              refreshing || (taskDataVal?.endTime && styles.btnDisable),
             ]}
             onPress={() => handleOnCancel()}
           >
@@ -456,7 +459,7 @@ const ContractTabDetail = ({ taskData, onRefresh }) => {
               style={{
                 color: 'red',
                 fontSize: 20,
-                ...(refreshing && styles.textDisable),
+                ...(refreshing || (taskDataVal?.endTime && styles.textDisable)),
               }}
             >
               Hủy
@@ -495,17 +498,18 @@ const ContractTabDetail = ({ taskData, onRefresh }) => {
               style={[
                 styles.button,
                 styles.btnsuccess,
-                refreshing && styles.btnDisable,
+                refreshing || (taskDataVal?.endTime && styles.btnDisable),
               ]}
-              // disabled={!taskDataVal?.startTime}
+              disabled={taskDataVal?.endTime}
+              onPress={() => handleUpdateTaskTime('end')}
             >
               <Text
                 style={{
                   color: 'white',
                   fontSize: 18,
-                  ...(refreshing && styles.textDisable),
+                  ...(refreshing ||
+                    (taskDataVal?.endTime && styles.textDisable)),
                 }}
-                onPress={() => handleUpdateTaskTime('end')}
               >
                 Kết thúc
               </Text>

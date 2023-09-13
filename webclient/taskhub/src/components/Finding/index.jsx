@@ -457,9 +457,9 @@ const Finding = (props) => {
                 <AuthLogin
                   onSuccess={() => {
                     setShowLoginForm(false);
-                    setSelectedTasker(taskerData);
-                    setshowDateBook(true);
-                    setActiveStep(2);
+                    // setSelectedTasker(taskerData);
+                    setshowDateBook(false);
+                    setActiveStep(1);
                   }}
                 />
               </Grid>

@@ -218,7 +218,9 @@ const PostModal = ({ type, value = {}, open, onClose, onCreateSuccess }) => {
               <Grid container spacing={3}>
                 <Grid item xs={12}>
                   <Stack spacing={1.25}>
-                    <InputLabel htmlFor="customer-name">Công việc</InputLabel>
+                    <InputLabel htmlFor="customer-name">
+                      {t('th_key_task')}
+                    </InputLabel>
                     <Controller
                       name="taskTag"
                       control={control}
@@ -237,7 +239,9 @@ const PostModal = ({ type, value = {}, open, onClose, onCreateSuccess }) => {
                 </Grid>
                 <Grid item xs={6}>
                   <Stack spacing={1.25}>
-                    <InputLabel htmlFor="customer-name">Thành phố</InputLabel>
+                    <InputLabel htmlFor="customer-name">
+                      {t('th_key_select_city')}
+                    </InputLabel>
                     <Controller
                       name="cityId"
                       control={control}
@@ -258,7 +262,9 @@ const PostModal = ({ type, value = {}, open, onClose, onCreateSuccess }) => {
                 </Grid>
                 <Grid item xs={6}>
                   <Stack spacing={1.25}>
-                    <InputLabel htmlFor="customer-name">Quận, Huyện</InputLabel>
+                    <InputLabel htmlFor="customer-name">
+                      {t('th_key_select_district')}
+                    </InputLabel>
                     <Controller
                       name="districtId"
                       control={control}
@@ -284,7 +290,7 @@ const PostModal = ({ type, value = {}, open, onClose, onCreateSuccess }) => {
                 <Grid item xs={12}>
                   <Stack spacing={1.25}>
                     <InputLabel htmlFor="customer-name">
-                      Địa chỉ cụ thể
+                      {t('th_key_post_address_detail')}
                     </InputLabel>
                     <Controller
                       name="address"
@@ -293,7 +299,7 @@ const PostModal = ({ type, value = {}, open, onClose, onCreateSuccess }) => {
                         <TextField
                           fullWidth
                           id="address"
-                          placeholder="Nhập địa chỉ cụ thể"
+                          placeholder={t('th_key_post_address_detail_place')}
                           {...field}
                           error={Boolean(errors.address)}
                           helperText={errors.address && errors.address.message}
@@ -305,7 +311,7 @@ const PostModal = ({ type, value = {}, open, onClose, onCreateSuccess }) => {
                 <Grid item xs={6}>
                   <Stack spacing={1.25}>
                     <InputLabel htmlFor="customer-name">
-                      Ngày làm việc
+                      {t('th_key_workdatetime')}
                     </InputLabel>
                     <Controller
                       name="workDate"
@@ -335,7 +341,9 @@ const PostModal = ({ type, value = {}, open, onClose, onCreateSuccess }) => {
                 </Grid>
                 <Grid item xs={6}>
                   <Stack spacing={1.25}>
-                    <InputLabel htmlFor="customer-name">Thời gian</InputLabel>
+                    <InputLabel htmlFor="customer-name">
+                      {t('th_key_worktime')}
+                    </InputLabel>
                     <Controller
                       name="workTime"
                       control={control}
@@ -380,9 +388,7 @@ const PostModal = ({ type, value = {}, open, onClose, onCreateSuccess }) => {
                 </Grid>
                 <Grid item xs={12}>
                   <Stack spacing={1.25}>
-                    <InputLabel htmlFor="text">
-                      Mô tả công việc cụ thể
-                    </InputLabel>
+                    <InputLabel htmlFor="text">{t('th_key_desc')}</InputLabel>
                     <Controller
                       name="text"
                       control={control}
@@ -399,7 +405,7 @@ const PostModal = ({ type, value = {}, open, onClose, onCreateSuccess }) => {
                           //     resize: 'vertical',
                           //   },
                           // }}
-                          placeholder="Mô tả các yêu cầu của công việc..."
+                          placeholder={t('th_key_post_desc_place')}
                           {...field}
                           error={Boolean(errors.text)}
                           helperText={errors.text && errors.text.message}
@@ -411,7 +417,7 @@ const PostModal = ({ type, value = {}, open, onClose, onCreateSuccess }) => {
                 <Grid item xs={12}>
                   <Stack spacing={1.25}>
                     <InputLabel htmlFor="customer-name">
-                      Thời hạn phản hồi
+                      {t('th_key_response_deadline')}
                     </InputLabel>
                     <Controller
                       name="closeRegisterAt"
@@ -431,11 +437,11 @@ const PostModal = ({ type, value = {}, open, onClose, onCreateSuccess }) => {
                             disableHighlightToday
                             maxDate={watch('workDate').add(1, 'day')}
                             minTime={dayjs(new Date()).add(50, 'minute')}
-                            maxTime={dayjs(
-                              `${watch('workDate').format('YYYY-MM-DD')} ${
-                                watch('workTime')?.from
-                              }`
-                            )}
+                            // maxTime={dayjs(
+                            //   `${watch('workDate').format('YYYY-MM-DD')} ${
+                            //     watch('workTime')?.from
+                            //   }`
+                            // )}
                             renderInput={(params) => (
                               <TextField
                                 sx={{ width: '100%' }}
@@ -456,7 +462,7 @@ const PostModal = ({ type, value = {}, open, onClose, onCreateSuccess }) => {
                 <Grid item xs={12}>
                   <Stack spacing={1.25}>
                     <InputLabel htmlFor="customer-location">
-                      Hình ảnh mô tả
+                      {t('th_key_post_photo_adding')}
                     </InputLabel>
                     <Controller
                       name="files"

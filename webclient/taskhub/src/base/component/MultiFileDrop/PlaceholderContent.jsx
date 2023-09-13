@@ -3,8 +3,10 @@ import { Typography, Stack, CardMedia } from '@mui/material';
 
 // assets
 import UploadCover from '../../../assets/svg/upload.svg';
+import { useTranslation } from 'react-i18next';
 
 export default function PlaceholderContent() {
+  const { t } = useTranslation();
   return (
     <Stack
       spacing={2}
@@ -15,18 +17,18 @@ export default function PlaceholderContent() {
     >
       <CardMedia component="img" image={UploadCover} sx={{ width: 80 }} />
       <Stack sx={{ p: 3 }} spacing={1}>
-        <Typography variant="h5">Drag & Drop or Select file</Typography>
+        <Typography variant="h5">{t('th_key_post_drag')}</Typography>
 
         <Typography color="secondary">
-          Drop files here or click&nbsp;
+          {t('th_key_post_drop')}&nbsp;
           <Typography
             component="span"
             color="primary"
             sx={{ textDecoration: 'underline' }}
           >
-            browse
+            {t('th_key_post_browse')}
           </Typography>
-          &nbsp;thorough your machine
+          &nbsp;{t('th_key_post_thorough')}
         </Typography>
       </Stack>
     </Stack>

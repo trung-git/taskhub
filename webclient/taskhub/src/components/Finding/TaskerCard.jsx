@@ -268,7 +268,7 @@ const TaskerCard = ({ taskerData, onSelect }) => {
               <ImagesList imagesList={taskerData?.photos} />
             </Box>
           )}
-          <Box
+          {/* <Box
             sx={{
               display: 'flex',
               flexDirection: 'column',
@@ -281,7 +281,7 @@ const TaskerCard = ({ taskerData, onSelect }) => {
               {t('th_key_review')}:
             </Typography>
             <ImagesList imagesList={taskerData?.photos} />
-          </Box>
+          </Box> */}
           <Stack
             direction={'row'}
             alignItems={'center'}

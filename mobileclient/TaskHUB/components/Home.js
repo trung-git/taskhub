@@ -63,8 +63,10 @@ const MainScreen = () => {
   }, []);
 
   const loadMorePosts = () => {
-    setLoading(true);
-    setPageNum((prev) => Number(prev) + 1);
+    if (!refreshing && !loading) {
+      setLoading(true);
+      setPageNum((prev) => Number(prev) + 1);
+    }
   };
 
   const refreshPosts = () => {

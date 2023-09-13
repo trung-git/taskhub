@@ -78,9 +78,9 @@ const PostList = () => {
   }, [pageNum, triggerFetchData]);
   useEffect(() => {
     socket.on('server-emit-reload-post', () => {
-      setTriggerFetchData(prev => !prev);
-    })
-  }, [])
+      setTriggerFetchData((prev) => !prev);
+    });
+  }, []);
   const handlePageChange = (event, value) => {
     setPageNum(value);
   };
@@ -100,7 +100,7 @@ const PostList = () => {
             size="medium"
             onClick={() => setOpenPostModal(true)}
           >
-            {t('Tạo một bài đăng')}
+            {t('th_key_btn_post')}
           </Button>
         </Stack>
         {isFetchingPostList ? (

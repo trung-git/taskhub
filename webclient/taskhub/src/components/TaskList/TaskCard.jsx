@@ -203,7 +203,8 @@ const TaskCard = ({ task }) => {
         <Stack direction={'column'} sx={{ alignItems: 'flex-start' }}>
           {task?.status === 'official' && !task?.endTime && (
             <Typography variant="caption" color="secondary">
-              Ngày tạo: {dayjs(createdAt).format('DD/MM/YYYY HH:mm')}
+              {t('th_key_create_at')}:{' '}
+              {dayjs(createdAt).format('DD/MM/YYYY HH:mm')}
             </Typography>
           )}
           {/* <Typography variant="caption" color="secondary">
@@ -211,7 +212,7 @@ const TaskCard = ({ task }) => {
           </Typography> */}
           {task?.status === 'invitation' && expireAt && (
             <Typography variant="caption" color="secondary">
-              {`${t('Thời hạn phản hồi')} : ${dayjs(expireAt).format(
+              {`${t('th_key_response_deadline')} : ${dayjs(expireAt).format(
                 'DD/MM/YYYY HH:mm'
               )}`}
             </Typography>

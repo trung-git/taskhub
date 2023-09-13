@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { RefreshControl, ScrollView } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { ActivityIndicator, RefreshControl, ScrollView } from 'react-native';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import {
 import { schedulePushNotification } from '../hooks/useNotification';
 import { API_URL } from '../config/constans';
 import axios from 'axios';
+import { AuthContext } from '../provider/AuthContext';
 
 const IncomeManage = () => {
   const [balance, setBalance] = useState(0); // Số dư ban đầu
@@ -21,30 +22,15 @@ const IncomeManage = () => {
   const [withdrawAmount, setWithdrawAmount] = useState('');
   const [errorText, setErrorText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { userData } = useContext(AuthContext);
+  const [isWidrawing, setIsWidrawing] = useState(false);
 
-  const [transactionHistory, setTransactionHistory] = useState([
-    { type: 'deposit', amount: 100000, timestamp: new Date() },
-    { type: 'deposit', amount: 100000, timestamp: new Date() },
-    { type: 'withdraw', amount: 50000, timestamp: new Date() },
-    { type: 'withdraw', amount: 50000, timestamp: new Date() },
-    { type: 'deposit', amount: 100000, timestamp: new Date() },
-    { type: 'deposit', amount: 100000, timestamp: new Date() },
-    { type: 'withdraw', amount: 50000, timestamp: new Date() },
-    { type: 'deposit', amount: 100000, timestamp: new Date() },
-    { type: 'deposit', amount: 100000, timestamp: new Date() },
-    { type: 'withdraw', amount: 50000, timestamp: new Date() },
-    { type: 'deposit', amount: 100000, timestamp: new Date() },
-    { type: 'deposit', amount: 100000, timestamp: new Date() },
-    { type: 'withdraw', amount: 50000, timestamp: new Date() },
-    { type: 'withdraw', amount: 50000, timestamp: new Date() },
-    { type: 'deposit', amount: 100000, timestamp: new Date() },
-    { type: 'deposit', amount: 100000, timestamp: new Date() },
-    { type: 'withdraw', amount: 50000, timestamp: new Date() },
-    { type: 'deposit', amount: 100000, timestamp: new Date() },
-    { type: 'deposit', amount: 100000, timestamp: new Date() },
-    { type: 'withdraw', amount: 50000, timestamp: new Date() },
-    // ... Các giao dịch khác
-  ]);
+  const [transactionHistory, setTransactionHistory] = useState([]);
+
+  // axios.interceptors.request.use((request) => {
+  //   console.log('Starting Request', JSON.stringify(request, null, 2));
+  //   return request;
+  // });
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -106,7 +92,7 @@ const IncomeManage = () => {
           </Text>
         </View>
         <Text style={styles.transactionTimestamp}>
-          {item.timestamp.toLocaleString('vi-VN')}
+          {item?.timestamp?.toLocaleString('vi-VN')}
         </Text>
       </View>
     );
@@ -118,9 +104,11 @@ const IncomeManage = () => {
     setWithdrawModalVisible(true);
   };
   const withdrawAction = async (amount) => {
+    setIsWidrawing(true);
     const withdrawData = {
       amount: amount,
       action: 'withdraw',
+      walletId: userData?.wallet,
     };
     try {
       const response = await axios.post(
@@ -143,11 +131,14 @@ const IncomeManage = () => {
       setWithdrawAmount('');
       schedulePushNotification(
         '[TaskHUB] - Rút tiền',
-        `${amount.toLocaleString('vi-VN')} ₫`
+        `${amount?.toLocaleString('vi-VN')} ₫`
       );
       setErrorText('');
+      setIsWidrawing(false);
     } catch (error) {
       console.error('Error fetching data:', error);
+      setIsWidrawing(false);
+
       // return [];
     }
   };
@@ -186,7 +177,7 @@ const IncomeManage = () => {
         <View style={styles.card}>
           <Text style={styles.balance}>
             Số dư:{' '}
-            {balance.toLocaleString('vi-VN', {
+            {balance?.toLocaleString('vi-VN', {
               style: 'currency',
               currency: 'VND',
             })}
@@ -254,14 +245,24 @@ const IncomeManage = () => {
               <TouchableOpacity
                 style={[styles.modalButton, styles.modalButtonCancel]}
                 onPress={() => setWithdrawModalVisible(false)}
+                disabled={isWidrawing}
               >
-                <Text style={styles.buttonText}>Hủy</Text>
+                {isWidrawing ? (
+                  <ActivityIndicator size="small" color="grey" />
+                ) : (
+                  <Text style={styles.buttonText}>Hủy</Text>
+                )}
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.modalButton}
                 onPress={handleWithdraw}
+                disabled={isWidrawing}
               >
-                <Text style={styles.buttonText}>Xác nhận</Text>
+                {isWidrawing ? (
+                  <ActivityIndicator size="small" color="grey" />
+                ) : (
+                  <Text style={styles.buttonText}>Xác nhận</Text>
+                )}
               </TouchableOpacity>
             </View>
           </View>

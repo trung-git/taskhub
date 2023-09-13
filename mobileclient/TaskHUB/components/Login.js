@@ -312,7 +312,7 @@ const LoginScreen = () => {
                       }}
                       onPress={() => setModalForgetVisible(true)}
                     >
-                      <Text
+                      {/* <Text
                         style={{
                           color: 'red',
                           textDecorationLine: 'underline',
@@ -320,7 +320,7 @@ const LoginScreen = () => {
                         }}
                       >
                         Quên mật khẩu ?
-                      </Text>
+                      </Text> */}
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={{

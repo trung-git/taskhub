@@ -181,12 +181,12 @@ const DateBookingModal = ({
                   dayOfWeekFormatter={vietnameseDayOfWeekFormatter}
                   disableHighlightToday
                   minDate={dayjs(startOfCurrentWeek)}
-                  maxDate={dayjs(maxDate)}
+                  maxDate={dayjs(maxDate).add(1, 'day')}
                   toolbar={<></>}
                   sx={{
-                    '& .MuiPickersCalendarHeader-root': {
-                      display: 'none',
-                    },
+                    // '& .MuiPickersCalendarHeader-root': {
+                    //   display: 'none',
+                    // },
                     '& .MuiDialogActions-root': {
                       display: 'none',
                     },
