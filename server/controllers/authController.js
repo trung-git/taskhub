@@ -96,7 +96,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     console.log(error);
     // return next(new AppError('Send email fail! Please try again.', 500));
   }
-  createAndSendToken(finalUser, 201, req, res, false);
+  createAndSendToken(newUser, 201, req, res, false);
 });
 
 exports.verifyEmail = catchAsync(async (req, res, next) => {
